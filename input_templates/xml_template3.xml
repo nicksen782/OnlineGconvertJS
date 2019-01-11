@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<gfx-xform version="SINGLE_TS">
+ <input file="input_templates/sampleImage3.png" type="png" tile-width="8" tile-height="8" />
+ <output file="../rpg_ts1.inc" file2="../rpg_ts1_C2BIN.inc">
+ <tiles var-name="rpg_ts1" tilesetOutputTo="PROGMEM" removeDupeTiles="1" />
+ <maps pointers-size="8">
+  <map var-name="fontset" left="2" top="1" width="16" height="4" mapOutputTo="PROGMEM" />
+  <map var-name="blacktile" left="2" top="1" width="1" height="1" mapOutputTo="NOWHERE" />
+  <map var-name="graytile" left="20" top="1" width="1" height="1" mapOutputTo="PROGMEM" />
+  <map var-name="basicColors" left="20" top="1" width="10" height="2" mapOutputTo="PROGMEM" />
+  <map var-name="S_INVALID" left="3" top="12" width="28" height="28" mapOutputTo="C2BIN" />
+  <map var-name="S_X00_Y00" left="3" top="46" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X01_Y00" left="38" top="46" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X02_Y00" left="73" top="46" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X03_Y00" left="108" top="46" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X04_Y00" left="143" top="46" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X05_Y00" left="178" top="46" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X06_Y00" left="213" top="46" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X07_Y00" left="248" top="46" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X00_Y01" left="3" top="82" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X01_Y01" left="38" top="82" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X02_Y01" left="73" top="82" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X03_Y01" left="108" top="82" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X04_Y01" left="143" top="82" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X05_Y01" left="178" top="82" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X06_Y01" left="213" top="82" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X07_Y01" left="248" top="82" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X00_Y02" left="3" top="118" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X01_Y02" left="38" top="118" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X02_Y02" left="73" top="118" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X03_Y02" left="108" top="118" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X04_Y02" left="143" top="118" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X05_Y02" left="178" top="118" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X06_Y02" left="213" top="118" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X07_Y02" left="248" top="118" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X00_Y03" left="3" top="154" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X01_Y03" left="38" top="154" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X02_Y03" left="73" top="154" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X03_Y03" left="108" top="154" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X04_Y03" left="143" top="154" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X05_Y03" left="178" top="154" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X06_Y03" left="213" top="154" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X07_Y03" left="248" top="154" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X00_Y04" left="3" top="190" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X01_Y04" left="38" top="190" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X02_Y04" left="73" top="190" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X03_Y04" left="108" top="190" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X04_Y04" left="143" top="190" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X05_Y04" left="178" top="190" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X06_Y04" left="213" top="190" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X07_Y04" left="248" top="190" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X00_Y05" left="3" top="226" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X01_Y05" left="38" top="226" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X02_Y05" left="73" top="226" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X03_Y05" left="108" top="226" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X04_Y05" left="143" top="226" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X05_Y05" left="178" top="226" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X06_Y05" left="213" top="226" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X07_Y05" left="248" top="226" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X00_Y06" left="3" top="262" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X01_Y06" left="38" top="262" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X02_Y06" left="73" top="262" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X03_Y06" left="108" top="262" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X04_Y06" left="143" top="262" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X05_Y06" left="178" top="262" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X06_Y06" left="213" top="262" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X07_Y06" left="248" top="262" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X00_Y07" left="3" top="298" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X01_Y07" left="38" top="298" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X02_Y07" left="73" top="298" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X03_Y07" left="108" top="298" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X04_Y07" left="143" top="298" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X05_Y07" left="178" top="298" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X06_Y07" left="213" top="298" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="S_X07_Y07" left="248" top="298" width="32" height="32" mapOutputTo="C2BIN" />
+  <map var-name="SMFT_titleScreen" left="34" top="12" width="28" height="28" mapOutputTo="C2BIN" />
+  <map var-name="SMFT_dialog_box" left="66" top="18" width="26" height="10" mapOutputTo="C2BIN" />
+  <map var-name="SMFT_dialog_ch_box" left="67" top="12" width="4" height="5" mapOutputTo="C2BIN" />
+  <map var-name="DIALOG_ARROW3" left="28" top="3" width="1" height="1" mapOutputTo="PROGMEM" />
+ </maps>
+ </output>
+</gfx-xform>

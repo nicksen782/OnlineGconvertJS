@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<gfx-xform version="MULTI_TS">
+ <!--Settings are CSV-->
+ <SETTINGS>
+  combineOutputFileWithMatchingFilename="1"
+ </SETTINGS>
+
+<!--Good guys-->
+<TILESET>
+ <gfx-xform version="MULTI_TS">
+ <input file="input_templates/sampleImage6.png" type="png" tile-width="8" tile-height="8" />
+ <output file="../marioBros_ts1.inc">
+  <tiles var-name="marioBros_ts1" tilesetOutputTo="PROGMEM" removeDupeTiles="1" text="Good guys" />
+  <maps pointers-size="8">
+   <map var-name="marioJump" left="3" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+   <map var-name="marioIdle" left="5" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+   <map var-name="marioRunF1" left="7" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+   <map var-name="marioRunF2" left="9" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+   <map var-name="marioStop" left="11" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+   <map var-name="luigiJump" left="15" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+   <map var-name="luigiIdle" left="17" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+   <map var-name="luigiRunF1" left="19" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+   <map var-name="luigiRunF2" left="21" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+   <map var-name="luigiStop" left="23" top="2" width="1" height="3" mapOutputTo="PROGMEM" />
+  </maps>
+ </output>
+ </gfx-xform>
+</TILESET>
+
+<!--Store the tile(s), do not store a tilemap.-->
+<TILESET>
+ <gfx-xform version="MULTI_TS">
+ <input file="input_templates/sampleImage6.png" type="png" tile-width="8" tile-height="8" />
+ <output file="../marioBros_ts2.inc">
+  <tiles var-name="marioBros_ts2" tilesetOutputTo="PROGMEM" removeDupeTiles="1" text="Just one tile" />
+  <maps pointers-size="8">
+   <map var-name="blackTile" left="0" top="0" width="1" height="1" mapOutputTo="NOWHERE" />
+  </maps>
+ </output>
+ </gfx-xform>
+</TILESET>
+
+<!--Bad guys-->
+<TILESET>
+ <gfx-xform version="MULTI_TS">
+ <input file="input_templates/sampleImage6.png" type="png" tile-width="8" tile-height="8" />
+ <output file="../marioBros_ts3.inc">
+  <tiles var-name="marioBros_ts3" tilesetOutputTo="PROGMEM" removeDupeTiles="1" text="Bad guys" />
+  <maps pointers-size="8">
+   <map var-name="shellscrapperF1" left="1" top="7" width="1" height="1" mapOutputTo="PROGMEM" />
+   <map var-name="shellscrapperF2" left="3" top="7" width="1" height="1" mapOutputTo="PROGMEM" />
+   <map var-name="shellscrapperF3" left="3" top="8" width="1" height="1" mapOutputTo="PROGMEM" />
+   <map var-name="sidestepperF1" left="5" top="6" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="sidestepperF2" left="7" top="6" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="fighterflyF1" left="9" top="6" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="fighterflyF2" left="11" top="6" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="fighterflyF3" left="9" top="8" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="fighterflyF4" left="11" top="8" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="slipiceF1" left="13" top="6" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="slipiceF2" left="15" top="6" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="slipiceF3" left="17" top="6" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="slipiceF4" left="19" top="6" width="1" height="2" mapOutputTo="PROGMEM" />
+   <map var-name="fireballF1" left="9" top="10" width="1" height="1" mapOutputTo="PROGMEM" />
+   <map var-name="fireballF2" left="11" top="10" width="1" height="1" mapOutputTo="PROGMEM" />
+   <map var-name="fireballF3" left="13" top="10" width="1" height="1" mapOutputTo="PROGMEM" />
+   <map var-name="fireballF4" left="15" top="10" width="1" height="1" mapOutputTo="PROGMEM" />
+  </maps>
+ </output>
+ </gfx-xform>
+</TILESET>
+
+<!--Bonus points-->
+<TILESET>
+ <gfx-xform version="MULTI_TS">
+ <input file="input_templates/sampleImage6.png" type="png" tile-width="8" tile-height="8" />
+ <output file="../marioBros_ts4.inc">
+  <tiles var-name="marioBros_ts4" tilesetOutputTo="PROGMEM" removeDupeTiles="1" text="Bonus tiles" />
+  <maps pointers-size="8">
+   <map var-name="bonusWafferF1" left="1" top="10" width="1" height="1" mapOutputTo="PROGMEM" />
+   <map var-name="bonusWafferF2" left="3" top="10" width="1" height="1" mapOutputTo="PROGMEM" />
+   <map var-name="coinF1" left="5" top="10" width="1" height="1" mapOutputTo="PROGMEM" />
+   <map var-name="coinF2" left="7" top="10" width="1" height="1" mapOutputTo="PROGMEM" />
+  </maps>
+ </output>
+ </gfx-xform>
+</TILESET>
+
+</gfx-xform>

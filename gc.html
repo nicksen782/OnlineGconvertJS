@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="UTF-8">
+	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+	<title>gConvertJS v3</title>
+
+	<!-- Basic styling -->
+	<link rel="stylesheet" type="text/css" href="css/css_reset.css">
+	<link rel="stylesheet" type="text/css" href="css/normalize801.css">
+	<link rel="stylesheet" type="text/css" href="css/html5boilerplate.css">
+	<link rel="stylesheet" type="text/css" href="css/gc.css">
+
+	<!--JQUERY STUFF-->
+	<!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+	<!--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+	<!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+
+	<script src="_featureLoader/js/featureLoader.js"></script>
+	<script src="js/index.js"></script>
+	<script src="js/dom.js"></script>
+	<!--<script src="js/xml2json.min.js"></script>-->
+</head>
+
+<body>
+
+<div id="bodyHeader">
+gConvert JS (v3)
+	<div id="UAM_status">
+		<div class="modals" id="uamModal">
+			<!--<iframe id="uamIframe" src="about:blank" frameBorder="0"></iframe>-->
+		</div>
+		<div class="UAM_statuses" id="UAM_status_A">--</div>
+		<div class="UAM_statuses" id="UAM_status_B">Hello, <span id="UAM_status_username"></span> <button id="uam_logout">Logout</button> <button class="openUAM">UAM</button></div>
+		<div class="UAM_statuses" id="UAM_status_C">Hello, GUEST <button id="uam_login">Login</button> <button class="openUAM">UAM</button></div>
+	</div>
+</div>
+
+<div id="bodyContainer">
+
+<div id="section_input" class="sectionDivs">
+	<!-- Title bar of section. -->
+	<div class="sectionDivs_title">
+		<div class="sectionDivs_title_text">
+			INPUT AND VALIDATION
+		</div>
+		<div class="sectionDivs_title_options">
+			<div class="navOptions sectionTitle_toTop"   >(To top)</div>
+			<div class="navOptions sectionTitle_stepUp"  >(Up one step)</div>
+			<div class="navOptions sectionTitle_stepDown">(Down one step)</div>
+		</div>
+	</div>
+	<div class="sectionDivs_content_">
+
+		<!--Section window - XML INPUT -->
+		<div id="input_window1" class="sectionWindow">
+			<div class="sectionWindow_title">INPUT XML</div>
+			<div class="sectionWindow_content">
+				<textarea id="gc3_input_xml" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
+				<br>
+				<a href="input_templates/xml_template1.xml" target="_blank">Download XML template</a>
+
+			</div>
+		</div>
+
+		<!--Section window - XML INPUT - MULTI_TS -->
+		<div id="input_window5" class="sectionWindow unavailableView">
+			<div class="sectionWindow_title">INPUT XML (MULTI)</div>
+			<div class="sectionWindow_content">
+				<div id="gc3_input_xml_MULTI_TS_div">
+					<select id="gc3_input_xml_MULTI_TS_select">
+						<option value=""></option>
+					</select>
+
+					<input type="button" id="gc3_input_xml_MULTI_TS_BATCH_btn" value="BATCH PROCESS">
+				</div>
+
+			</div>
+		</div>
+
+		<!--Section window - FILE UPLOAD, TEST DATA LOAD-->
+		<div id="input_window2" class="sectionWindow">
+			<div class="sectionWindow_title">LOAD</div>
+			<div class="sectionWindow_content">
+
+			<!-- UPLOAD BUTTONS -->
+			<input id="gc3_input_loadXml_file" type="file">
+			<input id="gc3_input_loadImg_file" type="file">
+			<!-- UPLOAD BUTTONS -->
+
+			<button id="gc3_input_loadXml">Load XML</button>
+			<button id="gc3_input_loadImg">Load IMG</button>
+			<button id="gc3_input_validate1">Validate</button>
+			<br>
+			<br>
+			You can also use copy/paste for the XML and IMG.
+			<!--Double-click the canvas and then press CTRL+V. If you have an image in the clipboard it will load. <br>-->
+			<br>
+			<br>
+			<table class="table1">
+				<caption class="caption1">Test Data</caption>
+				<tr>
+					<th>DATA</th>
+					<td>
+						<select id="gc3_input_selectTestData">
+							<option value=""></option>
+
+							<optgroup label="Ver: 1">
+								<option value="1" url="input_templates/xml_template1.xml">MegaTris</option>
+							</optgroup>
+
+							<optgroup label="SINGLE_TS">
+								<option value="2" url="input_templates/xml_template2.xml">Mario Bros (sprites)</option>
+								<option value="2b" url="input_templates/xml_template2b.xml">Mario Bros (bg tiles)</option>
+								<option value="3" url="input_templates/xml_template3.xml">Uze RPG</option>
+								<option value="4" url="input_templates/xml_template4.xml">Ram-Tile Tests</option>
+								<option value="5" url="input_templates/xml_template5.xml">Bubble Bobble</option>
+							</optgroup>
+
+							<optgroup label="MULTI_TS">
+								<option value="6" url="input_templates/xml_template6.xml">Mario Bros</option>
+							</optgroup>
+						</select>
+						<br>
+						<button id="gc3_input_selectTestData_load">LOAD/RELOAD</button>
+					</td>
+					<!--<td>-->
+					<!--	<button>LOAD</button>-->
+					<!--</td>-->
+				</tr>
+			</table>
+
+
+			</div>
+		</div>
+
+		<!--Section window - ACTION - LOAD INTO MAP EDITOR, RE-VALIDATE -->
+		<div id="input_window3" class="sectionWindow">
+			<div class="sectionWindow_title">ACTION</div>
+			<div class="sectionWindow_content">
+				<button id="gc3_input_goToMapEditor">Load into the Map Editor</button>
+				<button id="gc3_input_validate2">Re-validate</button>
+			</div>
+		</div>
+
+		<!--Section window - TILESET IMG -->
+		<div id="input_window4" class="sectionWindow">
+			<div class="sectionWindow_title">INPUT IMG </div>
+			<div class="sectionWindow_content">
+				<canvas id="gc3_input_canvas" width="128" height="128"></canvas>
+				<input id="gc3_input_canvas_inputText" type="text" value="">
+				<br>
+				<br>
+				<a href="input_templates/sampleImage1.png" target="_blank">Download IMG sample</a>
+
+			</div>
+		</div>
+
+		<!--Section window - DOWNLOADS -->
+		<div id="input_window6" class="sectionWindow">
+			<div class="sectionWindow_title">Downloads</div>
+			<div class="sectionWindow_content">
+				<input type="button" id="gc3_input_download_inputXml_btn"         value="Download XML">
+				<input type="button" id="gc3_input_download_inputImg_btn"         value="Download IMG">
+			</div>
+		</div>
+
+		<!--Section window - INPUT VALIDATION RESULTS / MISC MAP AND TILESET INFO -->
+		<div id="input_window7" class="sectionWindow">
+			<div class="sectionWindow_title">MISC INFO</div>
+			<div class="sectionWindow_content">
+				<table class="table1">
+					<caption>INPUT VALIDATION</caption>
+					<tr> <th>gfx-xform version</th> <td> <span id="gc3_input_xformVersion"></span> </td> </tr>
+					<tr> <th>Validate XML     </th> <td> <span id="gc3_input_validateXML"></span>  </td> </tr>
+					<tr> <th>Loaded IMG       </th> <td> <span id="gc3_input_validateIMG"></span>  </td> </tr>
+					<tr> <th>Validate MAPS    </th> <td> <span id="gc3_input_validateMaps"></span> </td> </tr>
+				</table>
+				<table class="table1">
+					<caption>MISC INFO</caption>
+					<tr> <th>Image Width  </th> <td> <span id="gc3_input_imgWidth"></span>     </td> </tr>
+					<tr> <th>Image Height </th> <td> <span id="gc3_input_imgHeight"></span>    </td> </tr>
+					<tr> <th>Tile Width   </th> <td> <span id="gc3_input_tileWidth"></span>    </td> </tr>
+					<tr> <th>Tile Height  </th> <td> <span id="gc3_input_tileHeight"></span>   </td> </tr>
+					<tr> <th>Pointers Size</th> <td> <span id="gc3_input_pointersSize"></span> </td> </tr>
+					<tr> <th>Map count    </th> <td> <span id="gc3_input_mapCount"></span>     </td> </tr>
+				</table>
+			</div>
+		</div>
+
+		<!--Section window - UAM FEATURES -->
+		<div id="input_window8" class="sectionWindow uamOnly">
+			<div class="sectionWindow_title">UAM</div>
+			<div class="sectionWindow_content">
+				<table class="table1">
+					<caption class="caption1">UAM Options</caption>
+					<tr>
+						<th>GAME</th>
+						<td >
+							<select id="gc3_input_uam_gameList_select">
+								<option value="">0 games</option>
+								<!--<option value="0" title="" basegamedir="UzeRPG_A1">Uze RPG Alpha 1</option>-->
+								<!--<option value="1" title="" basegamedir="MARIOBROS2018">Mario Bros 2018</option>-->
+							</select>
+						</td>
+						<td>
+							<button id="gc3_input_uam_refreshGameList">Refresh</button>
+						</td>
+					</tr>
+
+					<tr>
+						<th>XML</th>
+						<td>
+							<select id="gc3_input_uam_xmlList_select">
+								<option value="">0 files</option>
+								<!--<option value="0" url="/non-web/Uzebox/MARIOBROS2018/UAM/XML/bg_tiles.xml"    >UAM: Mario Bros (bg tiles)</option>-->
+								<!--<option value="1" url="/non-web/Uzebox/MARIOBROS2018/UAM/XML/sprite_tiles.xml">UAM: Mario Bros (sprites)</option>-->
+							</select>
+						</td>
+						<td>
+							<button id="gc3_input_uam_updateXML">Update</button>
+						</td>
+					</tr>
+
+
+					<tr>
+						<th>IMG</th>
+						<td>
+							<input readonly disabled id="gc3_input_uam_imgName" type="text" value="">
+						</td>
+						<td>
+							<button id="gc3_input_uam_updateIMG">Update</button>
+						</td>
+					</tr>
+
+				</table>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<div id="section_mapedit" class="sectionDivs">
+	<!-- Title bar of section. -->
+	<div class="sectionDivs_title">
+		<div class="sectionDivs_title_text">
+			TILE MAP EDITOR
+		</div>
+		<div class="sectionDivs_title_options">
+			<div class="navOptions sectionTitle_toTop"   >(To top)</div>
+			<div class="navOptions sectionTitle_stepUp"  >(Up one step)</div>
+			<div class="navOptions sectionTitle_stepDown">(Down one step)</div>
+		</div>
+
+	</div>
+	<div class="sectionDivs_content_">
+		<!--Section window-->
+		<div id="mapedit_window1" class="sectionWindow">
+			<div class="sectionWindow_title">IMAGE</div>
+			<div class="sectionWindow_content">
+				<canvas id="gc3_mapedit_image" width="128" height="128"></canvas>
+				<canvas id="gc3_mapedit_image_layer2" width="128" height="128"></canvas>
+
+				<div id="mapEdit_creationInstructions">
+					<div class="gc3_colHeader">Map Creation Instructions</div>
+					<ul>
+						<li>Select a map record from the list.</li>
+						<li>Set the width and height for the new map.</li>
+						<li>Hover over where the map would be in the source image.</li>
+						<li>Double-click right there to load the coordinates into the selected map record.</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+
+		<!--Section window-->
+		<div id="mapedit_window2" class="sectionWindow">
+			<div class="sectionWindow_title">PREVIEW</div>
+			<div class="sectionWindow_content">
+				<canvas id="gc3_mapedit_preview" width="128" height="128"></canvas>
+				<br>
+
+				<table class="table1" id="gc3_mapedit_preview_settings">
+					<tr>
+						<td>L</td>
+						<td><input onclick="this.select();" name="L" type="number" min="0" max="5" value="0"></td>
+						<td>T</td>
+						<td><input onclick="this.select();" name="T" type="number" min="0" max="5" value="0"></td>
+					</tr>
+					<tr>
+						<td>W</td>
+						<td><input onclick="this.select();" name="W" type="number" min="0" max="5" value="2"></td>
+						<td>H</td>
+						<td><input onclick="this.select();" name="H" type="number" min="0" max="5" value="2"></td>
+					</tr>
+				</table>
+				<br>
+
+				<table class="table1" id="gc3_mapedit_preview_stats">
+					<tr> <th>First tile in map:</th> <td> <span name="firstTile">6 </span> </td> </tr>
+					<tr> <th>Tile count:</th> <td> <span name="tileCountMap">40</span> </td> </tr>
+				</table>
+				<br>
+
+			</div>
+		</div>
+
+		<!--Section window-->
+		<div id="mapedit_window3" class="sectionWindow">
+			<div class="sectionWindow_title">MAP EDIT</div>
+			<div class="sectionWindow_content">
+
+				<div id="gc3_maps_records_div_colHeaders">
+					<div class="td gc3_colHeader gc3_select">SEL</div>
+					<div class="td gc3_colHeader gc3_varname">VARNAME</div>
+					<div class="td gc3_colHeader gc3_l">L</div>
+					<div class="td gc3_colHeader gc3_t">T</div>
+					<div class="td gc3_colHeader gc3_w">W</div>
+					<div class="td gc3_colHeader gc3_h">H</div>
+					<div class="td gc3_colHeader gc3_outputTo">OUTPUTTO</div>
+					<div class="td gc3_colHeader gc3_delete">DEL</div>
+				</div>
+
+				<div id="gc3_maps_records_div">
+				</div>
+
+				<div id="gc3_maps_records_controls_div">
+					<input type="button" value="Add new blank row"                     id="gc3_maps_records_addNew_btn">
+					<input type="button" value="Update xml/json text (above)" class="" id="gc3_maps_actions_updateInput_btn">
+					<input type="button" value="Reload data from input" class=""       id="gc3_maps_actions_startOver_btn">
+				</div>
+
+			</div>
+		</div>
+
+		<!--Section window-->
+		<div id="mapedit_window4" class="sectionWindow">
+			<div class="sectionWindow_title">ACTION</div>
+			<div class="sectionWindow_content">
+				<button id="gc3_maps_processToC_btn">PROCESS</button>
+			</div>
+		</div>
+
+		<!--Section window - ADDITIONAL SETTINGS -->
+		<div id="mapedit_window5" class="sectionWindow">
+			<div class="sectionWindow_title">Additional Settings</div>
+			<div class="sectionWindow_content">
+				<select id="gc3_mapedit_tilesetOutputTo">
+					<option value=""         >Tileset output to: ...</option>
+					<option value="PROGMEM"  >Tileset output to: PROGMEM</option>
+					<option value="C2BIN"    >Tileset output to: C2BIN</option>
+				</select>
+
+				<br>
+
+				<label><input type="checkbox" id="gc3_mapedit_removeDupeTiles"> Remove duplicate tiles </label>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<div id="section_gcOutput" class="sectionDivs">
+	<!-- Title bar of section. -->
+	<div class="sectionDivs_title">
+		<div class="sectionDivs_title_text">
+			GCONVERT OUTPUT
+		</div>
+		<div class="sectionDivs_title_options">
+			<div class="navOptions sectionTitle_toTop"   >(To top)</div>
+			<div class="navOptions sectionTitle_stepUp"  >(Up one step)</div>
+			<div class="navOptions sectionTitle_stepDown">(Down one step)</div>
+		</div>
+	</div>
+
+	<div class="sectionDivs_content_">
+		<!--Section window PROGMEM OUTPUT -->
+		<div id="gcOutput_window1" class="sectionWindow">
+			<div class="sectionWindow_title">PROGMEM OUTPUT</div>
+			<div class="sectionWindow_content">
+				<textarea id="gcOutput_progmemTextarea" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
+			</div>
+		</div>
+
+		<!--Section window - C2BIN OUTPUT -->
+		<div id="gcOutput_window2" class="sectionWindow">
+			<div class="sectionWindow_title">C2BIN OUTPUT</div>
+			<div class="sectionWindow_content">
+				<textarea id="gcOutput_c2binTextarea" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
+			</div>
+		</div>
+
+		<!--Section window - TILESET -->
+		<div id="gcOutput_window3" class="sectionWindow">
+			<div class="sectionWindow_title">TILESET</div>
+			<div class="sectionWindow_content">
+				<div id="gc3_outputTilesetCanvasContainer">
+					<canvas class="gcOutput_tilesetCanvas" id="gcOutput_tilesetCanvas" width="128" height="128"></canvas>
+					<canvas class="gcOutput_tilesetCanvas" id="gcOutput_tilesetCanvas_layer2" width="128" height="128"></canvas>
+					<canvas class="gcOutput_smallCanvas" id="gcOutput_tilesetCanvas2_small" width="128" height="128"></canvas>
+				</div>
+
+			<div id="gc3_output_tileHoverPreview_div">
+				<!--Hover previewer for tileset image with tile id indicator<br><br>-->
+				<canvas width="8" height="8" id="gc3_output_tileHoverPreview_canvas1"></canvas>
+				<div id="gc3_output_tileHoverPreview_tileNumber">-</div>
+			</div>
+
+			</div>
+		</div>
+
+		<!--Section window - MARKED DUPES -->
+		<div id="gcOutput_window4" class="sectionWindow">
+			<div class="sectionWindow_title">MARKED DUPES</div>
+			<div class="sectionWindow_content">
+				<canvas id="gcOutput_markedDupesCanvas" width="128" height="128"></canvas>
+				<canvas class="gcOutput_smallCanvas" id="gcOutput_markedDupesCanvas_small" width="128" height="128"></canvas>
+			</div>
+		</div>
+
+		<!--Section window - ACTION -->
+		<div id="gcOutput_window5" class="sectionWindow">
+			<div class="sectionWindow_title">ACTION</div>
+			<div class="sectionWindow_content">
+				<button id="gc3_goToPerformance">See performance stats?</button>
+			</div>
+		</div>
+
+		<!--Section window - COMBINED OUTPUT **NOT IN USE** -->
+		<div id="gcOutput_window6" class="sectionWindow">
+			<div class="sectionWindow_title">COMBINED OUTPUT</div>
+			<div class="sectionWindow_content">
+				<textarea id="gcOutput_combinedTextarea" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
+			</div>
+		</div>
+
+		<!--Section window - UAM features-->
+		<div id="gcOutput_window7" class="sectionWindow uamOnly">
+			<div class="sectionWindow_title">UAM</div>
+			<div class="sectionWindow_content">
+				<table class="table1" id="gc3_output_downloadsTable">
+					<caption></caption>
+					<tr>
+						<td> <input type="button" id="gc3_output_UAM_saveProgmem_btn"         value="Save PROGMEM to UAM dir"> </td>
+						<td> <input type="button" id="gc3_output_UAM_saveC2bin_btn"           value="Save C2BIN to UAM dir"> </td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<!--Section window - Download features-->
+		<div id="gcOutput_window8" class="sectionWindow">
+			<div class="sectionWindow_title">Downloads</div>
+			<div class="sectionWindow_content">
+				<table class="table1" id="gc3_output_downloadsTable">
+					<caption class="caption1">Download Options</caption>
+					<tr>
+						<td> <input type="button" id="gc3_output_download_srcXml_btn"         value="Input XML"> </td>
+						<td> <input type="button" id="gc3_output_download_srcImg_btn"         value="Input IMG"> </td>
+						<td> <input type="button" id="gc3_output_download_mapImg_btn"         value="Maps IMG"> </td>
+					</tr>
+					<tr>
+						<td> <input type="button" id="gc3_output_download_tilesetImg_btn"     value="Tileset IMG"> </td>
+						<td> <input type="button" id="gc3_output_download_markedDupesImg_btn" value="MarkedDupes IMG"> </td>
+						<td></td>
+					</tr>
+					<tr>
+						<td> <input type="button" id="gc3_output_download_progmemInc_btn"     value="PROGMEM inc"> </td>
+						<td> <input type="button" id="gc3_output_download_c2binInc_btn"       value="C2BIN inc"> </td>
+						<td></td>
+					</tr>
+					<tr>
+						<td> <input type="button" id="gc3_output_download_all_input_btn"      value="INPUT (.zip)"> </td>
+						<td> <input type="button" id="gc3_output_download_all_output_btn"     value="OUTPUT (.zip)"> </td>
+						<td> <input type="button" id="gc3_output_download_all_all_btn"        value="EVERYTHING (.zip)"> </td>
+					</tr>
+				</table>
+
+			</div>
+		</div>
+
+
+
+	</div>
+
+</div>
+
+<div id="section_gcPerformance" class="sectionDivs">
+	<!-- Title bar of section. -->
+	<div class="sectionDivs_title">
+		<div class="sectionDivs_title_text">
+			GCONVERT PERFORMANCE
+		</div>
+		<div class="sectionDivs_title_options">
+			<div class="navOptions sectionTitle_toTop"   >(To top)</div>
+			<div class="navOptions sectionTitle_stepUp"  >(Up one step)</div>
+			<div class="navOptions sectionTitle_stepDown">(Down one step)</div>
+		</div>
+	</div>
+
+	<div class="sectionDivs_content_">
+		<!--Section window-->
+		<div id="gcPerformance_window1" class="sectionWindow">
+			<div class="sectionWindow_title">IMAGE</div>
+			<div class="sectionWindow_content">
+
+				<table class="table2" id="gc3_perf_output">
+					<caption class="caption2">PRE-OUTPUT</caption>
+					<tr> <td>Create tileset placeholder array</td> <td name="getTilesetPlaceholderArray">-</td> </tr>
+					<tr> <td>Pre-process maps</td>                 <td name="preProcessMaps"            >-</td> </tr>
+					<tr> <td>CreateRGB332 image buffer</td>        <td name="createRGB332_imageBuffer"  >-</td> </tr>
+					<tr> <td>Populate tileset data</td>            <td name="populateTileSetData"       >-</td> </tr>
+					<tr> <td>Reduce duplicate tiles</td>           <td name="reduceDuplicateTiles"      >-</td> </tr>
+					<tr> <td>Remap tile maps</td>                  <td name="remapTileMaps"             >-</td> </tr>
+				</table>
+				<br>
+
+				<table class="table2" id="gc3_perf_output2">
+					<caption class="caption2">OUTPUT</caption>
+					<tr> <td>Generate timestamp</td>                                  <td name="timestamp"                    >-</td> </tr>
+					<tr> <td>Filter tileset to uniques only</td>                      <td name="newTileset"                   >-</td> </tr>
+					<tr> <td>Create replacement tile ids</td>                         <td name="newTileIds"                   >-</td> </tr>
+					<tr> <td>Update maps with new tile ids</td>                       <td name="newMaps"                      >-</td> </tr>
+					<tr> <td>Create the tileset text output</td>                      <td name="tilesetText"                  >-</td> </tr>
+					<tr> <td>Create the tilemaps text output</td>                     <td name="tilemapsText"                 >-</td> </tr>
+					<tr> <td>Put together the final text outputs</td>                 <td name="final_outputText"             >-</td> </tr>
+					<tr> <td>Draw the new tileset image</td>                          <td name="final_outputImage_tileset"    >-</td> </tr>
+					<tr> <td>Draw original images with duplicate tiles indicated</td> <td name="final_outputImage_markedDupes">-</td> </tr>
+				</table>
+				<br>
+
+				<table class="table2" id="gc3_perf_output3">
+					<caption class="caption2">TOTAL TIME - OUTPUT</caption>
+					<tr> <td>Total time processing tiles</td>                        <td name="ts_all"                       >-</td> </tr>
+				</table>
+				<br>
+
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+
+</div>
+
+<div id="bodyFooter">
+UAM5 (2018) Nickolas Andersen (nicksen782)
+</div>
+
+<div id="entireBodyDiv"></div>
+<div id="progressbarDiv"></div>
+
+</body>
+
+</html>

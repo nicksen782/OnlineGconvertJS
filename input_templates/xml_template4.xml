@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gfx-xform version="SINGLE_TS">
+ <input file="input_templates/sampleImage4.png" type="png" tile-width="8" tile-height="8" />
+ <output file="ramtiletests1_progmem.inc" file2="ramtiletests1_c2bin.inc">
+ <tileset tilesetoutputTo="FLASH_FLASH">
+ </tileset>
+ <tiles var-name="ramtiletest1" />
+ <maps pointers-size="8">
+ <map var-name="fontset" left="1" top="1" width="16" height="4" outputTo="FLASH" />
+ <map var-name="blacktile" left="1" top="1" width="1" height="1" outputTo="NOWHERE" />
+ <map var-name="graytile" left="0" top="0" width="1" height="1" outputTo="NOWHERE" />
+ <map var-name="mushroom1up" left="1" top="5" width="2" height="2" outputTo="FLASH" />
+ <map var-name="oldman" left="3" top="5" width="2" height="2" outputTo="FLASH" />
+ <map var-name="oldwoman" left="5" top="5" width="2" height="2" outputTo="FLASH" />
+ <map var-name="bub" left="7" top="5" width="2" height="2" outputTo="FLASH" />
+ <map var-name="bob" left="9" top="5" width="2" height="2" outputTo="FLASH" />
+ <map var-name="penguin1" left="11" top="5" width="2" height="2" outputTo="FLASH" />
+ <map var-name="penguin2" left="13" top="5" width="2" height="2" outputTo="FLASH" />
+ <map var-name="penguin3" left="15" top="5" width="2" height="2" outputTo="FLASH" />
+ <map var-name="border_leaf" left="1" top="7" width="1" height="1" outputTo="FLASH" />
+ <map var-name="border_leaf2" left="2" top="7" width="1" height="1" outputTo="FLASH" />
+ <map var-name="mushroom_cursor" left="3" top="7" width="1" height="1" outputTo="FLASH" />
+ <map var-name="bg1" left="17" top="5" width="2" height="2" outputTo="FLASH" />
+ <map var-name="hollow_white_square" left="17" top="5" width="1" height="1" outputTo="FLASH" />
+ <map var-name="hollow_orange_square" left="18" top="5" width="1" height="1" outputTo="FLASH" />
+ <map var-name="hollow_red_square" left="17" top="6" width="1" height="1" outputTo="FLASH" />
+ <map var-name="hollow_blue_square" left="18" top="6" width="1" height="1" outputTo="FLASH" />
+ <map var-name="filled_white_square" left="17" top="7" width="1" height="1" outputTo="FLASH" />
+ <map var-name="filled_orange_square" left="18" top="7" width="1" height="1" outputTo="FLASH" />
+ <map var-name="filled_red_square" left="17" top="8" width="1" height="1" outputTo="FLASH" />
+ <map var-name="filled_blue_square" left="18" top="8" width="1" height="1" outputTo="FLASH" />
+
+ </maps>
+
+
+ </output>
+</gfx-xform>

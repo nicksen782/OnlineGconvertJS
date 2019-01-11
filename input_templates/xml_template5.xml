@@ -1,0 +1,34 @@
+<?xml version="1.0"?><gfx-xform version="SINGLE_TS">
+	<input file="input_templates/sampleImage5.png" type="" tile-width="8" tile-height="8" />
+	<output file="" file2="bb_ramtilemaps.inc">
+	<tileset tilesetoutputTo="BIN_BIN"></tileset>
+	<tiles var-name="bb_ramtilemaps" />
+
+	<maps pointers-size="8">
+
+	<map var-name="blacktile" left="0" top="0" width="1" height="1" outputTo="BIN" />
+	<map var-name="RTMAP_tatio1" left="36" top="14" width="8" height="3" outputTo="BIN" />
+	<map var-name="RTMAP_tatio2" left="36" top="20" width="9" height="3" outputTo="BIN" />
+	<map var-name="RTMAP_tatio3" left="36" top="26" width="7" height="3" outputTo="BIN" />
+	<map var-name="RTMAP_info1" left="36" top="3" width="30" height="3" outputTo="BIN" />
+	<map var-name="RTMAP_nicksen782" left="36" top="10" width="14" height="1" outputTo="BIN" />
+	<map var-name="RTMAP_gfBubbleF1" left="3" top="3" width="30" height="4" outputTo="BIN" />
+	<map var-name="RTMAP_gfBubbleF2" left="3" top="10" width="30" height="4" outputTo="BIN" />
+	<map var-name="RTMAP_gfBubbleF3" left="3" top="17" width="30" height="4" outputTo="BIN" />
+	<map var-name="RTMAP_gfBubbleF4" left="3" top="24" width="30" height="4" outputTo="BIN" />
+	<map var-name="RTMAP_dinos" left="3" top="31" width="30" height="5" outputTo="BIN" />
+	<map var-name="RTMAP_endingPlayersF1" left="3" top="39" width="30" height="5" outputTo="BIN" />
+	<map var-name="RTMAP_endingPlayersF2" left="3" top="47" width="30" height="5" outputTo="BIN" />
+	<map var-name="RTMAP_human" left="3" top="55" width="30" height="5" outputTo="BIN" />
+	<map var-name="RTMAP_hugs" left="3" top="63" width="30" height="5" outputTo="BIN" />
+	<map var-name="RTMAP_NICKSEN782LOGO1" left="56" top="17" width="7" height="8" outputTo="BIN" />
+	<map var-name="RTMAP_NICKSEN782LOGO2" left="56" top="28" width="7" height="8" outputTo="BIN" />
+	<map var-name="RTMAP_NICKSEN782LOGO3" left="56" top="39" width="7" height="8" outputTo="BIN" />
+	<map var-name="RTMAP_NICKSEN782LOGO4" left="56" top="50" width="7" height="8" outputTo="BIN" />
+	<map var-name="RTMAP_NICKSEN782LOGO5" left="56" top="61" width="7" height="8" outputTo="BIN" />
+	<map var-name="RTMAP_ThankYouDance" left="3" top="73" width="30" height="24" outputTo="BIN" />
+
+	</maps>
+
+	</output>
+</gfx-xform>
