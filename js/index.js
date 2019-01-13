@@ -398,8 +398,6 @@ gc.funcs.UAM = {
 	// * Show UAM.
 	disableUAM        : function(){
 		gc.vars.originUAM      = false;
-		gc.vars.uamwindow      = undefined;
-		gc.vars.uamwindow_objs = undefined;
 
 		document.querySelectorAll(".uamOnly").forEach(function(d,i,a){
 			d.classList.add("unavailableView");
@@ -472,9 +470,12 @@ gc.funcs.UAM = {
 		entireBodyDiv.addEventListener("click", onClickListener, false);
 
 		// Show the specified modal.
-		gc.vars.dom.uamLogin["uamModal"].classList.add("active");
-		iframe.src=url;
 		uamModal.appendChild(iframe);
+		iframe.onload=function(){
+			iframe.onload=null;
+			gc.vars.dom.uamLogin["uamModal"].classList.add("active");
+		};
+		iframe.src=url;
 
 	},
 
