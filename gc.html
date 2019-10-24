@@ -263,17 +263,18 @@ gConvert JS (v3)
 				<canvas id="gc3_mapedit_image" width="128" height="128"></canvas>
 				<canvas id="gc3_mapedit_image_layer2" width="128" height="128"></canvas>
 
-				<div id="mapEdit_creationInstructions">
-					<div class="gc3_colHeader">Map Creation Instructions</div>
-					<ul>
-						<li>Select a map record from the list.</li>
-						<li>Set the width and height for the new map.</li>
-						<li>Hover over where the map would be in the source image.</li>
-						<li>Double-click right there to load the coordinates into the selected map record.</li>
-					</ul>
-				</div>
-
 			</div>
+
+			<div id="mapEdit_creationInstructions">
+				<div class="gc3_colHeader">Map Creation Instructions</div>
+				<ul>
+					<li>Select a map record from the list.</li>
+					<li>Set the width and height for the new map.</li>
+					<li>Hover over where the map would be in the source image.</li>
+					<li>Double-click right there to load the coordinates into the selected map record.</li>
+				</ul>
+			</div>
+
 		</div>
 
 		<!--Section window-->
@@ -444,10 +445,12 @@ gConvert JS (v3)
 			<div class="sectionWindow_content">
 				<table class="table1" id="gc3_output_downloadsTable">
 					<caption></caption>
-					<tr>
-						<td> <input type="button" id="gc3_output_UAM_saveProgmem_btn"         value="Save PROGMEM to UAM dir"> </td>
-						<td> <input type="button" id="gc3_output_UAM_saveC2bin_btn"           value="Save C2BIN to UAM dir"> </td>
-					</tr>
+						<tr> <td colspan="2"> <input type="button" id="gc3_output_UAM_saveProgmem_btn"  value="Save PROGMEM to UAM dir"> </td>  </tr>
+						<tr> <td colspan="2"> <input type="button" id="gc3_output_UAM_saveC2bin_btn"    value="Save C2BIN to UAM dir"> </td>    </tr>
+						<tr>
+							<td colspan="1"> <input type="button" id="gc3_output_UAM_runC2BIN_btn" value="Run C2BIN"> </td>
+							<td colspan="1"> <input type="button" id="gc3_output_UAM_updateAssets_btn" value="Copy assets to src/assets"> </td>
+						</tr>
 				</table>
 			</div>
 		</div>
@@ -555,6 +558,7 @@ UAM5 (2018) Nickolas Andersen (nicksen782)
 
 <div id="entireBodyDiv"></div>
 <div id="progressbarDiv"></div>
+<div id="c2bin_modal"></div>
 
 </body>
 

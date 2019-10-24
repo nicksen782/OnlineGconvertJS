@@ -14,6 +14,14 @@ ini_set("display_errors", 1);
 define('TIMEZONE', 'America/Detroit');
 date_default_timezone_set(TIMEZONE);
 
+$_appdir      = getcwd().'/'                  ;
+$_db_file     = $_appdir . "../_sys/UAM5b.db" ;
+$_emu_db_file = $_appdir . "_sys/eud.db"      ;
+$_db          = $_db_file                     ;
+
+$emu_dir = __DIR__ . '/';
+$emu_games_dir = $emu_dir . '/games/';
+
 // Look for UAM. It should be one directory back.
 $filename = "../UAMVER.TXT";
 $UAMFOUND = false;
@@ -96,11 +104,14 @@ function API_REQUEST( $api, $type ){
 	$o_values["gc_init"]                = [ "p"=>( ( $public) ? 1 : 0 ), "args"=>[] ] ;
 
 	// GCONVERT FUNCTIONS - (UAM)
-	$o_values["getGamesAndXmlFilepathsViaUserId"] = [ "p"=>( ( $public) ? 1 : 0 ), "args"=>[] ] ;
-	$o_values["gc_updateXmlFile"]                 = [ "p"=>( ( $public) ? 1 : 0 ), "args"=>[] ] ;
-	$o_values["gc_updateImgFile"]                 = [ "p"=>( ( $public) ? 1 : 0 ), "args"=>[] ] ;
-	$o_values["uam_saveProgmem"]                  = [ "p"=>( ( $public) ? 1 : 0 ), "args"=>[] ] ;
-	$o_values["uam_saveC2bin"]                    = [ "p"=>( ( $public) ? 1 : 0 ), "args"=>[] ] ;
+	$o_values["getGamesAndXmlFilepathsViaUserId"] = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
+	$o_values["gc_updateXmlFile"]                 = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
+	$o_values["gc_updateImgFile"]                 = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
+	$o_values["uam_saveProgmem"]                  = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
+	$o_values["uam_saveC2bin"]                    = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
+	$o_values["uam_updateAssets"]                 = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
+
+	$o_values["uam_runC2BIN"]                 = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
 
 
 	// DETERMINE IF THE API IS AVAILABLE TO THE USER.
@@ -166,58 +177,384 @@ function gc_init(){
 }
 
 
+// * Get XML file names from indicated games' UAM dir.
 function getGamesAndXmlFilepathsViaUserId(){
+	$author_user_id = $_POST["user_id"];
+
+	global $_appdir;
+	global $_db_file;
+	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
+	$s_SQL1  ="
+SELECT
+	  gameId
+	, gameName
+	, UAMdir
+
+	--, author_user_id
+	--, author
+	--, gamedir
+	--, created
+	--, last_update
+FROM games_manifest
+WHERE author_user_id = :author_user_id
+ORDER BY last_update DESC
+	;";
+	$prp1    = $dbhandle->prepare($s_SQL1);
+	$dbhandle->bind(':author_user_id' , $author_user_id ) ;
+	$retval1 = $dbhandle->execute();
+	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
+	// echo json_encode($results1);
+	// exit();
+	// You have the gameIds, gameNames, and UAMdirs. You need the XML filenames in the XML dir of the game's UAM dir.
+	$results2 = [];
+
+	for($i=0; $i<sizeof($results1); $i+=1){
+		$directory = $results1[$i]["UAMdir"] . "/XML";
+		$gameId = $results1[$i]["gameId"];
+		$gameName = $results1[$i]["gameName"];
+
+		// Scan the dir. Get the file names that have the XML extension.
+		$scanned_directory = array_values(
+			array_diff(
+				scandir($_SERVER["DOCUMENT_ROOT"] . "/" . $directory
+			)
+			, array('..', '.', '.git')
+			)
+		);
+
+		for($ii=0; $ii<sizeof($scanned_directory); $ii++){
+			// Don't include dirs.
+			if( ! is_dir($_SERVER["DOCUMENT_ROOT"] . "/" . $directory.'/'.$scanned_directory[$ii]) ){
+				array_push($results2,
+					[
+						// "fullpath" => $_SERVER["DOCUMENT_ROOT"] . "/" . $directory.'/'.$scanned_directory[$ii] ,
+						"webpath"  => "/".$directory.'/'.$scanned_directory[$ii] ,
+						"filename" => $scanned_directory[$ii]                ,
+						"gameid"   => $gameId                                  ,
+						"gamename" => $gameName                              ,
+						// "label"    => $gameName . " - "  .$scanned_directory[$ii]       ,
+					]
+				);
+			}
+		}
+
+	}
+
+	//
+
 	echo json_encode(array(
-		'data'       => []        ,
-		'success'    => true      ,
-		'$results1'    => []      ,
-		'$results2'    => []      ,
+		'data'      => [] ,
+		'success'   => true      ,
 
-
-		// DEBUG
-		'$_POST'     => $_POST      ,
+		'$_POST'    => $_POST    ,
+		'$results1' => $results1 ,
+		'$results2' => $results2 ,
 	) );
+
 }
 
+// * Update XML file.
 function gc_updateXmlFile(){
-	echo json_encode(array(
-		'data'       => []        ,
-		'success'    => true      ,
+	$filename = $_POST["filename"] ;
+	$gameid   = $_POST["gameid"]  ;
+	$userFile = $_POST["userFile"];
 
-		// DEBUG
-		'$_POST'     => $_POST      ,
+	// Get the game's UAMdir.
+	global $_appdir;
+	global $_db_file;
+	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
+	$s_SQL1  ="
+SELECT
+	UAMdir
+FROM games_manifest
+WHERE gameid = :gameid
+ORDER BY last_update DESC
+	;";
+	$prp1    = $dbhandle->prepare($s_SQL1);
+	$dbhandle->bind(':gameid' , $gameid ) ;
+	$retval1 = $dbhandle->execute();
+	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
+
+	if(!sizeof($results1)){
+		echo json_encode([
+			'data'    => "Game not found in the UAM database.",
+			'success' => false
+		]);
+		exit();
+	}
+
+	$directory = $_SERVER["DOCUMENT_ROOT"] . "/" . $results1[0]["UAMdir"] . "/XML";
+	file_put_contents( $directory . "/" . $filename, $userFile );
+
+	echo json_encode(array(
+		'data'       => []         ,
+		'success'    => true       ,
 	) );
+
 }
 
+// * Get IMG file names from indicated games' UAM dir.
 function gc_updateImgFile(){
-	echo json_encode(array(
-		'data'       => []        ,
-		'success'    => true      ,
+	$filename = $_POST["filename"] ;
+	$gameid   = $_POST["gameid"]  ;
+	$userFile = $_POST["userFile"];
 
-		// DEBUG
-		'$_POST'     => $_POST      ,
+	// Get the game's UAMdir.
+	global $_appdir;
+	global $_db_file;
+	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
+	$s_SQL1  ="
+SELECT
+	UAMdir
+FROM games_manifest
+WHERE gameid = :gameid
+ORDER BY last_update DESC
+	;";
+	$prp1    = $dbhandle->prepare($s_SQL1);
+	$dbhandle->bind(':gameid' , $gameid ) ;
+	$retval1 = $dbhandle->execute();
+	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
+
+	if(!sizeof($results1)){
+		echo json_encode([
+			'data'    => "Game not found in the UAM database.",
+			'success' => false
+		]);
+		exit();
+	}
+
+	$directory = $_SERVER["DOCUMENT_ROOT"] . "/" . $results1[0]["UAMdir"] . "/IMG";
+
+	$userFile = str_replace('data:image/png;base64,', '', $userFile);
+	$userFile = str_replace(' ', '+', $userFile);
+	$userFile = base64_decode($userFile);
+
+	file_put_contents( $directory . "/" . $filename, $userFile );
+
+	echo json_encode(array(
+		'data'       => []         ,
+		'success'    => true       ,
 	) );
+
 }
 
+//
 function uam_saveProgmem(){
-	echo json_encode(array(
-		'data'       => []        ,
-		'success'    => true      ,
+	$filename = $_POST["filename"] ;
+	$gameid   = $_POST["gameid"]  ;
+	$userFile = $_POST["userFile"];
 
-		// DEBUG
-		'$_POST'     => $_POST      ,
+	// Get the game's UAMdir.
+	global $_appdir;
+	global $_db_file;
+	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
+	$s_SQL1  ="
+SELECT
+	UAMdir
+FROM games_manifest
+WHERE gameid = :gameid
+ORDER BY last_update DESC
+	;";
+	$prp1    = $dbhandle->prepare($s_SQL1);
+	$dbhandle->bind(':gameid' , $gameid ) ;
+	$retval1 = $dbhandle->execute();
+	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
+
+	if(!sizeof($results1)){
+		echo json_encode([
+			'data'    => "Game not found in the UAM database.",
+			'success' => false
+		]);
+		exit();
+	}
+
+	$directory = $_SERVER["DOCUMENT_ROOT"] . "/" . $results1[0]["UAMdir"] . "/PROGMEM";
+
+	$res = file_put_contents( $directory . "/" . $filename, $userFile );
+
+	echo json_encode(array(
+		'data'       => []         ,
+		'success'    => true       ,
+
+		// // '$_POST'     => $_POST     ,
+		// '$results1'  => $results1  ,
+		// '$directory' => $directory ,
+		// '$gameid'    => $gameid    ,
+		// '$res'    => $res    ,
+
 	) );
 }
 
-function uam_saveC2bin(){
-	echo json_encode(array(
-		'data'       => []        ,
-		'success'    => true      ,
+//
+function uam_saveC2bin()  {
+	$filename = $_POST["filename"] ;
+	$gameid   = $_POST["gameid"]  ;
+	$userFile = $_POST["userFile"];
 
-		// DEBUG
-		'$_POST'     => $_POST      ,
+	// Get the game's UAMdir.
+	global $_appdir;
+	global $_db_file;
+	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
+	$s_SQL1  ="
+SELECT
+	UAMdir
+FROM games_manifest
+WHERE gameid = :gameid
+ORDER BY last_update DESC
+	;";
+	$prp1    = $dbhandle->prepare($s_SQL1);
+	$dbhandle->bind(':gameid' , $gameid ) ;
+	$retval1 = $dbhandle->execute();
+	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
+
+	if(!sizeof($results1)){
+		echo json_encode([
+			'data'    => "Game not found in the UAM database.",
+			'success' => false
+		]);
+		exit();
+	}
+
+	$directory = $_SERVER["DOCUMENT_ROOT"] . "/" . $results1[0]["UAMdir"] . "/C2BIN";
+
+	file_put_contents( $directory . "/" . $filename, $userFile );
+
+	echo json_encode(array(
+		'data'       => []         ,
+		'success'    => true       ,
+
+		// '$results1'  => $results1  ,
+		// '$directory' => $directory ,
+		// '$_POST'     => $_POST     ,
+		// '$gameid'    => $gameid    ,
+
 	) );
+
 }
+
+function uam_updateAssets()  {
+	// $filename = $_POST["filename"] ;
+	$gameid   = $_POST["gameid"]  ;
+	// $userFile = $_POST["userFile"];
+
+	// Get the game's UAMdir.
+	global $_appdir;
+	global $_db_file;
+	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
+	$s_SQL1  ="
+SELECT
+	UAMdir
+FROM games_manifest
+WHERE gameid = :gameid
+ORDER BY last_update DESC
+	;";
+	$prp1    = $dbhandle->prepare($s_SQL1);
+	$dbhandle->bind(':gameid' , $gameid ) ;
+	$retval1 = $dbhandle->execute();
+	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
+
+	if(!sizeof($results1)){
+		echo json_encode([
+			'data'    => "Game not found in the UAM database.",
+			'success' => false
+		]);
+		exit();
+	}
+
+	$directory = $_SERVER["DOCUMENT_ROOT"] . "/" . $results1[0]["UAMdir"] . "";
+	$assetsDir = $directory . "/../src/assets/";
+
+	// file_put_contents( $directory . "/" . $filename, $userFile );
+	// Copy the files in PROGMEM, C2BIN, and MUSIC.
+	$script1 = "cp -rf " . $directory . "/" . "PROGMEM/* "        . $assetsDir . " 2>&1 ";
+	$script2 = "cp -rf " . $directory . "/" . "C2BIN/OUTPUT/* "   . $assetsDir . " 2>&1 ";
+	$script3 = "cp -rf " . $directory . "/" . "MUSIC/* "          . $assetsDir . " 2>&1 ";
+	$script4 = "echo DONE 2>&1 ";
+
+	$output1 = shell_exec($script1);
+	$output2 = shell_exec($script2);
+	$output3 = shell_exec($script3);
+	$output4 = shell_exec($script4);
+
+	echo json_encode(array(
+		'data'       => []         ,
+		'success'    => true       ,
+		// '$script1'    => $script1       ,
+		// '$script2'    => $script2       ,
+		// '$script3'    => $script3       ,
+		// '$script4'    => $script4       ,
+
+		// '$results1'  => $results1  ,
+		// '$directory' => $directory ,
+		// '$_POST'     => $_POST     ,
+		// '$gameid'    => $gameid    ,
+		// '$output1'   => $output1   ,
+		// '$output2'   => $output2   ,
+		// '$output3'   => $output3   ,
+		// '$output4'   => $output4   ,
+
+	) );
+
+}
+
+function uam_runC2BIN()  {
+	// $filename = $_POST["filename"] ;
+	$gameid   = $_POST["gameid"]  ;
+	// $userFile = $_POST["userFile"];
+
+	// Get the game's UAMdir.
+	global $_appdir;
+	global $_db_file;
+	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
+	$s_SQL1  ="
+SELECT
+	UAMdir
+FROM games_manifest
+WHERE gameid = :gameid
+ORDER BY last_update DESC
+	;";
+	$prp1    = $dbhandle->prepare($s_SQL1);
+	$dbhandle->bind(':gameid' , $gameid ) ;
+	$retval1 = $dbhandle->execute();
+	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
+
+	if(!sizeof($results1)){
+		echo json_encode([
+			'data'    => "Game not found in the UAM database.",
+			'success' => false
+		]);
+		exit();
+	}
+
+	$directory = $_SERVER["DOCUMENT_ROOT"] . "/" . $results1[0]["UAMdir"] . "";
+	$assetsDir = $directory . "/../src/assets/";
+
+	// file_put_contents( $directory . "/" . $filename, $userFile );
+	// Run the C2BIN script.
+	$script1 = "$directory" . "/C2BIN/c2bin_runit.sh" . " 2>&1 ";
+	// $script2 = "echo DONE 2>&1 ";
+
+	$output1 = shell_exec($script1);
+	// $output2 = shell_exec($script2);
+
+	echo json_encode(array(
+		'data'       => []         ,
+		'success'    => true       ,
+
+		'script1'   => $script1       ,
+		// '$script2'   => $script2       ,
+		'output1'   => $output1   ,
+		// '$output2'   => $output2   ,
+
+		// '$results1'  => $results1  ,
+		// '$directory' => $directory ,
+		// '$_POST'     => $_POST     ,
+		// '$gameid'    => $gameid    ,
+
+	) );
+
+}
+
 
 
 ?>

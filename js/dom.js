@@ -163,6 +163,8 @@ gc.funcs.domHandleCache_populate_UAM = function(){
 		// UAM DOM: OUTPUT
 		gc.vars.dom.output.saveProgmem_btn    = document.querySelector("#gc3_output_UAM_saveProgmem_btn") ;
 		gc.vars.dom.output.saveC2bin_btn      = document.querySelector("#gc3_output_UAM_saveC2bin_btn")   ;
+		 gc.vars.dom.output.runC2BIN_btn       = document.querySelector("#gc3_output_UAM_runC2BIN_btn")   ;
+		gc.vars.dom.output.updateAssets_btn   = document.querySelector("#gc3_output_UAM_updateAssets_btn")   ;
 	}
 	if(gc.vars.originUAM==true){
 		gc.vars.dom.uamLogin     = {};

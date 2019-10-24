@@ -226,6 +226,12 @@ gc.funcs.UAM = {
 			gc.funcs.shared.serverRequest(formData).then(
 				function(res){
 					// console.log("SUCCESS:", res);
+
+					if(res.success == false){
+						console.log("An error has occurred.\n\n"+res.data);
+						alert      ("An error has occurred.\n\n"+res.data);
+					}
+
 				},
 				function(res){
 					console.log("FAILURE:", res);
@@ -264,6 +270,11 @@ gc.funcs.UAM = {
 			gc.funcs.shared.serverRequest(formData).then(
 				function(res){
 					// console.log("SUCCESS:", res);
+
+					if(res.success == false){
+						console.log("An error has occurred.\n\n"+res.data);
+						alert      ("An error has occurred.\n\n"+res.data);
+					}
 				},
 				function(res){
 					console.log("FAILURE:", res);
@@ -275,7 +286,13 @@ gc.funcs.UAM = {
 	output : {
 		// * Saves the PROGMEM data to the server.
 		uam_saveProgmem : function(){
-			let filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file"];
+			let filename = "";
+			try{ filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file"]; }
+			catch(e){
+				// console.log("ERROR: No XML file is loaded.");
+				alert      ("ERROR: No XML file is loaded.");
+				return;
+			}
 
 			if(filename!=undefined){
 				filename = filename.split("/");
@@ -300,6 +317,12 @@ gc.funcs.UAM = {
 			let gameid   = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gameid");
 			let gamename = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gamename");
 
+			if(!gamename){
+				// console.log("ERROR: No game was selected.");
+				alert      ("ERROR: No game was selected.");
+				return;
+			}
+
 			let conf = confirm(
 				"About to update file.\n" +
 				"    FILE: " + filename + "\n" +
@@ -320,6 +343,10 @@ gc.funcs.UAM = {
 			gc.funcs.shared.serverRequest(formData).then(
 				function(res){
 					// console.log("SUCCESS:", res);
+					if(res.success == false){
+						console.log("An error has occurred.\n\n"+res.data);
+						alert      ("An error has occurred.\n\n"+res.data);
+					}
 				},
 				function(res){
 					console.log("FAILURE:", res);
@@ -329,7 +356,13 @@ gc.funcs.UAM = {
 		},
 		// * Saves the C2BIN data to the server.
 		uam_saveC2bin   : function(){
-			let filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file2"];
+			let filename = "";
+			try{ filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file2"]; }
+			catch(e){
+				// console.log("ERROR: No XML file is loaded.");
+				alert      ("ERROR: No XML file is loaded.");
+				return;
+			}
 
 			if(filename!=undefined){
 				filename = filename.split("/");
@@ -353,6 +386,12 @@ gc.funcs.UAM = {
 			let gameid = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gameid");
 			let gamename = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gamename");
 
+			if(!gamename){
+				// console.log("ERROR: No game was selected.");
+				alert      ("ERROR: No game was selected.");
+				return;
+			}
+
 			let conf = confirm(
 				"About to update file.\n" +
 				"    FILE: " + filename + "\n" +
@@ -373,13 +412,129 @@ gc.funcs.UAM = {
 			gc.funcs.shared.serverRequest(formData).then(
 				function(res){
 					// console.log("SUCCESS:", res);
+					if(res.success == false){
+						console.log("An error has occurred.\n\n"+res.data);
+						alert      ("An error has occurred.\n\n"+res.data);
+					}
 				},
 				function(res){
 					console.log("FAILURE:", res);
 				}
 			);
 
-		}
+		},
+
+		//
+		uam_updateAssets: function(){
+			let uam_gameList_select = gc.vars.dom.input.uam_gameList_select;
+			let gameid = uam_gameList_select.options[uam_gameList_select.selectedIndex].getAttribute("gameid");
+			let gamename = uam_gameList_select.options[uam_gameList_select.selectedIndex].getAttribute("gamename");
+
+			if(!gamename){
+				// console.log("ERROR: No game was selected.");
+				alert      ("ERROR: No game was selected.");
+				return;
+			}
+
+			let conf = confirm(
+				"About to update the assets in:.\n" +
+				"    GAME: " + gamename + "\n" +
+				"Continue?"
+			);
+
+			if(!conf){ return; }
+
+			//
+			var formData = {
+				"o"        : "uam_updateAssets" ,
+				// "userFile" : c2binTextarea.value ,
+				"gameid"   : gameid   ,
+				// "filename" : filename ,
+				"_config"  : { "processor":"gc_p.php" }
+			};
+
+			gc.funcs.shared.serverRequest(formData).then(
+				function(res){
+					// console.log("SUCCESS:", res);
+					if(res.success == false){
+						console.log("An error has occurred.\n\n"+res.data);
+						alert      ("An error has occurred.\n\n"+res.data);
+					}
+				},
+				function(res){
+					console.log("FAILURE:", res);
+				}
+			);
+
+		},
+
+		uam_runC2BIN: function(){
+			let uam_gameList_select = gc.vars.dom.input.uam_gameList_select;
+			let gameid = uam_gameList_select.options[uam_gameList_select.selectedIndex].getAttribute("gameid");
+			let gamename = uam_gameList_select.options[uam_gameList_select.selectedIndex].getAttribute("gamename");
+
+			if(!gamename){
+				// console.log("ERROR: No game was selected.");
+				alert      ("ERROR: No game was selected.");
+				return;
+			}
+
+			let conf = confirm(
+				"About to run C2BIN for:.\n" +
+				"    GAME: " + gamename + "\n" +
+				"Continue?"
+			);
+
+			if(!conf){ return; }
+
+			//
+			var formData = {
+				"o"        : "uam_runC2BIN" ,
+				"gameid"   : gameid   ,
+				"_config"  : { "processor":"gc_p.php" }
+			};
+
+			var dest = document.querySelector("#c2bin_modal");
+			var newhtml="";
+
+			gc.funcs.shared.serverRequest(formData).then(
+				function(res){
+					console.log("SUCCESS:", res);
+
+					newhtml+="<div>";
+					newhtml+="Results from: " + res.script1;
+					newhtml+="</div>";
+
+					newhtml+="<textarea>";
+					newhtml+=res.output1;
+					newhtml+="</textarea>";
+
+					dest.innerHTML=newhtml;
+					setTimeout(function(){ gc.funcs.shared.showC2BIN_modal(true); }, 250);
+
+					if(res.success == false){
+						console.log("An error has occurred.\n\n"+res.data);
+						alert      ("An error has occurred.\n\n"+res.data);
+					}
+				},
+				function(res){
+					console.log("FAILURE:", res);
+
+					newhtml+="<div>";
+					newhtml+="Results from: " + res.script1;
+					newhtml+="</div>";
+
+					newhtml+="<textarea>";
+					newhtml+=res.output1;
+					newhtml+="</textarea>";
+
+					dest.innerHTML=newhtml;
+					setTimeout(function(){ gc.funcs.shared.showC2BIN_modal(true); }, 250);
+				}
+			);
+
+		},
+
 	},
 
 	// * Hide UAM.
@@ -505,6 +660,13 @@ gc.funcs.UAM = {
 
 		// UAM: saveC2bin_btn
 		gc.vars.dom.output.saveC2bin_btn      .addEventListener('click', gc.funcs.UAM.output.uam_saveC2bin, false);
+
+		// UAM: updateAssets_btn
+		gc.vars.dom.output.updateAssets_btn   .addEventListener('click', gc.funcs.UAM.output.uam_updateAssets, false);
+
+
+		// UAM: runC2BIN_btn
+		gc.vars.dom.output.runC2BIN_btn       .addEventListener('click', gc.funcs.UAM.output.uam_runC2BIN, false);
 	}
 
 };
@@ -621,23 +783,17 @@ gc.funcs.downloads={
 
 				featureDetection.funcs.applyFeatures_fromList([ "JSZip", "FileSaver" ]).then(
 					 function(success){
-					 	// console.log("SUCCESS:", success);
-					 	// resolve();
 						// Zip it all up!
 						gc.funcs.downloads.downloadZipFileFromRAM(res, res).then(
 							 function(success){
-							 	// console.log("SUCCESS:", success);
-							 	// resolve();
 							 }
 							,function(error){
 							 	console.log("ERROR:", error);
-							 	// reject();
 							}
 						);
 					 }
 					,function(error){
 					 	console.log("ERROR:", error);
-					 	// reject();
 					}
 				)
 
@@ -794,6 +950,11 @@ gc.funcs.shared={
 					default               : { data = this.responseText ; break; }
 				}
 
+				// Required for IE.
+				if (formData._config.responseType == "json" && typeof data == "string") {
+					data = JSON.parse(data);
+				}
+
 				resolve(data);
 			} ;
 			var transferFailed   = function(evt)    {
@@ -911,6 +1072,26 @@ gc.funcs.shared={
 			entireBodyDiv.removeEventListener("click", onClickListener, false);
 		}
 	},
+	// * Show/hide the progress bar. Used by serverRequest.
+	showC2BIN_modal  : function(turnItOn) {
+		let onClickListener = function(){ gc.funcs.shared.showC2BIN_modal(false); };
+
+		let c2bin_modal = document.querySelector("#c2bin_modal");
+		let entireBodyDiv  = document.querySelector("#entireBodyDiv");
+
+		// Activate the progress bar and screen darkener.
+		if (turnItOn === true) {
+			entireBodyDiv.classList.add("active");
+			c2bin_modal.classList.add("active");
+			entireBodyDiv.addEventListener("click", onClickListener, false);
+		}
+		// De-activate the progress bar and screen darkener.
+		else if (turnItOn === false) {
+			entireBodyDiv.classList.remove("active");
+			c2bin_modal.classList.remove("active");
+			entireBodyDiv.removeEventListener("click", onClickListener, false);
+		}
+	},
 	// * Get a file as-is via a url.
 	getFile_fromUrl : function(url){
 		return new Promise(function(resolve, reject) {
@@ -955,7 +1136,7 @@ gc.funcs.shared={
 				img.onload=null;
 				resolve(img);
 			};
-			img.src = url ;
+			img.src = url  + "?r=" + (new Date()).getTime(); ;
 		});
 
 		// img_prom.then(function(img){
@@ -1306,7 +1487,7 @@ gc.funcs.quickNav={
 gc.funcs.input={
 	// * Reset inputs.
 	reset_inputs : function(){
-		if( gc.vars.originUAM == true ){
+		if( gc.vars.originUAM == true && gc.vars.UAM_active ){
 			gc.vars.dom.input.uam_gameList_select.value="";
 
 			gc.vars.dom.input.uam_xmlList_select.value="";
@@ -1549,11 +1730,11 @@ gc.funcs.input={
 	  	if(src == 'testdata'){
 		  	elem           = gc.vars.dom.input.selectTestData;
 		  	selectedOption = elem.options[elem.selectedIndex];
-		  	url            = selectedOption.getAttribute('url');
+		  	url            = selectedOption.getAttribute('url') + "?r=" + (new Date()).getTime();url;
 
 		  	gc.funcs.input.reset_inputs();
 
-			if( gc.vars.originUAM == true ){
+			if( gc.vars.originUAM == true && gc.vars.UAM_active ){
 			  	gc.vars.dom.input.uam_imgName.setAttribute("gameid", "");
 			  	gc.vars.dom.input.uam_imgName.setAttribute("gamename", "");
 			}
@@ -1561,7 +1742,7 @@ gc.funcs.input={
 	  	else if(src=='uam'){
 		  	elem           = gc.vars.dom.input.uam_xmlList_select;
 		  	selectedOption = elem.options[elem.selectedIndex];
-		  	url            = selectedOption.getAttribute('webpath');
+		  	url            = selectedOption.getAttribute('webpath') + "?r=" + (new Date()).getTime();
 
 		  	gc.vars.dom.input.uam_imgName.setAttribute("gameid", selectedOption.getAttribute("gameid"));
 	  	}
@@ -1879,10 +2060,21 @@ gc.funcs.input={
 
 			gc.vars.dom.input.xml.value = newXml ;
 
+			var invalidImageWidth  = (imgWidth  % tileWidth  !=0) ? 1 : 0 ;
+			var invalidImageHeight = (imgHeight % tileHeight !=0) ? 1 : 0 ;
+
 			// DEBUG:
 			if     (missingKeyMaps.length) { console.log("missingKeyMaps", missingKeyMaps); reject('One or more tilemaps are missing required attributes.'); }
 			else if(missingValues.length)  { console.log("missingValues" , missingValues);  reject('One or more required keys are missing.'); }
 			else if(oobMaps.length)        { console.log("oobMaps"       , oobMaps);        reject('One or more tilemaps are out of bounds.'); }
+			else if(invalidImageWidth) {
+				console.log("invalidImageWidth:", invalidImageWidth);
+				reject('Dimensions of the image are incorrect. (Invalid image width.)');
+			}
+			else if(invalidImageHeight) {
+				console.log("invalidImageHeight:", invalidImageHeight);
+				reject('Dimensions of the image are incorrect. (Invalid image height.)');
+			}
 			else{
 				resolve('Validation has passed!');
 			}
@@ -2204,7 +2396,17 @@ gc.funcs.input={
 		gc.vars.dom.input.loadImg_file        .addEventListener('change', gc.funcs.input.loadImg, false);
 
 		// ACTION: Load into the Map Editor (button)
-		gc.vars.dom.input.goToMapEditor       .addEventListener('click', gc.funcs.input.goToMapEditor, false);
+		gc.vars.dom.input.goToMapEditor       .addEventListener('click',
+			function(){
+				gc.funcs.input.goToMapEditor()
+				.then(
+					function(res)  { },
+					function(error){
+						console.log("error:", error);
+					}
+				);
+			}
+		, false);
 
 		// ACTION: Re-validate (button)
 		gc.vars.dom.input.validate1           .addEventListener('click', gc.funcs.input.validate, false);
@@ -2215,6 +2417,11 @@ gc.funcs.input={
 		gc.vars.dom.input.xml_multi_batch_btn .addEventListener('click', gc.funcs.input.multi_process, false);
 
 		// Double-click and paste image upload
+		gc.vars.dom.input.canvas              .addEventListener('dblclick', function(){
+				// console.log("Double-clicked!");
+				gc.vars.dom.input.canvas_inputText.value = "";
+				gc.vars.dom.input.canvas_inputText.focus();
+			}, false);
 		gc.vars.dom.input.canvas_inputText    .addEventListener('paste', gc.funcs.input.drawPastedImage, false);
 
 		// Download input xml
@@ -2807,7 +3014,10 @@ gc.funcs.maps={
 		gc.vars.dom.maps.maps_addNew_btn     .addEventListener('click', gc.funcs.maps.mapsList_addRow_blank, false);
 
 		// * Start over by re-processing the data in the INPUT section.
-		gc.vars.dom.maps.maps_startOver_btn  .addEventListener('click', function(){ if( confirm("Are you sure that you want reset the data in the map editor?") ) { gc.funcs.input.goToMapEditor(); } }, false);
+		gc.vars.dom.maps.maps_startOver_btn  .addEventListener('click', function(){
+			if( confirm("Are you sure that you want reset the data in the map editor?") ) {
+				gc.funcs.input.goToMapEditor();
+			} }, false);
 
 		// * Update the XML data in the INPUT section.
 		gc.vars.dom.maps.maps_updateInput_btn.addEventListener('click', function(){ if( confirm("Are you sure that you want to update the input XML?")          ) { gc.funcs.maps.recreateJSONandXML(true); } }, false);
@@ -3165,6 +3375,12 @@ gc.funcs.output={
 
 	}
 	,tilesetText                   : function(tileset, tilesetName, tilesetOutputTo){
+		// console.log(
+		// 	"tileset        :", tileset        , "\n",
+		// 	// "tilesetName    :", tilesetName    , "\n",
+		// 	// "tilesetOutputTo:", tilesetOutputTo, "\n",
+		// 	""
+		// );
 		var text_tileset = "";
 		var tileWidth                = parseInt(gc.vars.settings.output.jsonObj["gfx-xform"]["input"]['@tile-width'], 10);
 		var tileHeight               = parseInt(gc.vars.settings.output.jsonObj["gfx-xform"]["input"]['@tile-height'], 10);
@@ -3179,8 +3395,11 @@ gc.funcs.output={
 			// Indent.
 			text_tileset += " ";
 
+			// Generate the comment text for the usage count of the tile id.
+			let usage = "[ USED: " + (tileset[tileIndex].timesUsed).toString().padEnd(3, " ") + " ]";
+
 			// Comment for start of tile.
-			text_tileset += " /*[ TILE #" + tileIndex.toString().padStart(3, " ") + " ]*/ ";
+			text_tileset += " /*[ TILE #" + tileIndex.toString().padStart(3, " ") + " ] "+usage+"*/ ";
 
 			// Output the data bytes for this tile.
 			a.data.map(function(data, dataIndex, dataArray){
@@ -3231,12 +3450,19 @@ gc.funcs.output={
 		var text_mapset_C2BIN   = "";
 		var progmem=false;
 
+		function countUniqueTileIdsInMap(map) {
+			// console.log(map);
+			return new Set( map.reduced_tilesUsed ).size;
+		}
+
 		function makeATileMap(map, progmem, pointersSize){
 			// Start the text string for the map.
 			var text ="";
 
 			// Put the define for the map.
-			text += "#define "+map["@var-name"].toUpperCase()+"_SIZE "+(2+(map["@width"]*map["@height"]))+"\n";
+			text += "#define "+map["@var-name"].toUpperCase()+"_SIZE "+(2+(map["@width"]*map["@height"]));
+			text += " // " + countUniqueTileIdsInMap(map) + " of " + map.reduced_tilesUsed.length + " are unique in this map.";
+			text +="\n";
 
 			var dataType;
 			if     (pointersSize==8) { dataType="char"; }
@@ -3285,7 +3511,7 @@ gc.funcs.output={
 			if     ( a["@mapOutputTo"]=="PROGMEM" ){ progmem=true ; text_mapset_PROGMEM += makeATileMap(a, progmem, pointersSize); }
 			else if( a["@mapOutputTo"]=="SKIPMAP" ){ progmem=true ; text_mapset_SKIPMAP += makeATileMap(a, progmem, pointersSize); }
 			else if( a["@mapOutputTo"]=="NOWHERE" ){ progmem=true ; text_mapset_NOWHERE += makeATileMap(a, progmem, pointersSize); }
-			else if( a["@mapOutputTo"]=="C2BIN"   ){ progmem=false; text_mapset_C2BIN   += makeATileMap(a, progmem, pointersSize); }
+			else if( a["@mapOutputTo"]=="C2BIN"   ){ progmem=false; text_mapset_C2BIN   += makeATileMap(a, progmem, 16); }
 			else                          {
 				// progmem=true ; text_mapset_PROGMEM += makeATileMap(a, progmem, pointersSize);
 				console.log("The 'mapOutputTo' attribute did not have a match. This is a bug. Please report it to the application author. ", a);
@@ -3304,6 +3530,14 @@ gc.funcs.output={
 	,final_outputText              : function(obj, dontClearTextareas, dstFile, dstFile2){
 		var text_tileset_PROGMEM = obj.text_tileset_PROGMEM                  ;
 		var text_mapset_PROGMEM  = obj.text_mapset_PROGMEM                   ;
+
+		var mapNames             = obj.mapNames                              ;
+
+		if(mapNames.NOWHERE.length){ mapNames.NOWHERE = "Map names: NOWHERE\n" + "  " + mapNames.NOWHERE.join("\n  ") + "\n\n"; }
+		if(mapNames.SKIPMAP.length){ mapNames.SKIPMAP = "Map names: SKIPMAP\n" + "  " + mapNames.SKIPMAP.join("\n  ") + "\n\n"; }
+		if(mapNames.PROGMEM.length){ mapNames.PROGMEM = "Map names: PROGMEM\n" + "  " + mapNames.PROGMEM.join("\n  ") + "\n\n"; }
+		if(mapNames.C2BIN.length)  { mapNames.C2BIN   = "Map names: C2BIN\n"   + "  " + mapNames.C2BIN  .join("\n  ") + "\n\n"; }
+
 		var text_mapset_NOWHERE  = obj.text_mapset_NOWHERE                   ;
 		var text_mapset_SKIPMAP  = obj.text_mapset_SKIPMAP                   ;
 		var text_tileset_C2BIN   = obj.text_tileset_C2BIN                    ;
@@ -3316,13 +3550,13 @@ gc.funcs.output={
 
 		// Clear the output text areas.
 		if(!dontClearTextareas){
-			// console.log(
-			// 	// "\n obj               :", obj                ,
-			// 	// "\n dontClearTextareas:", dontClearTextareas ,
-			// 	"\n dstFile           :", dstFile            ,
-			// 	"\n dstFile2          :", dstFile2           ,
-			// 	"\n"
-			// );
+			console.log(
+				// "\n obj               :", obj                ,
+				// "\n dontClearTextareas:", dontClearTextareas ,
+				"\n dstFile           :", dstFile            ,
+				"\n dstFile2          :", dstFile2           ,
+				"\n"
+			);
 			textOutput1.value = "";
 			textOutput2.value = "";
 		}
@@ -3376,6 +3610,8 @@ gc.funcs.output={
 			textarea2_text += "// ------- TEXT_MAPSET_C2BIN    -------\n";
 			textarea2_text += "// ------- -------------------- -------\n\n";
 			textarea2_text += "" + text_mapset_C2BIN+"\n";
+
+			// textarea2_text += "" + text_mapset_C2BIN+"\n";
 		}
 
 		if(textarea1_text.length){
@@ -3384,6 +3620,15 @@ gc.funcs.output={
 				"// BEGIN OUTPUT FILE: " + dstFile +" (PROGMEM)\n" +
 				"// " + ("*".repeat(80)) + "\n" +
 				textarea1_text +
+
+				// Map names
+				"/*\n\n"+
+				mapNames.NOWHERE +
+				mapNames.SKIPMAP +
+				mapNames.PROGMEM +
+				"*/"+
+				"\n\n" +
+
 				"// " + ("*".repeat(80)) + "\n" +
 				"// END OUTPUT FILE: " + dstFile +" (PROGMEM)\n" +
 				"// " + ("*".repeat(80)) + "\n" +
@@ -3399,6 +3644,13 @@ gc.funcs.output={
 				"// BEGIN OUTPUT FILE: " + dstFile2 +" (C2BIN)\n" +
 				"// " + ("*".repeat(80)) + "\n" +
 				textarea2_text +
+
+				// Map names
+				"/*\n\n"+
+				mapNames.C2BIN +
+				"*/"+
+				"\n\n" +
+
 				"// " + ("*".repeat(80)) + "\n" +
 				"// END OUTPUT FILE: " + dstFile2 +" (C2BIN)\n" +
 				"// " + ("*".repeat(80)) + "\n" +
@@ -3607,35 +3859,41 @@ gc.funcs.output={
 
 		for(tile_index=0; tile_index<reducedTileset.length; tile_index++){
 			var tile = reducedTileset[tile_index];
-			imgData_tile = tempCanvas_tile_ctx.createImageData( tileWidth, tileHeight);
 
-			// Get the RGBA32 data for this tile.
-			var RGB32_data = reducedTileset[tile_index].data.map( RGB32_data_function );
+			// let minUsed = 10; let filterBasedOnminUsed=true;
+			// let maxUsed = 1; let filterBasedOnmaxUsed=true;
 
-			// Go through all the returned bytes. Set as RGBA332.
-			curIndex_src=0;
+			// if( (filterBasedOnminUsed==true && tile.timesUsed>=minUsed) || filterBasedOnminUsed==false){
+			// if( (filterBasedOnmaxUsed==true && tile.timesUsed<=maxUsed) || filterBasedOnmaxUsed==false){
+				imgData_tile = tempCanvas_tile_ctx.createImageData( tileWidth, tileHeight);
 
-			for(tilePosY=0; tilePosY<tileHeight; tilePosY++){
-				for(tilePosX=0; tilePosX<tileWidth; tilePosX++){
-					setPixel(
-						 tilePosX ,tilePosY ,imgData_tile
-						,RGB32_data[curIndex_src].red
-						,RGB32_data[curIndex_src].green
-						,RGB32_data[curIndex_src].blue
-						,255
-					);
-					curIndex_src++;
+				// Get the RGBA32 data for this tile.
+				var RGB32_data = reducedTileset[tile_index].data.map( RGB32_data_function );
 
+				// Go through all the returned bytes. Set as RGBA332.
+				curIndex_src=0;
+
+				for(tilePosY=0; tilePosY<tileHeight; tilePosY++){
+					for(tilePosX=0; tilePosX<tileWidth; tilePosX++){
+						setPixel(
+							 tilePosX ,tilePosY ,imgData_tile
+							,RGB32_data[curIndex_src].red
+							,RGB32_data[curIndex_src].green
+							,RGB32_data[curIndex_src].blue
+							,255
+						);
+						curIndex_src++;
+
+					}
 				}
-			}
 
-			// Determine the destination col and row.
-			// Now write the tile canvas to the dest canvas. Keep in mind the current width/height.
-			tempCanvas.getContext('2d').putImageData(imgData_tile, tile.src_x*tileWidth, tile.src_y*tileHeight);
+				// Determine the destination col and row.
+				// Now write the tile canvas to the dest canvas. Keep in mind the current width/height.
+				tempCanvas.getContext('2d').putImageData(imgData_tile, tile.src_x*tileWidth, tile.src_y*tileHeight);
+			// }
 		}
 
 		gc.vars.dom.output.markedDupesCanvas.getContext('2d').drawImage(tempCanvas, 0, 0);
-
 
 		// Draw the tiny canvas.
 		gc.vars.dom.output.markedDupesCanvas_small.width= newCanvasWidth;
@@ -3782,7 +4040,7 @@ gc.funcs.output={
 					text_tileset_PROGMEM = gc.funcs.output.tilesetText( reducedTileset, tilesetName, tilesetOutputTo );
 				}
 				else if(tilesetOutputTo=='C2BIN'){
-					text_tileset_C2BIN = gc.funcs.output.tilesetText( reducedTileset, tilesetName, tilesetOutputTo );
+					text_tileset_C2BIN   = gc.funcs.output.tilesetText( reducedTileset, tilesetName, tilesetOutputTo );
 				}
 				gc.vars.timestamps.tilesetText.e                   = performance.now();
 
@@ -3790,6 +4048,15 @@ gc.funcs.output={
 				gc.vars.timestamps.tilemapsText.s                  = performance.now();
 				textOutput = gc.funcs.output.tilemapsText( data.maps, pointersSize );
 				gc.vars.timestamps.tilemapsText.e                  = performance.now();
+
+				var mapNames = {
+					"SKIPMAP" : data.maps.filter(function(d,i,a){if(d["@mapOutputTo"]=="SKIPMAP"){return true;}}).map(function(d,i,a){ return d["@var-name"];}) ,
+					"PROGMEM" : data.maps.filter(function(d,i,a){if(d["@mapOutputTo"]=="PROGMEM"){return true;}}).map(function(d,i,a){ return d["@var-name"];}) ,
+					"NOWHERE" : data.maps.filter(function(d,i,a){if(d["@mapOutputTo"]=="NOWHERE"){return true;}}).map(function(d,i,a){ return d["@var-name"];}) ,
+					"C2BIN"   : data.maps.filter(function(d,i,a){if(d["@mapOutputTo"]=="C2BIN"  ){return true;}}).map(function(d,i,a){ return d["@var-name"];}) ,
+				};
+				// console.log("data.maps:", data.maps);
+				// console.log("mapNames  :", mapNames  );
 
 				var textObject = {
 					 text_tileset_PROGMEM : text_tileset_PROGMEM
@@ -3801,6 +4068,8 @@ gc.funcs.output={
 					,text_mapset_C2BIN    : textOutput.text_mapset_C2BIN
 
 					,generatedTime        : generatedTime
+
+					,mapNames             : mapNames
 				};
 
 				//_07_ //
@@ -3829,8 +4098,10 @@ gc.funcs.output={
 					,"dstFile2"       : dstFile2
 
 				};
+
 				// console.log(
 				// 	"\nFINAL PROCESS:",
+				// 	"\nreturnObject           :", returnObject,
 				// 	"\ntileset                :", returnObject.reducedTileset,
 				// 	"\nmaps                   :", returnObject["data.maps"],
 				// 	"\ntilesUsedByMaps_inOrder:", tilesUsedByMaps_inOrder,

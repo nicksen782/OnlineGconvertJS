@@ -27,12 +27,10 @@
 	left             : 0px;
 	width            : 100vw;
 	height           : 100vh;
-	background-color : rgba(0, 0, 0, 0.40);
-
+	background-color: rgba(0, 0, 0, 0.5);
 	opacity          : 0;
 	visibility       : hidden;
 	z-index:-1;
-
 	animation: fadeOut .25s;
 }
 #entireBodyDiv.active{
@@ -62,6 +60,51 @@
 
 }
 #progressbarDiv.active{
+	z-index          : 5000;
+	visibility       : visible;
+	opacity          : 1;
+	animation: fadeIn .25s;
+}
+#c2bin_modal{
+	border: 4px solid rgba(0, 0, 0, 0.5);
+	background-color: rgb(28, 61, 85);
+	border-radius     : 5px;
+	/*background-image  : url(../img/ProgressBar.gif);*/
+	/*background-repeat : no-repeat;*/
+	/*background-size   : 100% 100%;*/
+	position          : fixed;
+	left              : 50%;
+	top               : 10px;
+	bottom            : 10px;
+	transform: translate(-50%, 10%);
+	width: 1100px;
+	height: 500px;
+	opacity          : 0;
+	visibility       : hidden;
+	z-index:-1;
+	animation: fadeOut .25s;
+	padding: 1em;
+}
+
+#c2bin_modal div{
+    background-color: lightgray;
+    padding: 1em;
+}
+#c2bin_modal textarea{
+    margin-top: 1em;
+    width: 99.5%;
+    height: 440px;
+    background-color: lightgray;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-weight: normal;
+    background-color: #1b1b1b;
+    color: palegoldenrod;
+    /* margin: 0px auto; */
+    font-size: 100%;
+    white-space: nowrap;
+}
+
+#c2bin_modal.active{
 	z-index          : 5000;
 	visibility       : visible;
 	opacity          : 1;
@@ -339,6 +382,8 @@ body {
 .sectionWindow_content {
 	padding: 5px;
 	position:relative;
+	/* height: 100%; */
+	/* width: 100%; */
 }
 
 #section_input {
@@ -484,14 +529,14 @@ body {
 }
 
 #mapedit_window1 {
-	left: 10px;
+	left: 235px;
 	top: 10px;
 	width: 295px;
 	height: 440px;
 }
 
 #mapedit_window2 {
-	left: 315px;
+	left: 5px;
 	top: 10px;
 	width: 215px;
 	height: 340px;
@@ -532,16 +577,21 @@ body {
 #gc3_mapedit_image {
 	border: 1px solid steelblue;
 	background-color: #16152a;
-	width: 280px;
-	height: 280px;
+	/* width: 280px; */
+	/* height: 280px; */
 	position: absolute;
+	/* width: 100%; */
+	/* height: 100%; */
 }
 
 #gc3_mapedit_image_layer2 {
 	border: 1px solid steelblue;
-	width: 280px;
-	height: 280px;
+	/* width: 280px; */
+	/* height: 280px; */
 	position: absolute;
+	/* width: 100%; */
+	/* display: none; */
+	/* height: 100%; */
 }
 
 #mapEdit_creationInstructions {
@@ -549,12 +599,14 @@ body {
 	width: 278px;
 	height: auto;
 	/* text-align:left; */
-	/* 	position: absolute; */
+	position: relative;
 	/* 	top: 260px; */
 	/* 	left: 390px; */
 	font-size: 13px;
-	position: absolute;
-	top: 300px;
+	/* position: absolute; */
+	/* top: 300px; */
+	top: 5px;
+	left: 10px;
 }
 
 .gc3_colHeader {
@@ -651,11 +703,11 @@ select#gc3_input_selectTestData {
 
 .gc3_select {
 	display: inline-block;
-	width: 25px;
+	width: 20px;
 	text-align: center;
 	/* margin: auto; */
 	/* margin: auto; */
-	height: 100%;
+	height: 20px;
 	text-align: center;
 	/*! vertical-align: top; */
 	/* position: relative; */
@@ -676,6 +728,8 @@ select#gc3_input_selectTestData {
 	width: 60px;
 	/* margin: auto; */
 	text-align: center;
+	height: 20px;
+	/* margin-left: 5px; */
 }
 
 .gc3_delete input {
@@ -686,79 +740,92 @@ select#gc3_input_selectTestData {
 
 .gc3_varname {
 	display: inline-block;
-	width: 180px;
+	width: 160px;
 	/* margin: auto; */
 	text-align: center;
+	height: 20px;
+	margin-left: 5px;
 }
 
 .gc3_varname input {
-	width: 95%;
+	width: 90%;
 	font-size: 12px;
 	/* margin: auto; */
 }
 
 .gc3_l {
 	display: inline-block;
-	width: 40px;
+	width: 35px;
 	/* margin: auto; */
 	text-align: center;
+	height: 20px;
+	/* margin-left: 5px; */
 }
 
 .gc3_l input {
-	width: 95%;
-	font-size: 12px;
+	width: 90%;
+	font-size: 10px;
 	/* margin: auto; */
 }
 
 .gc3_t {
 	display: inline-block;
-	width: 40px;
+	width: 35px;
 	/* margin: auto; */
 	text-align: center;
+	height: 20px;
+	margin-left: 5px;
 }
 
 .gc3_t input {
-	width: 95%;
-	font-size: 12px;
+	width: 90%;
+	font-size: 10px;
 	/* margin: auto; */
 }
 
 .gc3_w {
 	display: inline-block;
-	width: 40px;
+	width: 35px;
 	/* margin: auto; */
 	text-align: center;
+	height: 20px;
+	/* margin-left: 35px; */
+	margin-left: 5px;
 }
 
 .gc3_w input {
-	width: 95%;
-	font-size: 12px;
+	width: 90%;
+	font-size: 10px;
 	/* margin: auto; */
 }
 
 .gc3_h {
 	display: inline-block;
-	width: 40px;
+	width: 35px;
 	/* margin: auto; */
 	text-align: center;
+	height: 20px;
+	margin-left: 5px;
 }
 
 .gc3_h input {
-	width: 95%;
-	font-size: 12px;
+	width: 90%;
+	font-size: 10px;
 	/* margin: auto; */
 }
 
 .gc3_outputTo {
 	display: inline-block;
-	width: 100px;
+	width: 110px;
 	margin: auto;
 	text-align: center;
+	height: 20px;
+	/* margin-left: 5px; */
 }
 
 .gc3_outputTo select {
-	width: 95%;
-	font-size: 12px;
+	width: 90%;
+	font-size: 10px;
 	margin: auto;
 	/* text-align: center; */
 }
@@ -800,14 +867,14 @@ select#gc3_input_selectTestData {
 	left: 650px;
 	top: 10px;
 	width: 490px;
-	height: 230px;
+	height: 210px;
 }
 
 #gcOutput_window2 {
 	left: 650px;
-	top: 250px;
+	top: 230px;
 	width: 490px;
-	height: 230px;
+	height: 210px;
 }
 
 #gcOutput_window3 {
@@ -841,7 +908,7 @@ select#gc3_input_selectTestData {
 	color: navajowhite;
 	margin: 0px;
 	width: 475px;
-	height: 190px;
+	height: 170px;
 	/* overflow-x: auto; */
 	white-space: pre;
 }
@@ -853,7 +920,7 @@ select#gc3_input_selectTestData {
 	color: navajowhite;
 	margin: 0px;
 	width: 475px;
-	height: 190px;
+	height: 170px;
 	/* overflow-x: auto; */
 	white-space: pre;
 }
@@ -954,10 +1021,11 @@ select#gc3_input_selectTestData {
 	height: auto;
 	border: 1px solid rgba(0, 0, 0, 0);
 	background-color: #d4d4d4;
-	text-align: center;
+	/* text-align: center; */
 	overflow: hidden;
 	/*! vertical-align: top; */
 	position: relative;
+	/* width: 100%; */
 }
 
 
@@ -1043,17 +1111,17 @@ div#gcOutput_window6.show{
 }
 
 #gcOutput_window7 {
-	left: 650px;
-	top: 490px;
-	width: 490px;
-	height: 60px;
+	left: 855px;
+	top: 450px;
+	width: 285px;
+	height: 100px;
 	text-align: center;
 }
 #gcOutput_window8 {
 	left: 200px;
-	top: 380px;
+	top: 410px;
 	width: 440px;
-	height: 170px;
+	height: 140px;
 	text-align: center;
 }
 
@@ -1063,4 +1131,10 @@ table#gc3_output_downloadsTable input[type="button"] { width:95%; margin:auto; f
 
 option.hidden{
 	display:none;
+}
+
+div#mapedit_window1 .sectionWindow_content {
+	height: 300px;
+	width: 280px;
+	overflow: scroll;
 }
