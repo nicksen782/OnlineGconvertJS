@@ -58,6 +58,8 @@ gc.funcs.domHandleCache_populate = function(){
 		,"canvas_main_layer2" : document.querySelector("#gc3_mapedit_image_layer2")
 		,"canvas_preview"     : document.querySelector("#gc3_mapedit_preview")
 
+		,"mapedit_image_tiny" : document.querySelector("#gc3_mapedit_image_tiny")
+
 		// DOM for the preview section.
 		,"preview_l"            : document.querySelector("#gc3_mapedit_preview_settings [name='L']")
 		,"preview_t"            : document.querySelector("#gc3_mapedit_preview_settings [name='T']")

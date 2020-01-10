@@ -86,30 +86,62 @@ gc.funcs = {};
 gc.funcs.UAM = {
 	// UAM FUNCTIONS BY SECTION.
 	input  : {
+		// * Reset the UAM input section.
+		uam_resetInputSection : function(){
+			// Reset input canvas.
+			gc.vars.dom.input.canvas.getContext("2d").clearRect(0,0,gc.vars.dom.input.canvas.width,gc.vars.dom.input.canvas.height);
+
+			// Reset input XML.
+			gc.vars.dom.input.xml.value="";
+
+			// Reset input XML select.
+			gc.vars.dom.input.uam_xmlList_select.value="";
+
+			// Reset input IMG select.
+			gc.vars.dom.input.uam_imgName.value="";
+
+			// Reset input validation section too.
+			gc.vars.dom.input.xformVersion.innerHTML="";
+			gc.vars.dom.input.validateXML .innerHTML="";
+			gc.vars.dom.input.validateIMG .innerHTML="";
+			gc.vars.dom.input.validateMaps.innerHTML="";
+			gc.vars.dom.input.imgWidth    .innerHTML="";
+			gc.vars.dom.input.imgHeight   .innerHTML="";
+			gc.vars.dom.input.tileWidth   .innerHTML="";
+			gc.vars.dom.input.tileHeight  .innerHTML="";
+			gc.vars.dom.input.pointersSize.innerHTML="";
+			gc.vars.dom.input.mapCount    .innerHTML="";
+		},
 		// * Event listener.
 		uam_gameList_select  : function(e){
 			let uam_gamelist = gc.vars.dom.input.uam_gameList_select;
 			let uam_xmllist  = gc.vars.dom.input.uam_xmlList_select;
-			let uam_imgName = gc.vars.dom.input.uam_imgName ;
+			// let uam_imgName = gc.vars.dom.input.uam_imgName ;
 			let gameid=uam_gamelist.value;
 
+			// Reset the inputs.
+			gc.funcs.UAM.input.uam_resetInputSection();
+
 			if(uam_gamelist.value==""){
-				// gc.funcs.input.reset_inputs();
 			}
 			else{
 				// Hide options that do not match the selected game's gameid.
 				let thecount=0;
-			  	uam_xmllist.querySelectorAll("option").forEach(function(d,i,a){
-			  		if(d.getAttribute("gameid")!=gameid){
-			  			d.classList.add("hidden");
-			  		}
-			  		else{
-			  			thecount+=1;
-			  		}
-			  	});
+				uam_xmllist.querySelectorAll("option").forEach(function(d,i,a){
+					// First, remove the hidden class.
+					d.classList.remove("hidden");
 
-			  	uam_xmllist.options[0].text=thecount + " XML files";
+					// Now, decide if it will be shown or hidden.
+					if(d.getAttribute("gameid")!=gameid && d.value !=""){ d.classList.add("hidden"); }
+					else                                                { thecount+=1; }
+				});
+
+				// Update the first value (the blank one with the file count.)
+				uam_xmllist.options[0].text=thecount + " XML files";
 				uam_xmllist.options[0].value="";
+
+				// Select the first value.
+				gc.vars.dom.input.uam_xmlList_select.value="";
 			}
 
 		},
@@ -2522,6 +2554,11 @@ gc.funcs.maps={
 			gc.vars.dom.maps.canvas_main_layer2.getContext('2d').clearRect(
 				0, 0 , gc.vars.dom.maps.canvas_main_layer2.width , gc.vars.dom.maps.canvas_main_layer2.height
 			);
+
+			// Copy the converted data to the tiny canvas.
+			gc.vars.dom.maps.mapedit_image_tiny.width  = gc.vars.dom.maps.canvas_main.width;
+			gc.vars.dom.maps.mapedit_image_tiny.height = gc.vars.dom.maps.canvas_main.height;
+			gc.vars.dom.maps.mapedit_image_tiny.getContext("2d").drawImage(gc.vars.dom.maps.canvas_main,0,0);
 
 			// Clear the map records div.
 			var map_records = gc.vars.dom.maps.maps_records_div;
