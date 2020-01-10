@@ -33,7 +33,7 @@ if($UAMFOUND){
 	require_once("../basics_p.php");
 }
 else{
-	if ( strpos($_SERVER['SERVER_NAME'], "-nicksen782.c9users.io") !== false ) { $dev=1; }
+	if ( strpos($_SERVER['SERVER_NAME'], "dev2.nicksen782.net") !== false ) { $dev=1; }
 	else { $dev=0; }
 }
 
@@ -68,6 +68,7 @@ function API_REQUEST( $api, $type ){
 		$thisUser = [
 			"settings"      => $perms         ,
 			"thisUserPerms" => $thisUserPerms ,
+			"hasActiveLogin" => $_SESSION['hasActiveLogin'] == 1 ,
 		];
 	}
 	else{
@@ -76,7 +77,9 @@ function API_REQUEST( $api, $type ){
 		$loggedIn      = 0;
 		$admin         = 0;
 		$public        = 1;
-		$thisUser      = [];
+		$thisUser      = [
+			"hasActiveLogin" => $_SESSION['hasActiveLogin'] == 1 ,
+		];
 	}
 
 	// Rights.
@@ -203,38 +206,50 @@ ORDER BY last_update DESC
 	$dbhandle->bind(':author_user_id' , $author_user_id ) ;
 	$retval1 = $dbhandle->execute();
 	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
-	// echo json_encode($results1);
-	// exit();
+
+	// Remove dirs that don't exist.
+	for($i=0; $i<sizeof($results1); $i+=1){
+		$directory = $results1[$i]["UAMdir"] . "/XML";
+		$gameId    = $results1[$i]["gameId"];
+		$gameName  = $results1[$i]["gameName"];
+		if( ! file_exists($_SERVER["DOCUMENT_ROOT"] . "/" . $directory) ){
+			unset($results1[$i]);
+		}
+	}
+	$results1=array_values($results1);
+
 	// You have the gameIds, gameNames, and UAMdirs. You need the XML filenames in the XML dir of the game's UAM dir.
 	$results2 = [];
 
 	for($i=0; $i<sizeof($results1); $i+=1){
 		$directory = $results1[$i]["UAMdir"] . "/XML";
-		$gameId = $results1[$i]["gameId"];
-		$gameName = $results1[$i]["gameName"];
+		$gameId    = $results1[$i]["gameId"];
+		$gameName  = $results1[$i]["gameName"];
 
 		// Scan the dir. Get the file names that have the XML extension.
-		$scanned_directory = array_values(
-			array_diff(
-				scandir($_SERVER["DOCUMENT_ROOT"] . "/" . $directory
-			)
-			, array('..', '.', '.git')
-			)
-		);
+		if( file_exists($_SERVER["DOCUMENT_ROOT"] . "/" . $directory) ){
+			$scanned_directory = array_values(
+				array_diff(
+					scandir($_SERVER["DOCUMENT_ROOT"] . "/" . $directory
+				)
+				, array('..', '.', '.git')
+				)
+			);
 
-		for($ii=0; $ii<sizeof($scanned_directory); $ii++){
-			// Don't include dirs.
-			if( ! is_dir($_SERVER["DOCUMENT_ROOT"] . "/" . $directory.'/'.$scanned_directory[$ii]) ){
-				array_push($results2,
-					[
-						// "fullpath" => $_SERVER["DOCUMENT_ROOT"] . "/" . $directory.'/'.$scanned_directory[$ii] ,
-						"webpath"  => "/".$directory.'/'.$scanned_directory[$ii] ,
-						"filename" => $scanned_directory[$ii]                ,
-						"gameid"   => $gameId                                  ,
-						"gamename" => $gameName                              ,
-						// "label"    => $gameName . " - "  .$scanned_directory[$ii]       ,
-					]
-				);
+			for($ii=0; $ii<sizeof($scanned_directory); $ii++){
+				// Don't include dirs.
+				if( ! is_dir($_SERVER["DOCUMENT_ROOT"] . "/" . $directory.'/'.$scanned_directory[$ii]) ){
+					array_push($results2,
+						[
+							// "fullpath" => $_SERVER["DOCUMENT_ROOT"] . "/" . $directory.'/'.$scanned_directory[$ii] ,
+							"webpath"  => "/".$directory.'/'.$scanned_directory[$ii] ,
+							"filename" => $scanned_directory[$ii]                ,
+							"gameid"   => $gameId                                  ,
+							"gamename" => $gameName                              ,
+							// "label"    => $gameName . " - "  .$scanned_directory[$ii]       ,
+						]
+					);
+				}
 			}
 		}
 
