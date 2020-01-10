@@ -3374,7 +3374,7 @@ gc.funcs.output={
 		return maps;
 
 	}
-	,tilesetText                   : function(tileset, tilesetName, tilesetOutputTo){
+	,tilesetText                   : function(tileset, tilesetName, tilesetOutputTo, pointersSize){
 		// console.log(
 		// 	"tileset        :", tileset        , "\n",
 		// 	// "tilesetName    :", tilesetName    , "\n",
@@ -3389,7 +3389,19 @@ gc.funcs.output={
 		text_tileset += "#define "+tilesetName.toUpperCase()+"_SIZE " + tileset.length + "\n";
 
 		// If tilesetOutputTo is NOT set to PROGMEM then don't include the PROGMEM keyword.
-		text_tileset += "const char "+tilesetName+"[] "+(tilesetOutputTo=='PROGMEM' ? 'PROGMEM ' : '')+"= {"+ "\n";
+
+		// pointersSize is 8?
+		if(pointersSize==8){
+			text_tileset += "const char "+tilesetName+"[] "+(tilesetOutputTo=='PROGMEM' ? 'PROGMEM ' : '')+"= {"+ "\n";
+		}
+		// pointersSize is 16?
+		else if(pointersSize==16){
+			text_tileset += "const int "+tilesetName+"[] "+(tilesetOutputTo=='PROGMEM' ? 'PROGMEM ' : '')+"= {"+ "\n";
+		}
+		// pointerSize not set? Default to 8.
+		else{
+			text_tileset += "const char "+tilesetName+"[] "+(tilesetOutputTo=='PROGMEM' ? 'PROGMEM ' : '')+"= {"+ "\n";
+		}
 
 		tileset.map(function(a, tileIndex, tileArray){
 			// Indent.
@@ -4037,10 +4049,10 @@ gc.funcs.output={
 				//_05_ // Convert the tileset data to a C array.
 				gc.vars.timestamps.tilesetText.s                   = performance.now();
 				if     (tilesetOutputTo=='PROGMEM'){
-					text_tileset_PROGMEM = gc.funcs.output.tilesetText( reducedTileset, tilesetName, tilesetOutputTo );
+					text_tileset_PROGMEM = gc.funcs.output.tilesetText( reducedTileset, tilesetName, tilesetOutputTo, pointersSize );
 				}
 				else if(tilesetOutputTo=='C2BIN'){
-					text_tileset_C2BIN   = gc.funcs.output.tilesetText( reducedTileset, tilesetName, tilesetOutputTo );
+					text_tileset_C2BIN   = gc.funcs.output.tilesetText( reducedTileset, tilesetName, tilesetOutputTo, pointersSize );
 				}
 				gc.vars.timestamps.tilesetText.e                   = performance.now();
 
