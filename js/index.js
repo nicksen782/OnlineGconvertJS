@@ -569,6 +569,24 @@ gc.funcs.UAM = {
 
 	},
 
+	// Keeps the session open.
+	keepAlive_ping : function(){
+
+		var formData = {
+			"o"       : "keepAlive_ping",
+			"_config" : { "noProgress" : true, "processor":"gc_p.php" }
+		};
+		gc.funcs.shared.serverRequest(formData).then(
+			function(res){
+				console.log("keepAlive_ping:", res.data);
+			},
+			function(res){
+				console.log("FAILURE:", res);
+			}
+		);
+
+	},
+
 	// * Hide UAM.
 	enableUAM         : function(){
 		gc.vars.originUAM      = true;
@@ -599,6 +617,11 @@ gc.funcs.UAM = {
 
 		// Set up the UAM DOM.
 		// gc.funcs.domHandleCache_populate_UAM();
+
+		// Start the gc.funcs.UAM.keepAlive_ping
+		// PHP default session time is 24 minutes. (1440 seconds.)
+		let mins = 20;
+		setInterval(gc.funcs.UAM.keepAlive_ping, (mins*60*1000) );
 
 		// Add the UAM event listeners.
 		gc.funcs.UAM.addEventListeners();
@@ -948,6 +971,7 @@ gc.funcs.shared={
 		if( typeof formData._config.filesHandle  == "undefined" ){ formData._config.filesHandle  = null   ; }
 		if( typeof formData._config.method       == "undefined" ){ formData._config.method       = "POST" ; }
 		if( typeof formData._config.processor    == "undefined" ){ formData._config.processor    = "index_p.php" ; }
+		if( typeof formData._config.noProgress    == "undefined" ){ formData._config.noProgress  = false ; }
 
 		return new Promise(function(resolve, reject) {
 			var progress_showPercent = function(){
@@ -1002,7 +1026,9 @@ gc.funcs.shared={
 			} ;
 			var loadEnd          = function(e)      {
 				// console.log("The transfer finished (although we don't know if it succeeded or not).", e);
-				try{ gc.funcs.shared.activateProgressBar(false); } catch(e){ }
+				if(!formData._config.noProgress){
+					try{ gc.funcs.shared.activateProgressBar(false); } catch(e){ }
+				}
 			} ;
 
 			// Create the form.
@@ -1058,7 +1084,9 @@ gc.funcs.shared={
 				xhr.responseType = "json";
 			}
 
-			try{ gc.funcs.shared.activateProgressBar(true); } catch(e){ }
+			if(!formData._config.noProgress){
+				try{ gc.funcs.shared.activateProgressBar(true); } catch(e){ }
+			}
 
 			// setTimeout(function() { xhr.send(fd); }, 1);
 			xhr.send(fd);

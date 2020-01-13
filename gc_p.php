@@ -114,8 +114,9 @@ function API_REQUEST( $api, $type ){
 	$o_values["uam_saveC2bin"]                    = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
 	$o_values["uam_updateAssets"]                 = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
 
-	$o_values["uam_runC2BIN"]                 = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
+	$o_values["uam_runC2BIN"]                     = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
 
+	$o_values["keepAlive_ping"]                   = [ "p"=>( ( $public) ? 1 : 0 ), "args"=>[] ] ;
 
 	// DETERMINE IF THE API IS AVAILABLE TO THE USER.
 
