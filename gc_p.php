@@ -116,6 +116,7 @@ function API_REQUEST( $api, $type ){
 
 	$o_values["uam_runC2BIN"]                     = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
 
+	// In basics_p.php
 	$o_values["keepAlive_ping"]                   = [ "p"=>( ( $public) ? 1 : 0 ), "args"=>[] ] ;
 
 	// DETERMINE IF THE API IS AVAILABLE TO THE USER.
@@ -162,6 +163,10 @@ function gc_init(){
 
 	// If yes then return the base session information including permissions list.
 	if($UAMFOUND){
+		// gc_init
+		if( $_SESSION['hasActiveLogin'] == 1 ) {
+			$_SESSION['refreshes'] = 0;
+		}
 		$UAMDATA = $_SESSION;
 	}
 	// If no, then that's it. No UAM.

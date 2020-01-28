@@ -531,7 +531,7 @@ gc.funcs.UAM = {
 
 			gc.funcs.shared.serverRequest(formData).then(
 				function(res){
-					console.log("SUCCESS:", res);
+					// console.log("SUCCESS:", res);
 
 					newhtml+="<div>";
 					newhtml+="Results from: " + res.script1;
@@ -578,7 +578,8 @@ gc.funcs.UAM = {
 		};
 		gc.funcs.shared.serverRequest(formData).then(
 			function(res){
-				console.log("keepAlive_ping:", res.data);
+				// console.log("keepAlive_ping:", new Date().toLocaleString(), res.data, "hasActiveLogin:", res.hasActiveLogin);
+				console.log("keepAlive_ping:", new Date().toLocaleString(), res.data, "hasActiveLogin:", res.hasActiveLogin, "REFRESHES:", res.refreshes );
 			},
 			function(res){
 				console.log("FAILURE:", res);
@@ -3627,13 +3628,13 @@ gc.funcs.output={
 
 		// Clear the output text areas.
 		if(!dontClearTextareas){
-			console.log(
-				// "\n obj               :", obj                ,
-				// "\n dontClearTextareas:", dontClearTextareas ,
-				"\n dstFile           :", dstFile            ,
-				"\n dstFile2          :", dstFile2           ,
-				"\n"
-			);
+			// console.log(
+			// 	// "\n obj               :", obj                ,
+			// 	// "\n dontClearTextareas:", dontClearTextareas ,
+			// 	"\n dstFile           :", dstFile            ,
+			// 	"\n dstFile2          :", dstFile2           ,
+			// 	"\n"
+			// );
 			textOutput1.value = "";
 			textOutput2.value = "";
 		}
