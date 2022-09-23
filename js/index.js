@@ -1417,14 +1417,24 @@ gc.funcs.shared={
 
 		return index;
 	},
+
+
 	// * Get 24-bit rgb version of 1-byte rgb332.
 	rgb_decode332        : function(RGB332) {
+		// 0b00000111 >> 0 RED
+		// 0b00111000 >> 3 GREEN
+		// 0b11000000 >> 6 BLUE
+
 		// Accepts RGB332 byte and converts back to 24-bit RGB.
-		var nR = ((((RGB332 >> 0) & 7) * (255 / 7))); // red
-		var nG = ((((RGB332 >> 3) & 7) * (255 / 7))); // green
+		let nR = ( ((RGB332 >> 0) & 0b00000111) * (255 / 7) ) << 0; // red
+		let nG = ( ((RGB332 >> 3) & 0b00000111) * (255 / 7) ) << 0; // green
+		let nB = ( ((RGB332 >> 6) & 0b00000011) * (255 / 3) ) << 0; // blue
+
+		// var nR = ((((RGB332 >> 0) & 7) * (255 / 7))); // red
+		// var nG = ((((RGB332 >> 3) & 7) * (255 / 7))); // green
 
 		// OLD
-		var nB = ((((RGB332 >> 5) & 6) * (255 / 7))); // blue
+		// var nB = ((((RGB332 >> 5) & 6) * (255 / 7))); // blue
 
 		// NEW
 		// var nB = ((RGB332 >> 6)&7) * (255/7);
@@ -3474,10 +3484,10 @@ gc.funcs.output={
 			text_tileset += " ";
 
 			// Generate the comment text for the usage count of the tile id.
-			let usage = "[ USED: " + (tileset[tileIndex].timesUsed).toString().padEnd(3, " ") + " ]";
+			let usage = "[ USED: " + (tileset[tileIndex].timesUsed).toString().padEnd(5, " ") + " ]";
 
 			// Comment for start of tile.
-			text_tileset += " /*[ TILE #" + tileIndex.toString().padStart(3, " ") + " ] "+usage+"*/ ";
+			text_tileset += " /*[ TILE #" + tileIndex.toString().padStart(4, " ") + " ] "+usage+"*/ ";
 
 			// Output the data bytes for this tile.
 			a.data.map(function(data, dataIndex, dataArray){
@@ -4011,7 +4021,7 @@ gc.funcs.output={
 		var text_mapset_SKIPMAP      = "";
 
 		function preProcess      (){
-			return new Promise(function(resolve, reject){
+			return new Promise(async function(resolve, reject){
 				// Get an array of maps. ParseInt where needed.
 				var maps = jsonObj["gfx-xform"]["output"]["maps"]["map"].map(function(d,i,a){
 					// Parse int on the number attributes.

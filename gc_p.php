@@ -192,6 +192,8 @@ function getGamesAndXmlFilepathsViaUserId(){
 
 	global $_appdir;
 	global $_db_file;
+	global $dev;
+
 	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
 	$s_SQL1  ="
 SELECT
@@ -212,6 +214,7 @@ ORDER BY last_update DESC
 	$dbhandle->bind(':author_user_id' , $author_user_id ) ;
 	$retval1 = $dbhandle->execute();
 	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
+	$errors = [];
 
 	// Remove dirs that don't exist.
 	for($i=0; $i<sizeof($results1); $i+=1){
@@ -219,6 +222,7 @@ ORDER BY last_update DESC
 		$gameId    = $results1[$i]["gameId"];
 		$gameName  = $results1[$i]["gameName"];
 		if( ! file_exists($_SERVER["DOCUMENT_ROOT"] . "/" . $directory) ){
+			array_push($errors, [$results1[$i], $_SERVER["DOCUMENT_ROOT"] . "/" . $directory, "!file_exists"]);
 			unset($results1[$i]);
 		}
 	}
@@ -262,7 +266,6 @@ ORDER BY last_update DESC
 	}
 
 	//
-
 	echo json_encode(array(
 		'data'      => [] ,
 		'success'   => true      ,
@@ -270,6 +273,7 @@ ORDER BY last_update DESC
 		'$_POST'    => $_POST    ,
 		'$results1' => $results1 ,
 		'$results2' => $results2 ,
+		'$errors'   => $dev ? $errors : []  ,
 	) );
 
 }
