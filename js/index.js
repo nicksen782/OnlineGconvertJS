@@ -2418,6 +2418,8 @@ gc.funcs.input={
 				 	// Check if the tilesetOutputTo and removeDupeTiles keys exist and are populated.
 					var tilesetOutputTo  = jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"];
 					var removeDupeTiles  = jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"];
+					var outputAsJson     = jsonObj["gfx-xform"]["output"]["tiles"]["@outputAsJson"];
+
 				 	// Provide default values.
 					if(tilesetOutputTo==undefined || tilesetOutputTo == ""){
 						tilesetOutputTo="PROGMEM";
@@ -2430,7 +2432,8 @@ gc.funcs.input={
 					}
 					// Set the DOM controls for tilesetOutputTo and removeDupeTiles.
 					gc.vars.dom.maps.tilesetOutputTo.value   = tilesetOutputTo;
-					gc.vars.dom.maps.removeDupeTiles.checked = removeDupeTiles=="1" ? true : false;
+					gc.vars.dom.maps.removeDupeTiles.checked = removeDupeTiles == "1" ? true : false;
+					gc.vars.dom.maps.outputAsJson.checked    = outputAsJson    == "1" ? true : false;
 
 				 //	console.log("tilesetOutputTo:", tilesetOutputTo);
 					// console.log("removeDupeTiles:", removeDupeTiles);
@@ -2442,7 +2445,7 @@ gc.funcs.input={
 
 				 }
 				,function(error){
-					console.log("Validation was NOT successful. Please fix before you try again.");
+					console.log("Validation was NOT successful. Please fix before you try again.", error);
 					alert      ("Validation was NOT successful. Please fix before you try again.");
 					reject();
 				}
@@ -2563,24 +2566,24 @@ gc.funcs.maps={
 			gc.vars.dom.maps.preview_h .setAttribute('min', '0');
 			gc.vars.dom.maps.preview_h .setAttribute('max', rows);
 
-			// Convert the canvas_main to the Uzebox RGB332 color space.
 			var buff = gc.vars.dom.input.canvas.getContext('2d').getImageData(
 				0,0, gc.vars.dom.input.canvas.width, gc.vars.dom.input.canvas.height
 			);
+
+			// Convert the canvas_main to the Uzebox RGB332 color space.
 			for(i=0; i<buff.data.length; i+=4){
 				var red   = buff.data[i+0];
 				var green = buff.data[i+1];
 				var blue  = buff.data[i+2];
 				var alpha = buff.data[i+3];
-
 				var rgb332 = gc.funcs.shared.rgb_encode332(red,green,blue);
 				var rgb32  = gc.funcs.shared.rgb_decode332(rgb332);
-
 				buff.data[i+0] = rgb32.red;
 				buff.data[i+1] = rgb32.green;
 				buff.data[i+2] = rgb32.blue;
 				buff.data[i+3] = alpha;
 			}
+
 			// Copy the converted data to the map editor source canvas.
 			gc.vars.dom.maps.canvas_main.width  = gc.vars.dom.input.canvas.width;
 			gc.vars.dom.maps.canvas_main.height = gc.vars.dom.input.canvas.height;
@@ -2960,15 +2963,17 @@ gc.funcs.maps={
 			}
 			case "SINGLE_TS" : {
 				// Override the JSON values for tilesetOutputTo and removeDupeTiles to be what the DOM control values are.
-				jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"] = gc.vars.dom.maps.tilesetOutputTo.value  != ""  ? gc.vars.dom.maps.tilesetOutputTo.value : "PROGMEM";
-				jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"] = gc.vars.dom.maps.removeDupeTiles.checked==true ? "1"                                     : "0";
+				jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"] = gc.vars.dom.maps.tilesetOutputTo.value   != ""   ? gc.vars.dom.maps.tilesetOutputTo.value : "PROGMEM";
+				jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"] = gc.vars.dom.maps.removeDupeTiles.checked == true ? "1"                                     : "0";
+				jsonObj["gfx-xform"]["output"]["tiles"]["@outputAsJson"]    = gc.vars.dom.maps.outputAsJson.checked    == true ? "1"                                     : "0";
 				do_mapOutputTo=true;
 				break;
 			}
 			case "MULTI_TS"  : {
 				// Override the JSON values for tilesetOutputTo and removeDupeTiles to be what the DOM control values are.
-				jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"] = gc.vars.dom.maps.tilesetOutputTo.value  != ""  ? gc.vars.dom.maps.tilesetOutputTo.value : "PROGMEM";
-				jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"] = gc.vars.dom.maps.removeDupeTiles.checked==true ? "1"                                     : "0";
+				jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"] = gc.vars.dom.maps.tilesetOutputTo.value   != ""   ? gc.vars.dom.maps.tilesetOutputTo.value : "PROGMEM";
+				jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"] = gc.vars.dom.maps.removeDupeTiles.checked == true ? "1"                                     : "0";
+				jsonObj["gfx-xform"]["output"]["tiles"]["@outputAsJson"]    = gc.vars.dom.maps.outputAsJson.checked    == true ? "1"                                     : "0";
 				do_mapOutputTo=true;
 				break;
 			}
@@ -3174,6 +3179,7 @@ gc.funcs.output={
 		var img = [];
 
 		// Get source image as imageData.
+		// console.log("createRGB332_imageBuffer", src_canvas);
 		var bufferORG = src_canvas.getContext('2d').getImageData(
 			0, 0, src_canvas.width,src_canvas.height
 		);
@@ -3193,9 +3199,12 @@ gc.funcs.output={
 
 		return img;
 	}
-	,populateTileSetData           : function(src_tileset, rgb332_buffer, imgWidth, tileWidth, tileHeight){
+	,createRGB32_imageBuffer      : function(src_canvas){
+		return this.createRGB332_imageBuffer(src_canvas);
+	}
+	,populateTileSetData           : function(src_tileset, image_buffer, imgWidth, tileWidth, tileHeight){
 		var i;
-		var getTileBytes = function(src_tile_id, src_tileset, imgWidth, tileWidth, tileHeight, rgb332_buffer){
+		var getTileBytes = function(src_tile_id, src_tileset, imgWidth, tileWidth, tileHeight, image_buffer){
 			// Find the tile with the specified src_tile_id.
 			var thisTile = src_tileset[src_tile_id] ;
 			var y = thisTile.src_y ;
@@ -3208,7 +3217,7 @@ gc.funcs.output={
 					var index = (y * h_tiles * tileWidth * tileHeight) +
 						(x * tileWidth) + (th * h_tiles * tileWidth) + tw;
 
-					tile[tileIndex++] = rgb332_buffer[index];
+					tile[tileIndex++] = image_buffer[index];
 				}
 			}
 
@@ -3233,7 +3242,7 @@ gc.funcs.output={
 				, imgWidth
 				, tileWidth
 				, tileHeight
-				, rgb332_buffer
+				, image_buffer
 			);
 
 			// Easier compares.
@@ -3615,6 +3624,51 @@ gc.funcs.output={
 			, text_mapset_C2BIN   : text_mapset_C2BIN
 		};
 	}
+	,final_outputText_jsonOnly     : function(srcJson){
+		// console.log("final_outputText_jsonOnly:", srcJson, Object.keys(srcJson));
+		var textOutput1          = gc.vars.dom.output.progmemTextarea ;
+		var textOutput2          = gc.vars.dom.output.c2binTextarea ;
+		textOutput1.value = "";
+		textOutput2.value = "";
+		let json = {
+			'generatedTime': srcJson["generatedTime"], 
+			'tilesetName'  : srcJson["tilesetName"], 
+			'config': {
+				'pointersSize' : srcJson["pointersSize"], 
+				'tileHeight'   : srcJson["tileHeight"], 
+				'tileWidth'    : srcJson["tileWidth"], 
+				'translucent_color' : srcJson["translucent_color"], 
+			},
+			'counts':{
+				'tileset' : srcJson["tileset"].length,
+				'tilemaps': Object.keys(srcJson["tilemaps"]).length,
+			},
+			'tilemaps'     : {},
+			'tileset'      : [], 
+		};
+		
+		for(let index in srcJson["tileset"]){
+			json.tileset.push( JSON.stringify(srcJson["tileset"][index]) );
+			// json.tileset.push( srcJson["tileset"][index] );
+		}
+		for(let key in srcJson["tilemaps"]){
+			let rec = srcJson["tilemaps"][key];
+			json.tilemaps[key] = JSON.stringify(rec);
+			// json.tilemaps[key] = rec;
+		}
+		// console.log("final_outputText_jsonOnly: DONE: ", json);
+		textOutput1.value = JSON.stringify(json);
+		textOutput2.value = JSON.stringify(json,null,1);
+		// [
+		// 	'generatedTime', 
+		// 	'tilesetName', 
+		// 	'pointersSize', 
+		// 	'tileHeight', 
+		// 	'tileWidth', 
+		// 	'tileset', 
+		// 	'tilemaps'
+		// ]
+	}
 	,final_outputText              : function(obj, dontClearTextareas, dstFile, dstFile2){
 		var text_tileset_PROGMEM = obj.text_tileset_PROGMEM                  ;
 		var text_mapset_PROGMEM  = obj.text_mapset_PROGMEM                   ;
@@ -3753,7 +3807,7 @@ gc.funcs.output={
 		textOutput2.value += textarea2_text;
 
 	}
-	,final_outputImage_tileset     : function(reducedTileset, maps, tileWidth, tileHeight, rows, cols){
+	,final_outputImage_tileset     : function(reducedTileset, maps, tileWidth, tileHeight, rows, cols, jsonObj){
 		// Tile data is in the reduced tileset object.
 		var numberOfTiles=reducedTileset.length;
 		if(numberOfTiles==0){
@@ -3812,22 +3866,33 @@ gc.funcs.output={
 		var tempCanvas_tile_ctx = tempCanvas_tile.getContext("2d");
 		var imgData_tile        ;
 
+		var translucent_color = Number( jsonObj["gfx-xform"]["output"]["tiles"]["@translucent_color"] );
+		// console.log("translucent_color:", translucent_color);
+
 		function setPixel(x, y, imgData_tile, r, g, b, a){
 			imgData_tile.data[ ((y * (imgData_tile.width * 4)) + (x * 4)) + 0 ] = r;
 			imgData_tile.data[ ((y * (imgData_tile.width * 4)) + (x * 4)) + 1 ] = g;
 			imgData_tile.data[ ((y * (imgData_tile.width * 4)) + (x * 4)) + 2 ] = b;
 			imgData_tile.data[ ((y * (imgData_tile.width * 4)) + (x * 4)) + 3 ] = a;
 		}
-		var RGB32_data_function = function(a){
-			var eightBitColor1 = a;
+		var RGB32_data_function = function(eightBitColor1){
+			// var eightBitColor1 = eightBitColor1;
 			var rgb32          = gc.funcs.shared.rgb_decode332(eightBitColor1);
 
-			rgb32.alpha = 255;
-
-			rgb32.red   = parseInt(rgb32.red  .toFixed(0), 10) ;
-			rgb32.green = parseInt(rgb32.green.toFixed(0), 10) ;
-			rgb32.blue  = parseInt(rgb32.blue .toFixed(0), 10) ;
-			rgb32.alpha = parseInt(rgb32.alpha.toFixed(0), 10) ;
+			// 0xFE, 254: Transparent color.
+			if(!isNaN(translucent_color) && eightBitColor1 == translucent_color){
+				rgb32.red   = 0 ;
+				rgb32.green = 0 ;
+				rgb32.blue  = 0 ;
+				rgb32.alpha = 0 ;
+			}
+			else{
+				rgb32.alpha = 255;
+				rgb32.red   = parseInt(rgb32.red  .toFixed(0), 10) ;
+				rgb32.green = parseInt(rgb32.green.toFixed(0), 10) ;
+				rgb32.blue  = parseInt(rgb32.blue .toFixed(0), 10) ;
+				rgb32.alpha = parseInt(rgb32.alpha.toFixed(0), 10) ;
+			}
 
 			return rgb32;
 		};
@@ -3846,7 +3911,8 @@ gc.funcs.output={
 						,RGB32_data[curIndex_src].red
 						,RGB32_data[curIndex_src].green
 						,RGB32_data[curIndex_src].blue
-						,255
+						,RGB32_data[curIndex_src].alpha
+						// ,255
 					);
 					curIndex_src++;
 
@@ -3859,7 +3925,6 @@ gc.funcs.output={
 
 			// Now write the tile canvas to the dest canvas. Keep in mind the current width/height.
 			tempCanvas.getContext('2d').putImageData(imgData_tile, thisCol*tileWidth, thisRow*tileHeight);
-
 		}
 
 		gc.vars.dom.output.tilesetCanvas.getContext('2d').drawImage(tempCanvas, 0, 0);
@@ -3996,6 +4061,7 @@ gc.funcs.output={
 		var srcCanvas                = gc.vars.dom.maps.canvas_main;
 		var tilesetOutputTo          = jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"];
 		var removeDupeTiles          = jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"];
+		var outputAsJson             = jsonObj["gfx-xform"]["output"]["tiles"]["@outputAsJson"];
 		var version                  = jsonObj["gfx-xform"]["@version"];
 		var pointersSize             = parseInt(jsonObj["gfx-xform"]["output"]["maps"]['@pointers-size'], 10);
 		var dstFile                  = jsonObj["gfx-xform"]["output"]['@file'];
@@ -4041,6 +4107,10 @@ gc.funcs.output={
 					removeDupeTiles = gc.vars.dom.maps.removeDupeTiles.checked ? 1 : 0;
 					jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"] = removeDupeTiles;
 				}
+				if(outputAsJson == undefined) {
+					outputAsJson = gc.vars.dom.maps.outputAsJson.checked ? 1 : 0;
+					jsonObj["gfx-xform"]["output"]["tiles"]["@outputAsJson"] = outputAsJson;
+				}
 
 				// 01_getTilesetPlaceholderArray
 				gc.vars.timestamps.getTilesetPlaceholderArray.s  = performance.now();
@@ -4054,12 +4124,17 @@ gc.funcs.output={
 
 				// 03_createRGB332_imageBuffer
 				gc.vars.timestamps.createRGB332_imageBuffer.s    = performance.now();
-				var rgb332_buffer = gc.funcs.output.createRGB332_imageBuffer(srcCanvas);
+				var image_buffer;
+				if(outputAsJson == 0){ image_buffer = gc.funcs.output.createRGB332_imageBuffer(srcCanvas); }
+				else{
+					image_buffer = gc.funcs.output.createRGB32_imageBuffer(srcCanvas);
+				}
+				
 				gc.vars.timestamps.createRGB332_imageBuffer.e    = performance.now();
 
 				// 04_populateTileSetData
 				gc.vars.timestamps.populateTileSetData.s         = performance.now();
-				gc.funcs.output.populateTileSetData( tileset, rgb332_buffer, imgWidth, tileWidth, tileHeight );
+				gc.funcs.output.populateTileSetData( tileset, image_buffer, imgWidth, tileWidth, tileHeight );
 				gc.vars.timestamps.populateTileSetData.e         = performance.now();
 
 				// 05_reduceDuplicateTiles
@@ -4081,7 +4156,7 @@ gc.funcs.output={
 					,'tileHeight'      : tileHeight
 					,'rows'            : rows
 					,'cols'            : cols
-					,'rgb332_buffer'   : rgb332_buffer
+					,'image_buffer'   : image_buffer
 					,'version'         : version
 					,'pointersSize'    : pointersSize
 					,'dstFile'         : dstFile
@@ -4091,8 +4166,9 @@ gc.funcs.output={
 					,'removeDupeTiles' : removeDupeTiles
 				};
 
-				// console.log( "PRE-PROCESS:\n", res_obj );
 				// throw "DONE";
+
+				// console.log( "PRE-PROCESS: res_obj: \n", res_obj );
 
 				resolve( res_obj );
 
@@ -4162,19 +4238,51 @@ gc.funcs.output={
 
 				//_07_ //
 				gc.vars.timestamps.final_outputText.s              = performance.now();
-				gc.funcs.output.final_outputText( textObject, false, dstFile, dstFile2 );
+				let json;
+				if(outputAsJson == "1"){
+					// Create a JSON-compatible output. 
+					let json = {
+						generatedTime: generatedTime,
+						tilesetName  : tilesetName,
+						pointersSize : pointersSize,
+						tileHeight   : tileHeight,
+						tileWidth    : tileWidth,
+						translucent_color : Number( jsonObj["gfx-xform"]["output"]["tiles"]["@translucent_color"] ),
+						tileset  : [],
+						tilemaps : {},
+					};
+					// console.log("SOURCE:", data);
+					for(let i=0; i<data.maps.length; i+=1){
+						let rec = data.maps[i];
+						// json.tilemaps[ rec["@var-name"] ] = {
+						// 	mapOutputTo: rec["@mapOutputTo"],
+						// 	arr        : [ rec["@width"], rec["@height"], ...rec["reduced_tilesUsed"]]
+						// };
+						json.tilemaps[ rec["@var-name"] ] = [ rec["@width"], rec["@height"], ...rec["reduced_tilesUsed"]];
+					}
+					for(let i=0; i<reducedTileset.length; i+=1){
+						json.tileset.push( reducedTileset[i].data );
+					}
+					// console.log("outputAsJson:", json);
+
+					gc.funcs.output.final_outputText_jsonOnly(json);
+				}
+				else{
+					gc.funcs.output.final_outputText( textObject, false, dstFile, dstFile2);
+				}
 				gc.vars.timestamps.final_outputText.e              = performance.now();
 
 				//_08_ //
 				gc.vars.timestamps.final_outputImage_tileset.s     = performance.now();
-				gc.funcs.output.final_outputImage_tileset( reducedTileset, data.maps, tileWidth, tileHeight, rows, cols );
+				gc.funcs.output.final_outputImage_tileset( reducedTileset, data.maps, tileWidth, tileHeight, rows, cols, jsonObj );
 				gc.vars.timestamps.final_outputImage_tileset.e     = performance.now();
 
 				//_09_ //
 				gc.vars.timestamps.final_outputImage_markedDupes.s = performance.now();
 				gc.funcs.output.final_outputImage_markedDupes( reducedTileset, data.maps, tileWidth, tileHeight, rows, cols  );
 				gc.vars.timestamps.final_outputImage_markedDupes.e = performance.now();
-
+				
+				// Return the normal output AND the JSON output. 
 				var returnObject = {
 					 "reducedTileset" : reducedTileset
 					,"data.maps"      : data.maps
@@ -4184,8 +4292,11 @@ gc.funcs.output={
 					,"textObject"     : textObject
 					,"dstFile"        : dstFile
 					,"dstFile2"       : dstFile2
-
+					,"JSON": json
 				};
+
+				// console.log("process:", returnObject);
+				// console.log(json);
 
 				// console.log(
 				// 	"\nFINAL PROCESS:",
@@ -4250,12 +4361,15 @@ gc.funcs.output={
 			//
 			preProcess()
 				//
-				.then( function(data){
-					return process(data);
+				.then( async function(data){
+					let results = await process(data)
+					// console.log("RESULTS:", results);
+					return results;
 				}, function(error){ console.log("ERROR in preProcess:", error); rejectOuter(); return outerPromise; } )
 				//
 				.then(
 					function(data)    {
+						// console.log("DONE:", data);
 						gc.vars.timestamps.ts_all.e = performance.now();
 						timestampsOutput();
 						resolveOuter(data);

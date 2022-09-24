@@ -81,6 +81,8 @@ gc.funcs.domHandleCache_populate = function(){
 		// Input remove duplicate tiles.
 		,"removeDupeTiles"       : document.querySelector("#gc3_mapedit_removeDupeTiles")
 
+		// Output as json instead of C
+		,"outputAsJson"       : document.querySelector("#gc3_mapedit_outputAsJson")
 
 		// The process button.
 		,"processToC_btn"       : document.querySelector("#gc3_maps_processToC_btn")
