@@ -151,7 +151,6 @@ gc.funcs.domHandleCache_populate = function(){
 		// OUTPUT - all
 		,"ts_all"                        : document.querySelector("#gc3_perf_output3 [name='ts_all']")
 	};
-
 };
 
 gc.funcs.domHandleCache_populate_UAM = function(){
@@ -178,6 +177,5 @@ gc.funcs.domHandleCache_populate_UAM = function(){
 		gc.vars.dom.uamLogin["openUAM"]    = document.querySelectorAll(".openUAM"); //
 		gc.vars.dom.uamLogin["uamIframe"]  = document.querySelector("#uamIframe");  //
 	}
-
 }
 
