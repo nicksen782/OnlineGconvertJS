@@ -494,6 +494,18 @@ body {
 	background-color: hsla(200, 58%, 32%, 0.4);
 }
 
+.table3 {
+	width: 100%;
+	/* background-color: rgba(90, 120, 181, 0.4); */
+	/* border-collapse: collapse; */
+}
+.table3 td {
+    border: 1px solid black;
+    padding: 5px;
+}
+.table3 input[type="button"] {
+	width:100%;
+}
 .navOptions:hover {
 	background-color: #a4c3ff;
 }
@@ -880,25 +892,45 @@ select#gc3_input_selectTestData {
 	height: 600px;
 }
 
-#gcOutput_window1 {
+#gcOutput_combined_window1 {
 	left: 650px;
 	top: 10px;
 	width: 490px;
-	height: 210px;
+	height: 420px;
+}
+
+#gcOutput_window1 {
+	left: 0px;
+	top: 10px;
+	width: 475px;
+	height: 330px;
+	/* overflow: hidden; */
 }
 
 #gcOutput_window2 {
-	left: 650px;
-	top: 230px;
-	width: 490px;
-	height: 210px;
+	left: 0px;
+	top: 10px;
+	width: 475px;
+	height: 330px;
+	/* overflow: hidden; */
 }
+
+#gcOutput_window_A{
+	left: 0px;
+	top: 10px;
+	width: 475px;
+	height: 330px;
+	/* overflow: hidden; */
+}
+
+
+
 
 #gcOutput_window3 {
 	left: 330px;
 	top: 10px;
 	width: 310px;
-	height: 360px;
+	height: 380px;
 	text-align: center;
 }
 
@@ -906,7 +938,7 @@ select#gc3_input_selectTestData {
 	left: 10px;
 	top: 10px;
 	width: 310px;
-	height: 360px;
+	height: 380px;
 	text-align: center;
 }
 
@@ -924,10 +956,12 @@ select#gc3_input_selectTestData {
 	background-color: rgb(22, 21, 43);
 	color: navajowhite;
 	margin: 0px;
-	width: 475px;
-	height: 170px;
+	/* width: 475px; */
+	/* height: 170px; */
 	/* overflow-x: auto; */
 	white-space: pre;
+	width: 460px;
+	height: 290px;
 }
 
 #gcOutput_c2binTextarea {
@@ -936,10 +970,26 @@ select#gc3_input_selectTestData {
 	background-color: rgb(22, 21, 43);
 	color: navajowhite;
 	margin: 0px;
-	width: 475px;
-	height: 170px;
+	/* width: 475px; */
+	/* height: 170px; */
 	/* overflow-x: auto; */
 	white-space: pre;
+	width: 460px;
+	height: 290px;
+}
+
+#gcOutput_jsonTextarea {
+	font-size: 10px;
+	font-family: monospace;
+	background-color: rgb(22, 21, 43);
+	color: navajowhite;
+	margin: 0px;
+	/* width: 475px; */
+	/* height: 170px; */
+	/* overflow-x: auto; */
+	white-space: pre;
+	width: 460px;
+	height: 290px;
 }
 
 
@@ -1128,9 +1178,9 @@ div#gcOutput_window6.show{
 }
 
 #gcOutput_window7 {
-	left: 855px;
+	left: 650px;
 	top: 450px;
-	width: 285px;
+	width: 490px;
 	height: 100px;
 	text-align: center;
 }

@@ -169,6 +169,9 @@ window.onload = function(){
 			// Add all the event listeners.
 			gc.funcs.addAllListeners();
 
+			// Init the output nav.
+			gc.funcs.output.nav.init();
+
 			},
 			// ERROR HANDLER.
 			gc.funcs.shared.rejectedPromise
