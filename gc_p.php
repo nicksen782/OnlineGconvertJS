@@ -1,4 +1,17 @@
 <?php
+/**
+* Function list:
+* - API_REQUEST()
+* - gc_init()
+* - getGamesAndXmlFilepathsViaUserId()
+* - gc_updateXmlFile()
+* - gc_updateImgFile()
+* - uam_saveProgmem()
+* - uam_saveC2bin()
+* - uam_updateAssets()
+* - uam_runC2BIN()
+*/
+
 // All requests to the server should go through this file.
 
 // This is the only place this flag is set. It is checked everywhere else insuring that all processes start here.
@@ -112,6 +125,7 @@ function API_REQUEST( $api, $type ){
 	$o_values["gc_updateImgFile"]                 = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
 	$o_values["uam_saveProgmem"]                  = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
 	$o_values["uam_saveC2bin"]                    = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
+	$o_values["uam_saveJSON"]                     = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
 	$o_values["uam_updateAssets"]                 = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
 
 	$o_values["uam_runC2BIN"]                     = [ "p"=>( ( $isFullAdmin ) ? 1 : 0 ), "args"=>[] ] ;
@@ -196,25 +210,26 @@ function getGamesAndXmlFilepathsViaUserId(){
 
 	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
 	$s_SQL1  ="
-SELECT
-	  gameId
-	, gameName
-	, UAMdir
+		SELECT
+			gameId
+			, gameName
+			, UAMdir
 
-	--, author_user_id
-	--, author
-	--, gamedir
-	--, created
-	--, last_update
-FROM games_manifest
-WHERE author_user_id = :author_user_id
-ORDER BY last_update DESC
+			--, author_user_id
+			--, author
+			--, gamedir
+			--, created
+			--, last_update
+		FROM games_manifest
+		WHERE author_user_id = :author_user_id
+		ORDER BY last_update DESC
 	;";
 	$prp1    = $dbhandle->prepare($s_SQL1);
 	$dbhandle->bind(':author_user_id' , $author_user_id ) ;
 	$retval1 = $dbhandle->execute();
 	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
 	$errors = [];
+	$results_test = $results1;
 
 	// Remove dirs that don't exist.
 	for($i=0; $i<sizeof($results1); $i+=1){
@@ -222,7 +237,19 @@ ORDER BY last_update DESC
 		$gameId    = $results1[$i]["gameId"];
 		$gameName  = $results1[$i]["gameName"];
 		if( ! file_exists($_SERVER["DOCUMENT_ROOT"] . "/" . $directory) ){
-			array_push($errors, [$results1[$i], $_SERVER["DOCUMENT_ROOT"] . "/" . $directory, "!file_exists"]);
+			array_push(
+				$errors, 
+				[
+					"$gameName" => [
+						"results1[$i]"=> $results1[$i],
+						"realdir"     => $_SERVER["DOCUMENT_ROOT"] . "/" . $directory,
+						"error"       => "!file_exists",
+						"webdir"      => $directory, 
+						"gameId"      => $gameId, 
+						"gameName"    => $gameName
+					] 
+				]
+			);
 			unset($results1[$i]);
 		}
 	}
@@ -273,7 +300,9 @@ ORDER BY last_update DESC
 		'$_POST'    => $_POST    ,
 		'$results1' => $results1 ,
 		'$results2' => $results2 ,
-		'$errors'   => $dev ? $errors : []  ,
+		'$results_test' => $results_test ,
+		// '$errors'   => $dev ? $errors : []  ,
+		'$errors'   => $errors ,
 	) );
 
 }
@@ -289,11 +318,11 @@ function gc_updateXmlFile(){
 	global $_db_file;
 	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
 	$s_SQL1  ="
-SELECT
-	UAMdir
-FROM games_manifest
-WHERE gameid = :gameid
-ORDER BY last_update DESC
+		SELECT
+			UAMdir
+		FROM games_manifest
+		WHERE gameid = :gameid
+		ORDER BY last_update DESC
 	;";
 	$prp1    = $dbhandle->prepare($s_SQL1);
 	$dbhandle->bind(':gameid' , $gameid ) ;
@@ -329,11 +358,11 @@ function gc_updateImgFile(){
 	global $_db_file;
 	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
 	$s_SQL1  ="
-SELECT
-	UAMdir
-FROM games_manifest
-WHERE gameid = :gameid
-ORDER BY last_update DESC
+		SELECT
+			UAMdir
+		FROM games_manifest
+		WHERE gameid = :gameid
+		ORDER BY last_update DESC
 	;";
 	$prp1    = $dbhandle->prepare($s_SQL1);
 	$dbhandle->bind(':gameid' , $gameid ) ;
@@ -374,11 +403,11 @@ function uam_saveProgmem(){
 	global $_db_file;
 	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
 	$s_SQL1  ="
-SELECT
-	UAMdir
-FROM games_manifest
-WHERE gameid = :gameid
-ORDER BY last_update DESC
+		SELECT
+			UAMdir
+		FROM games_manifest
+		WHERE gameid = :gameid
+		ORDER BY last_update DESC
 	;";
 	$prp1    = $dbhandle->prepare($s_SQL1);
 	$dbhandle->bind(':gameid' , $gameid ) ;
@@ -421,11 +450,11 @@ function uam_saveC2bin()  {
 	global $_db_file;
 	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
 	$s_SQL1  ="
-SELECT
-	UAMdir
-FROM games_manifest
-WHERE gameid = :gameid
-ORDER BY last_update DESC
+		SELECT
+			UAMdir
+		FROM games_manifest
+		WHERE gameid = :gameid
+		ORDER BY last_update DESC
 	;";
 	$prp1    = $dbhandle->prepare($s_SQL1);
 	$dbhandle->bind(':gameid' , $gameid ) ;
@@ -457,6 +486,61 @@ ORDER BY last_update DESC
 
 }
 
+//
+function uam_saveJSON()  {
+	$filename = $_POST["filename"] ;
+	$gameid   = $_POST["gameid"]  ;
+	$userFile = $_POST["userFile"];
+
+	// Get the game's UAMdir.
+	global $_appdir;
+	global $_db_file;
+	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
+	$s_SQL1  ="
+		SELECT
+			UAMdir
+		FROM games_manifest
+		WHERE gameid = :gameid
+		ORDER BY last_update DESC
+	;";
+	$prp1    = $dbhandle->prepare($s_SQL1);
+	$dbhandle->bind(':gameid' , $gameid ) ;
+	$retval1 = $dbhandle->execute();
+	$results1= $dbhandle->statement->fetchAll(PDO::FETCH_ASSOC) ;
+
+	if(!sizeof($results1)){
+		echo json_encode([
+			'data'    => "Game not found in the UAM database.",
+			'success' => false
+		]);
+		exit();
+	}
+
+	$directory = $_SERVER["DOCUMENT_ROOT"] . "/" . $results1[0]["UAMdir"] . "/JSON";
+
+	$filePath = $directory . "/" . $filename;
+	$fpc_result = file_put_contents( $filePath, $userFile );
+
+	echo json_encode(array(
+		// Expected response.
+		'data'       => []         ,
+		'success'    => true       ,
+
+		// Generated.
+		// '$results1'   => $results1 ,
+		// '$directory'  => $directory ,
+		// '$filePath'   => $filePath ,
+		// '$fpc_result' => $fpc_result ,
+		
+		// Provided.
+		// '$_POST'    => $_POST,
+		// '$gameid'   => $gameid ,
+		// '$filename' => $filename,
+		// '$userFile' => $userFile,
+	) );
+
+}
+
 function uam_updateAssets()  {
 	// $filename = $_POST["filename"] ;
 	$gameid   = $_POST["gameid"]  ;
@@ -467,11 +551,11 @@ function uam_updateAssets()  {
 	global $_db_file;
 	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
 	$s_SQL1  ="
-SELECT
-	UAMdir
-FROM games_manifest
-WHERE gameid = :gameid
-ORDER BY last_update DESC
+		SELECT
+			UAMdir
+		FROM games_manifest
+		WHERE gameid = :gameid
+		ORDER BY last_update DESC
 	;";
 	$prp1    = $dbhandle->prepare($s_SQL1);
 	$dbhandle->bind(':gameid' , $gameid ) ;
@@ -494,7 +578,8 @@ ORDER BY last_update DESC
 	$script1 = "cp -rf " . $directory . "/" . "PROGMEM/* "        . $assetsDir . " 2>&1 ";
 	$script2 = "cp -rf " . $directory . "/" . "C2BIN/OUTPUT/* "   . $assetsDir . " 2>&1 ";
 	$script3 = "cp -rf " . $directory . "/" . "MUSIC/* "          . $assetsDir . " 2>&1 ";
-	$script4 = "echo DONE 2>&1 ";
+	$script4 = "cp -rf " . $directory . "/" . "JSON/* "           . $assetsDir . " 2>&1 ";
+	$script5 = "echo DONE 2>&1 ";
 
 	$output1 = shell_exec($script1);
 	$output2 = shell_exec($script2);
@@ -508,15 +593,16 @@ ORDER BY last_update DESC
 		// '$script2'    => $script2       ,
 		// '$script3'    => $script3       ,
 		// '$script4'    => $script4       ,
+		// '$script5'    => $script5       ,
 
 		// '$results1'  => $results1  ,
 		// '$directory' => $directory ,
 		// '$_POST'     => $_POST     ,
 		// '$gameid'    => $gameid    ,
-		// '$output1'   => $output1   ,
-		// '$output2'   => $output2   ,
-		// '$output3'   => $output3   ,
-		// '$output4'   => $output4   ,
+		'$output1'   => $output1   ,
+		'$output2'   => $output2   ,
+		'$output3'   => $output3   ,
+		'$output4'   => $output4   ,
 
 	) );
 
@@ -532,11 +618,11 @@ function uam_runC2BIN()  {
 	global $_db_file;
 	$dbhandle = new sqlite3_DB_PDO__UAM5($_db_file) or exit("cannot open the database");
 	$s_SQL1  ="
-SELECT
-	UAMdir
-FROM games_manifest
-WHERE gameid = :gameid
-ORDER BY last_update DESC
+		SELECT
+			UAMdir
+		FROM games_manifest
+		WHERE gameid = :gameid
+		ORDER BY last_update DESC
 	;";
 	$prp1    = $dbhandle->prepare($s_SQL1);
 	$dbhandle->bind(':gameid' , $gameid ) ;
@@ -579,7 +665,5 @@ ORDER BY last_update DESC
 	) );
 
 }
-
-
 
 ?>

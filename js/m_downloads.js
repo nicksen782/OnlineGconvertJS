@@ -6,8 +6,50 @@ gc.funcs.downloads={
 	// 	,function(error){ console.log("ERROR"); }
 	// );
 
+
+	// * Download a single file. It could be from RAM, or from a textarea, etc.
+	downloadFileFromRAM    : function(data, filename, isBinary){
+		return new Promise(function(resolve, reject){
+			// This function requires 'saveAs'. Make sure it is loaded.
+			featureDetection.funcs.applyFeatures_fromList( ["FileSaver"] ).then(function(){
+				// console.log("DONE:", ['saveAs'] );
+
+				let dataToSave;
+				// var blob;
+				// blob = data;
+
+				if(isBinary){ 
+					console.log("isBinary: true", isBinary);
+					dataToSave = data; 
+				}
+				else{
+					console.log("isBinary: false", isBinary);
+					// blob = new Blob( [data] , {type: ""});
+					if(typeof data == "string"){
+						dataToSave = new Blob( [data.data] , {type: "text/plain;charset=utf-8"});
+					}
+					else if(typeof data == "object"){
+						dataToSave = new Blob( [ data.data ] , {type: "text/plain;charset=utf-8"});
+					}
+					else{
+						console.log("UNKNOWN TYPE");
+						reject(); return; 
+					}
+						
+				}
+
+				console.log(filename, dataToSave);
+
+				// Now get the data and present the download.
+				saveAs(dataToSave, filename);
+
+				resolve();
+			});
+		});
+
+	}
   	// * Downloads: In-RAM assets by name.
-  	 downloadOneRamFile     : function(which, immediateDownload){
+  	,downloadOneRamFile     : function(which, immediateDownload){
   	 	var filename="";
 
   	 	return new Promise(function(outer_resolve, outer_reject){
@@ -27,6 +69,11 @@ gc.funcs.downloads={
 					case "c2binInc"      : {
 						filename="c2bin.inc";
 			  	 		resolve( { "filename":filename, "data":gc.vars.dom.output.c2binTextarea.value } );
+						break;
+					}
+					case "json"      : {
+						filename="json.json";
+			  	 		resolve( { "filename":filename, "data":gc.vars.dom.output.jsonTextarea.value } );
 						break;
 					}
 
@@ -54,7 +101,7 @@ gc.funcs.downloads={
 
 			  	 	// opps?
 					default              : {
-						resolve("");
+						reject();
 						break;
 					}
 				}
@@ -90,6 +137,8 @@ gc.funcs.downloads={
   	 	});
 
   	}
+
+
   	// * Downloads: In-RAM assets from a list.
   	,downloadManyRamFiles   : function(list){
   		if(!list.length){
@@ -136,6 +185,7 @@ gc.funcs.downloads={
   			// TEXT
   			"progmemInc",
   			"c2binInc",
+  			"json",
 
   			// IMG
   			"tilesetImg",
@@ -149,6 +199,7 @@ gc.funcs.downloads={
   			"srcXml",
   			"progmemInc",
   			"c2binInc",
+  			"json",
 
   			// IMG
   			"srcImg",
@@ -168,32 +219,6 @@ gc.funcs.downloads={
   			"mapImg",
   		]);
   	}
-	// * Download a single file. It could be from RAM, or from a textarea, etc.
-	,downloadFileFromRAM    : function(data, filename, isBinary){
-		return new Promise(function(resolve, reject){
-			// This function requires 'saveAs'. Make sure it is loaded.
-			featureDetection.funcs.applyFeatures_fromList( ["FileSaver"] ).then(function(){
-				// console.log("DONE:", ['saveAs'] );
-
-				//
-				var blob;
-				// blob = data;
-
-				if(isBinary){ blob = data; }
-				else{
-					// blob = new Blob( [data] , {type: ""});
-					blob = new Blob( [data] , {type: "text/plain;charset=utf-8"});
-				}
-
-				// Now get the data and present the download.
-				saveAs(blob, filename);
-
-				resolve();
-
-			});
-		});
-
-	}
 	// * Download a single zip file that consists of multiple files from RAM, or from a textarea, etc.
 	,downloadZipFileFromRAM : function(results, datas){
 		// data should be an array ([]).

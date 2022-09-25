@@ -99,6 +99,7 @@ gc.funcs.domHandleCache_populate = function(){
 		// Textarea outputs.
 		,"progmemTextarea"        : document.querySelector("#gcOutput_progmemTextarea")
 		,"c2binTextarea"          : document.querySelector("#gcOutput_c2binTextarea")
+		,"jsonTextarea"          : document.querySelector("#gcOutput_jsonTextarea")
 		,"combinedTextareaWindow" : document.querySelector("#gcOutput_window6")
 
 		// Action buttons.
@@ -119,6 +120,7 @@ gc.funcs.domHandleCache_populate = function(){
 		,"download_markedDupesImg_btn" : document.querySelector("#gc3_output_download_markedDupesImg_btn")
 		,"download_progmemInc_btn"     : document.querySelector("#gc3_output_download_progmemInc_btn")
 		,"download_c2binInc_btn"       : document.querySelector("#gc3_output_download_c2binInc_btn")
+		,"download_json_btn"           : document.querySelector("#gc3_output_download_json_btn")
 
 		// Downloads: Lists
 		,"download_all_input_btn"      : document.querySelector("#gc3_output_download_all_input_btn")
@@ -164,9 +166,10 @@ gc.funcs.domHandleCache_populate_UAM = function(){
 		gc.vars.dom.input.uam_imgName         = document.querySelector("#gc3_input_uam_imgName")          ;
 
 		// UAM DOM: OUTPUT
+		gc.vars.dom.output.saveJson_btn       = document.querySelector("#gc3_output_UAM_saveJson_btn") ;
 		gc.vars.dom.output.saveProgmem_btn    = document.querySelector("#gc3_output_UAM_saveProgmem_btn") ;
 		gc.vars.dom.output.saveC2bin_btn      = document.querySelector("#gc3_output_UAM_saveC2bin_btn")   ;
-		 gc.vars.dom.output.runC2BIN_btn       = document.querySelector("#gc3_output_UAM_runC2BIN_btn")   ;
+		gc.vars.dom.output.runC2BIN_btn       = document.querySelector("#gc3_output_UAM_runC2BIN_btn")   ;
 		gc.vars.dom.output.updateAssets_btn   = document.querySelector("#gc3_output_UAM_updateAssets_btn")   ;
 	}
 	if(gc.vars.originUAM==true){

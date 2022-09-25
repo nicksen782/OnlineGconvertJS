@@ -1,0 +1,31 @@
+.output_tab{
+    display:
+    inline-block;
+    width:100px;
+    height: 1.5em;
+    line-height: 1.5em;
+    background-color: #346cda;
+    text-align: center;
+    vertical-align: top;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid #2e658e;
+}
+.output_tab.active{
+    background-color: #6994e9;
+    border-color: black;
+    font-weight: bold;
+}
+.output_tab:hover{
+    background-color:cornflowerblue;
+}
+
+.output_view{
+    display:none;
+    background-color:red;
+    position:relative;
+}
+.output_view.active{
+    display:block;
+}

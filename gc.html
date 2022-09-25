@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="css/normalize801.css">
 	<link rel="stylesheet" type="text/css" href="css/html5boilerplate.css">
 	<link rel="stylesheet" type="text/css" href="css/gc.css">
+	<link rel="stylesheet" type="text/css" href="css/outputNav.css">
 
 	<!--JQUERY STUFF-->
 	<!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
@@ -209,8 +210,6 @@
 						<td >
 							<select id="gc3_input_uam_gameList_select">
 								<option value="">0 games</option>
-								<!--<option value="0" title="" basegamedir="UzeRPG_A1">Uze RPG Alpha 1</option>-->
-								<!--<option value="1" title="" basegamedir="MARIOBROS2018">Mario Bros 2018</option>-->
 							</select>
 						</td>
 						<td>
@@ -223,8 +222,6 @@
 						<td>
 							<select id="gc3_input_uam_xmlList_select">
 								<option value="">0 files</option>
-								<!--<option value="0" url="/non-web/Uzebox/MARIOBROS2018/UAM/XML/bg_tiles.xml"    >UAM: Mario Bros (bg tiles)</option>-->
-								<!--<option value="1" url="/non-web/Uzebox/MARIOBROS2018/UAM/XML/sprite_tiles.xml">UAM: Mario Bros (sprites)</option>-->
 							</select>
 						</td>
 						<td>
@@ -390,21 +387,49 @@
 	</div>
 
 	<div class="sectionDivs_content_">
-		<!--Section window PROGMEM OUTPUT -->
-		<div id="gcOutput_window1" class="sectionWindow">
-			<div class="sectionWindow_title">PROGMEM OUTPUT</div>
+		<!--Section window COMBINED OUTPUT -->
+		<div id="gcOutput_combined_window1" class="sectionWindow">
+			<div class="sectionWindow_title">COMBINED OUTPUT</div>
 			<div class="sectionWindow_content">
-				<textarea id="gcOutput_progmemTextarea" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
+
+				<div id="output_nav">
+					<div class="output_tab active" id="output_tab_progmem">PROGMEM</div>
+					<div class="output_tab" id="output_tab_c2bin">C2BIN</div>
+					<div class="output_tab" id="output_tab_json">JSON</div>
+				</div>
+				<div id="output_views">
+					<div class="output_view active" id="output_view_progmem">
+						<!--Section window PROGMEM OUTPUT -->
+						<div id="gcOutput_window1" class="sectionWindow">
+							<div class="sectionWindow_title">PROGMEM OUTPUT</div>
+							<div class="sectionWindow_content">
+								<textarea id="gcOutput_progmemTextarea" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="output_view" id="output_view_c2bin">
+						<!--Section window - C2BIN OUTPUT -->
+						<div id="gcOutput_window2" class="sectionWindow">
+							<div class="sectionWindow_title">C2BIN OUTPUT</div>
+							<div class="sectionWindow_content">
+								<textarea id="gcOutput_c2binTextarea" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="output_view" id="output_view_json">
+						<!--Section window - JSON OUTPUT -->
+						<div id="gcOutput_window_A" class="sectionWindow">
+							<div class="sectionWindow_title">JSON OUTPUT</div>
+							<div class="sectionWindow_content">
+								<textarea id="gcOutput_jsonTextarea" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 
-		<!--Section window - C2BIN OUTPUT -->
-		<div id="gcOutput_window2" class="sectionWindow">
-			<div class="sectionWindow_title">C2BIN OUTPUT</div>
-			<div class="sectionWindow_content">
-				<textarea id="gcOutput_c2binTextarea" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
-			</div>
-		</div>
 
 		<!--Section window - TILESET -->
 		<div id="gcOutput_window3" class="sectionWindow">
@@ -454,14 +479,19 @@
 		<div id="gcOutput_window7" class="sectionWindow uamOnly">
 			<div class="sectionWindow_title">UAM</div>
 			<div class="sectionWindow_content">
-				<table class="table1" id="gc3_output_downloadsTable">
-					<caption></caption>
-						<tr> <td colspan="2"> <input type="button" id="gc3_output_UAM_saveProgmem_btn"  value="Save PROGMEM to UAM dir"> </td>  </tr>
-						<tr> <td colspan="2"> <input type="button" id="gc3_output_UAM_saveC2bin_btn"    value="Save C2BIN to UAM dir"> </td>    </tr>
-						<tr>
-							<td colspan="1"> <input type="button" id="gc3_output_UAM_runC2BIN_btn" value="Run C2BIN"> </td>
-							<td colspan="1"> <input type="button" id="gc3_output_UAM_updateAssets_btn" value="Copy assets to src/assets"> </td>
-						</tr>
+				<table class="table3" id="">
+					<tr>
+						<td colspan="1">Save to UAM dir:</td>
+						<td colspan="1"><input type="button" id="gc3_output_UAM_saveProgmem_btn"  value="PROGMEM"></td>
+						<td colspan="1"><input type="button" id="gc3_output_UAM_saveC2bin_btn"    value="C2BIN"></td>
+						<td colspan="1"><input type="button" id="gc3_output_UAM_saveJson_btn"     value="JSON"></td>
+					</tr>
+					<tr>
+						<td colspan="1">C2BIN/Assets</td>
+						<td colspan="1"> <input type="button" id="gc3_output_UAM_runC2BIN_btn" value="Run C2BIN"> </td>
+						<td colspan="1"> <input type="button" id="gc3_output_UAM_updateAssets_btn" value="Copy assets to src/assets"> </td>
+						<td colspan="1"> </td>
+					</tr>
 				</table>
 			</div>
 		</div>
@@ -485,7 +515,7 @@
 					<tr>
 						<td> <input type="button" id="gc3_output_download_progmemInc_btn"     value="PROGMEM inc"> </td>
 						<td> <input type="button" id="gc3_output_download_c2binInc_btn"       value="C2BIN inc"> </td>
-						<td></td>
+						<td> <input type="button" id="gc3_output_download_json_btn"           value="JSON"> </td>
 					</tr>
 					<tr>
 						<td> <input type="button" id="gc3_output_download_all_input_btn"      value="INPUT (.zip)"> </td>

@@ -371,6 +371,77 @@ gc.funcs.UAM = {
 
 		},
 
+		// * Saves the JSON data to the server.
+		uam_saveJson   : function(){
+			let filename = "";
+			try{ filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file"]; }
+			catch(e){
+				// console.log("ERROR: No XML file is loaded.");
+				alert      ("ERROR: No XML file is loaded.");
+				return;
+			}
+
+			if(filename!=undefined){
+				filename = filename.split("/");
+				filename = filename[ filename.length-1 ];
+			}
+			else{
+				console.log("ERROR: No value specified for the JSON output file.");
+				alert      ("ERROR: No value specified for the JSON output file.");
+				return;
+			}
+
+			let jsonTextarea      = gc.vars.dom.output.jsonTextarea   ;
+			if(! jsonTextarea.value.length){
+				console.log("ERROR: JSON output is empty.");
+				alert      ("ERROR: JSON output is empty.");
+				return;
+			}
+
+			let uam_xmlList_select = gc.vars.dom.input.uam_xmlList_select;
+
+			let gameid = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gameid");
+			let gamename = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gamename");
+
+			if(!gamename){
+				// console.log("ERROR: No game was selected.");
+				alert      ("ERROR: No game was selected.");
+				return;
+			}
+
+			let conf = confirm(
+				"About to update file.\n" +
+				"    FILE: " + filename + "\n" +
+				"    GAME: " + gamename + "\n" +
+				"Continue?"
+			);
+
+			if(!conf){ return; }
+
+			//
+			var formData = {
+				"o"        : "uam_saveJSON" ,
+				"userFile" : jsonTextarea.value ,
+				"gameid"   : gameid   ,
+				"filename" : filename ,
+				"_config"  : { "processor":"gc_p.php" }
+			};
+			
+			gc.funcs.shared.serverRequest(formData).then(
+				function(res){
+					// console.log("SUCCESS:", res);
+					if(res.success == false){
+						console.log("An error has occurred.\n\n"+res.data);
+						alert      ("An error has occurred.\n\n"+res.data);
+					}
+				},
+				function(res){
+					console.log("FAILURE:", res);
+				}
+			);
+
+		},
+
 		//
 		uam_updateAssets: function(){
 			let uam_gameList_select = gc.vars.dom.input.uam_gameList_select;
@@ -394,9 +465,7 @@ gc.funcs.UAM = {
 			//
 			var formData = {
 				"o"        : "uam_updateAssets" ,
-				// "userFile" : c2binTextarea.value ,
 				"gameid"   : gameid   ,
-				// "filename" : filename ,
 				"_config"  : { "processor":"gc_p.php" }
 			};
 
@@ -631,6 +700,9 @@ gc.funcs.UAM = {
 
 		// UAM: saveC2bin_btn
 		gc.vars.dom.output.saveC2bin_btn      .addEventListener('click', gc.funcs.UAM.output.uam_saveC2bin, false);
+		
+		// UAM: saveJson_btn
+		gc.vars.dom.output.saveJson_btn       .addEventListener('click', gc.funcs.UAM.output.uam_saveJson, false);
 
 		// UAM: updateAssets_btn
 		gc.vars.dom.output.updateAssets_btn   .addEventListener('click', gc.funcs.UAM.output.uam_updateAssets, false);
