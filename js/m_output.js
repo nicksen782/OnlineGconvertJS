@@ -533,6 +533,7 @@ gc.funcs.output = {
             },
             'tilemaps'     : {},
             'tileset'      : [], 
+            'SKIPPED_tilemaps'     : [],
         };
         
         for(let index in srcJson["tileset"]){
@@ -542,8 +543,11 @@ gc.funcs.output = {
         for(let key in srcJson["tilemaps"]){
             let rec = srcJson["tilemaps"][key];
             json.tilemaps[key] = JSON.stringify(rec);
-            // json.tilemaps[key] = rec;
         }
+        for(let key of srcJson["SKIPPED_tilemaps"]){
+            json.SKIPPED_tilemaps.push(key);
+        }
+
         // console.log("final_outputText_jsonOnly: DONE: ", json);
         textOutput3.value = JSON.stringify(json,null,2);
 
@@ -1148,14 +1152,22 @@ gc.funcs.output = {
                         translucent_color : Number( jsonObj["gfx-xform"]["output"]["tiles"]["@translucent_color"] ),
                         tileset  : [],
                         tilemaps : {},
+                        SKIPPED_tilemaps : [],
                     };
                     // console.log("SOURCE:", data);
                     for(let i=0; i<data.maps.length; i+=1){
+                        // Get the record. 
                         let rec = data.maps[i];
-                        // json.tilemaps[ rec["@var-name"] ] = {
-                        // 	mapOutputTo: rec["@mapOutputTo"],
-                        // 	arr        : [ rec["@width"], rec["@height"], ...rec["reduced_tilesUsed"]]
-                        // };
+
+                        // Skip this if the outputTo is set to "SKIPMAP".
+                        if(rec["@mapOutputTo"] == "SKIPMAP"){ 
+                            json.SKIPPED_tilemaps.push(rec["@var-name"]);
+                            continue; 
+                        }
+
+                        // TODO: Skip others?
+
+                        // Add.
                         json.tilemaps[ rec["@var-name"] ] = [ rec["@width"], rec["@height"], ...rec["reduced_tilesUsed"]];
                     }
                     for(let i=0; i<reducedTileset.length; i+=1){

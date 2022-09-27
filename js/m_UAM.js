@@ -38,6 +38,9 @@ gc.funcs.UAM = {
 			gc.funcs.UAM.input.uam_resetInputSection();
 
 			if(uam_gamelist.value==""){
+				uam_xmllist.options.length = 1;
+				uam_xmllist.options[0].text = "Game not selected";
+				uam_xmllist.options[0].value="";
 			}
 			else{
 				// Hide options that do not match the selected game's gameid.
@@ -47,12 +50,13 @@ gc.funcs.UAM = {
 					d.classList.remove("hidden");
 
 					// Now, decide if it will be shown or hidden.
-					if(d.getAttribute("gameid")!=gameid && d.value !=""){ d.classList.add("hidden"); }
-					else                                                { thecount+=1; }
+					if(d.getAttribute("gameid") != gameid || d.value == ""){ d.classList.add("hidden"); }
+					else                                                   { thecount +=1; }
 				});
 
 				// Update the first value (the blank one with the file count.)
-				uam_xmllist.options[0].text=thecount + " XML files";
+				// console.log("uam_gameList_select: ", thecount, uam_xmllist.options, uam_xmllist.options.length);
+				uam_xmllist.options[0].text = thecount + " XML files";
 				uam_xmllist.options[0].value="";
 
 				// Select the first value.
@@ -81,8 +85,31 @@ gc.funcs.UAM = {
 			gc.funcs.shared.serverRequest(formData).then(
 				function(res){
 					// console.log("SUCCESS:", res);
-					let gameList_UAM = res.$results1;
-					let XMLlist_UAM  = res.$results2;
+					let gameList_UAM = res.gameList_UAM;
+					let gameList_UAM_hidden = [];
+					let XMLlist_UAM  = res.XMLlist_UAM;
+					let defaultGameId  = res.defaultGameId;
+					let canLoadDefaultGameId  = false;
+					
+					// Disable entries in gameList_UAM that do not have any XML files. 
+					gameList_UAM = gameList_UAM.filter(function(game){
+						// Find match and return true. .
+						if(XMLlist_UAM.find(xml=>xml.gameid == game.gameId)){ 
+							// Is this gameid the default gameid? If so then set the canLoadDefaultGameId to true.
+							if(game.gameId == defaultGameId){
+								canLoadDefaultGameId = true; 
+							}
+
+							// Return true to include this game in the list.
+							return true; 
+						}
+
+						// No match. Add to hidden and return false. 
+						gameList_UAM_hidden.push(game);
+						return false;
+					});
+
+					// console.log("gameList_UAM_hidden:", gameList_UAM_hidden);
 
 					// Populate the games list.
 
@@ -100,9 +127,11 @@ gc.funcs.UAM = {
 					uam_gamelist.options[0].text=gameList_UAM.length + " games";
 					uam_gamelist.options[0].value="";
 
-					uam_xmllist.options[0].text=XMLlist_UAM.length + " XML files";
-					uam_xmllist.options[0].value="";
+					// console.log("XMLlist_UAM:", XMLlist_UAM);
+					uam_xmllist.options[0].text = XMLlist_UAM.length + " XML files";
+					uam_xmllist.options[0].value = "";
 
+					// Show the available games. 
 					gameList_UAM.map(function(d,i,a){
 						option = document.createElement("option");
 						option.setAttribute("gameid"        , d.gameId        );
@@ -110,6 +139,17 @@ gc.funcs.UAM = {
 						option.setAttribute("author_user_id", d.author_user_id);
 						option.value = d.gameId;
 						option.text = d.gameName;
+						frag.appendChild(option);
+					});
+					// show the unavailable games as disabled. 
+					gameList_UAM_hidden.map(function(d,i,a){
+						option = document.createElement("option");
+						option.setAttribute("gameid"        , d.gameId        );
+						option.setAttribute("gamename"      , d.gameName      );
+						option.setAttribute("author_user_id", d.author_user_id);
+						option.disabled = true; 
+						option.value = d.gameId;
+						option.text = `${d.gameName} (No XML)`;
 						frag.appendChild(option);
 					});
 					uam_gamelist.appendChild(frag);
@@ -131,6 +171,15 @@ gc.funcs.UAM = {
 					});
 					uam_xmllist.appendChild(frag);
 
+					// Set the default game as the selected GAME option. 
+					if(canLoadDefaultGameId){
+						// console.log("Loading default game.");
+						uam_gamelist.value = defaultGameId;
+						uam_gamelist.dispatchEvent(new Event("change") );
+					}
+					// else{
+						// console.log("Unable to load default game.");
+					// }
 				},
 				function(res){
 					console.log("FAILURE:", res);

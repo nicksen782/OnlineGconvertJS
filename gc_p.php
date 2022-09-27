@@ -231,6 +231,9 @@ function getGamesAndXmlFilepathsViaUserId(){
 	$errors = [];
 	$results_test = $results1;
 
+	// Get the default game value.
+	$defaultGameId = $_SESSION["default_game"];
+
 	// Remove dirs that don't exist.
 	for($i=0; $i<sizeof($results1); $i+=1){
 		$directory = $results1[$i]["UAMdir"] . "/XML";
@@ -297,12 +300,16 @@ function getGamesAndXmlFilepathsViaUserId(){
 		'data'      => [] ,
 		'success'   => true      ,
 
-		'$_POST'    => $_POST    ,
-		'$results1' => $results1 ,
-		'$results2' => $results2 ,
-		'$results_test' => $results_test ,
-		// '$errors'   => $dev ? $errors : []  ,
-		'$errors'   => $errors ,
+		'gameList_UAM'  => $results1 ,
+		'XMLlist_UAM'   => $results2 ,
+		'defaultGameId' => $defaultGameId ,
+		
+		// DEBUG
+		// '$_POST'       => $_POST    ,
+		// '$_SESSION'    => $_SESSION ,
+		// '$results_test'=> $results_test ,
+		// '$errors'      => $errors ,
+		// '$errors'      => $dev ? $errors : [] ,
 	) );
 
 }
