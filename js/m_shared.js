@@ -229,11 +229,20 @@ gc.funcs.shared={
 	getImageElem_fromUrl : function(url){
 		var img_prom = new Promise(function(resolve, reject){
 			var img = new Image();
+			let imgUrl = url;
+			let randomNum = "?r=" + (new Date()).getTime();
 			img.onload = function(){
 				img.onload=null;
 				resolve(img);
 			};
-			img.src = url  + "?r=" + (new Date()).getTime(); ;
+			img.onerror = function(err){
+				img.error=null;
+				reject({
+					"text": "Could not load image",
+					"src": img.src
+				});
+			};
+			img.src = imgUrl + randomNum;
 		});
 
 		// img_prom.then(function(img){

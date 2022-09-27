@@ -269,7 +269,7 @@ gc.funcs.input={
 		var prom = new Promise(
 			function(resolveOuter, rejectOuter){
 			// Get the selected test data value and load those files.
-			gc.funcs.shared.getFile_fromUrl( url ).then(function(xmlString){
+			gc.funcs.shared.getFile_fromUrl( url ).then(async function(xmlString){
 				// var parser = new DOMParser();
 				// xmlString = parser.parseFromString(xmlString,"text/xml");
 
@@ -332,28 +332,31 @@ gc.funcs.input={
 				}
 
 				// Get the image from the url.
-				var img_prom = gc.funcs.shared.getImageElem_fromUrl(srcImage);
+				var img;
+				try{ img = await gc.funcs.shared.getImageElem_fromUrl(srcImage); } 
+				catch(e){
+					alert(`ERROR: ${e.text}\n\nSRC: ${e.src}`);
+					console.log("ERROR:", e);
+					throw "ABORT";
+				}
 
-				// Continue validation after the image data has been retrieved.
-				img_prom.then(function(img){
-					// Draw the image to the canvas.
-					var ctx1 = gc.vars.dom.input.canvas.getContext("2d");
-					ctx1.canvas.width = img.width;
-					ctx1.canvas.height = img.height;
-					ctx1.drawImage(img, 0, 0);
+				// Draw the image to the canvas.
+				var ctx1 = gc.vars.dom.input.canvas.getContext("2d");
+				ctx1.canvas.width = img.width;
+				ctx1.canvas.height = img.height;
+				ctx1.drawImage(img, 0, 0);
 
-					// Validate the XML and IMG.
-					gc.funcs.input.inputDataValidation(jsonObj, img).then(
-						function(success){
-							// console.log("SUCCESS!", success);
-							resolveOuter(success);
-						}
-						, function(error){
-							console.log("ERROR!", error);
-							rejectOuter(error);
-						}
-					);
-				});
+				// Validate the XML and IMG.
+				gc.funcs.input.inputDataValidation(jsonObj, img).then(
+					function(success){
+						// console.log("SUCCESS!", success);
+						resolveOuter(success);
+					}
+					, function(error){
+						console.log("ERROR!", error);
+						rejectOuter(error);
+					}
+				);
 
 			});
 
