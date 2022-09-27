@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <gfx-xform version="SINGLE_TS">
- <input file="input_templates/sampleImage2.png" type="png" tile-width="8" tile-height="8" />
+ <input file="input_templates/Uzebox_MarioBros.png" type="png" tile-width="8" tile-height="8" />
  <output file="../marioBros_ts1.inc">
   <tiles var-name="marioBros_ts1" tilesetOutputTo="PROGMEM" removeDupeTiles="1" />
   <maps pointers-size="8">

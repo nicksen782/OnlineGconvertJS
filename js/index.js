@@ -139,6 +139,7 @@ window.onload = function(){
 				if(!res.UAMFOUND){
 					document.querySelector("#UAM_status_A").classList.add("show");
 					gc.funcs.UAM.disableUAM();
+					gc.funcs.input.showHideInputElements("testdata", "_CLEAR_ALL_");
 				}
 				// If UAM and there is an active login then show dialog B.
 				else if(res.UAMDATA.hasActiveLogin==1){
@@ -157,6 +158,8 @@ window.onload = function(){
 					// Show the dialog.
 					document.querySelector("#UAM_status_B").classList.add("show");
 
+					gc.funcs.input.showHideInputElements("uam", "_CLEAR_ALL_");
+
 				}
 				// If UAM and there is not an active login then show dialog C.
 				else if(res.UAMDATA.hasActiveLogin==0){
@@ -164,6 +167,8 @@ window.onload = function(){
 					gc.funcs.domHandleCache_populate_UAM();
 
 					document.querySelector("#UAM_status_C").classList.add("show");
+
+					gc.funcs.input.showHideInputElements("testdata", "_CLEAR_ALL_");
 				}
 
 			// Add all the event listeners.

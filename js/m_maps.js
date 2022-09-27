@@ -40,22 +40,27 @@ gc.funcs.maps={
 			var rows        = imgHeight/tileHeight;
 
 			// Reset the values in the preview.
-			gc.vars.dom.maps.preview_l           .value="0";
-			gc.vars.dom.maps.preview_t           .value="0";
-			gc.vars.dom.maps.preview_w           .value="2";
-			gc.vars.dom.maps.preview_h           .value="2";
+			// gc.vars.dom.maps.preview_l           .value="0";
+			// gc.vars.dom.maps.preview_t           .value="0";
+			// gc.vars.dom.maps.preview_w           .value="2";
+			// gc.vars.dom.maps.preview_h           .value="2";
+			gc.vars.dom.maps.preview_l           .innerText="0";
+			gc.vars.dom.maps.preview_t           .innerText="0";
+			gc.vars.dom.maps.preview_w           .innerText="2";
+			gc.vars.dom.maps.preview_h           .innerText="2";
+
 			gc.vars.dom.maps.preview_firstTile   .innerHTML="0";
 			gc.vars.dom.maps.preview_tileCountMap.innerHTML=cols*rows;
 
 			// Set the min and max values.
-			gc.vars.dom.maps.preview_l .setAttribute('min', '0');
-			gc.vars.dom.maps.preview_l .setAttribute('max', cols);
-			gc.vars.dom.maps.preview_t .setAttribute('min', '0');
-			gc.vars.dom.maps.preview_t .setAttribute('max', rows);
-			gc.vars.dom.maps.preview_w .setAttribute('min', '0');
-			gc.vars.dom.maps.preview_w .setAttribute('max', cols);
-			gc.vars.dom.maps.preview_h .setAttribute('min', '0');
-			gc.vars.dom.maps.preview_h .setAttribute('max', rows);
+			// gc.vars.dom.maps.preview_l .setAttribute('min', '0');
+			// gc.vars.dom.maps.preview_l .setAttribute('max', cols);
+			// gc.vars.dom.maps.preview_t .setAttribute('min', '0');
+			// gc.vars.dom.maps.preview_t .setAttribute('max', rows);
+			// gc.vars.dom.maps.preview_w .setAttribute('min', '0');
+			// gc.vars.dom.maps.preview_w .setAttribute('max', cols);
+			// gc.vars.dom.maps.preview_h .setAttribute('min', '0');
+			// gc.vars.dom.maps.preview_h .setAttribute('max', rows);
 
 			var buff = gc.vars.dom.input.canvas.getContext('2d').getImageData(
 				0,0, gc.vars.dom.input.canvas.width, gc.vars.dom.input.canvas.height
@@ -134,7 +139,7 @@ gc.funcs.maps={
 		switch(version){
 			case "1"        : { grayOut=true ; break; }
 			case "SINGLE_TS": { grayOut=false; break; }
-			case "MULTI_TS" : { grayOut=false; break; }
+			// case "MULTI_TS" : { grayOut=false; break; }
 			default         : { grayOut=true ; break; }
 		}
 		// +(grayOut ? 'unavailableView' : '')+'
@@ -265,10 +270,14 @@ gc.funcs.maps={
 		src_canvasL2.getContext('2d').strokeRect( srcX, srcY, w, h );
 
 		// Display the value for left, top, width, height.
-		gc.vars.dom.maps.preview_l.value = left      ;
-		gc.vars.dom.maps.preview_t.value = top       ;
-		gc.vars.dom.maps.preview_w.value = mapWidth  ;
-		gc.vars.dom.maps.preview_h.value = mapHeight ;
+		// gc.vars.dom.maps.preview_l.value = left      ;
+		// gc.vars.dom.maps.preview_t.value = top       ;
+		// gc.vars.dom.maps.preview_w.value = mapWidth  ;
+		// gc.vars.dom.maps.preview_h.value = mapHeight ;
+		gc.vars.dom.maps.preview_l.innerText = left      ;
+		gc.vars.dom.maps.preview_t.innerText = top       ;
+		gc.vars.dom.maps.preview_w.innerText = mapWidth  ;
+		gc.vars.dom.maps.preview_h.innerText = mapHeight ;
 
 		// Set the dimensions for the destination canvas.
 		dest_canvas.width  = mapWidth  * tileWidth;
@@ -312,18 +321,24 @@ gc.funcs.maps={
 		var top  = Math.floor(coords.y / tileHeight);
 
 		// Compare: look to see if either left or top has changed.
-		var oldLeft = parseInt(gc.vars.dom.maps.preview_l.value, 10);
-		var oldTop  = parseInt(gc.vars.dom.maps.preview_t.value, 10);
+		// var oldLeft = parseInt(gc.vars.dom.maps.preview_l.value, 10);
+		// var oldTop  = parseInt(gc.vars.dom.maps.preview_t.value, 10);
+		var oldLeft = parseInt(gc.vars.dom.maps.preview_l.innerText, 10);
+		var oldTop  = parseInt(gc.vars.dom.maps.preview_t.innerText, 10);
 
 		// If either has changed, redraw the preview.
 		if(oldLeft != left || oldTop !=top){
 			// Get the preview dimensions.
-			var mapWidth  = parseInt(gc.vars.dom.maps.preview_w.value, 10);
-			var mapHeight = parseInt(gc.vars.dom.maps.preview_h.value, 10);
+			// var mapWidth  = parseInt(gc.vars.dom.maps.preview_w.value, 10);
+			// var mapHeight = parseInt(gc.vars.dom.maps.preview_h.value, 10);
+			var mapWidth  = parseInt(gc.vars.dom.maps.preview_w.innerText, 10);
+			var mapHeight = parseInt(gc.vars.dom.maps.preview_h.innerText, 10);
 
 			// Update the coordinates under the preview canvas.
-			gc.vars.dom.maps.preview_l.value = left;
-			gc.vars.dom.maps.preview_t.value = top;
+			// gc.vars.dom.maps.preview_l.value = left;
+			// gc.vars.dom.maps.preview_t.value = top;
+			gc.vars.dom.maps.preview_l.innerText = left;
+			gc.vars.dom.maps.preview_t.innerText = top;
 
 			// Determine the coordinates.
 			var srcX = left      * tileWidth  ;
@@ -372,8 +387,10 @@ gc.funcs.maps={
 				src_canvasL2.getContext('2d').strokeRect( srcX, srcY, w, h );
 
 				// Display the values for left and top.
-				gc.vars.dom.maps.preview_l.value = left ;
-				gc.vars.dom.maps.preview_t.value = top  ;
+				// gc.vars.dom.maps.preview_l.value = left ;
+				// gc.vars.dom.maps.preview_t.value = top  ;
+				gc.vars.dom.maps.preview_l.innerText = left ;
+				gc.vars.dom.maps.preview_t.innerText = top  ;
 
 				// Set the dimensions for the destination canvas.
 				dest_canvas.width  = mapWidth  * tileWidth;
@@ -460,14 +477,6 @@ gc.funcs.maps={
 				do_mapOutputTo=true;
 				break;
 			}
-			case "MULTI_TS"  : {
-				// Override the JSON values for tilesetOutputTo and removeDupeTiles to be what the DOM control values are.
-				jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"] = gc.vars.dom.maps.tilesetOutputTo.value   != ""   ? gc.vars.dom.maps.tilesetOutputTo.value : "PROGMEM";
-				jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"] = gc.vars.dom.maps.removeDupeTiles.checked == true ? "1"                                     : "0";
-				jsonObj["gfx-xform"]["output"]["tiles"]["@outputAsJson"]    = gc.vars.dom.maps.outputAsJson.checked    == true ? "1"                                     : "0";
-				do_mapOutputTo=true;
-				break;
-			}
 			default                 : {
 				break;
 			}
@@ -497,13 +506,6 @@ gc.funcs.maps={
 			}
 
 			jsonObj["gfx-xform"]["output"]["maps"]["map"].push( newMapObj );
-		}
-
-		if(version=="MULTI_TS"){
-			// Update the full JSON in memory.
-			var full_jsonObj = gc.vars.settings.input.full_jsonObj;
-			var ts_index     = gc.vars.dom.input.xml_multi_select.value;
-			full_jsonObj["gfx-xform"]["TILESET"][ts_index] = jsonObj;
 		}
 
 		// Convert the JSON back to XML, and reformat it.
@@ -542,10 +544,14 @@ gc.funcs.maps={
 		}
 
 		// Set the new values.
-		maps_record.querySelector(".gc3_l        input" ).value = parseInt(gc.vars.dom.maps.preview_l.value, 10) ;
-		maps_record.querySelector(".gc3_t        input" ).value = parseInt(gc.vars.dom.maps.preview_t.value, 10) ;
-		maps_record.querySelector(".gc3_w        input" ).value = parseInt(gc.vars.dom.maps.preview_w.value, 10) ;
-		maps_record.querySelector(".gc3_h        input" ).value = parseInt(gc.vars.dom.maps.preview_h.value, 10) ;
+		// maps_record.querySelector(".gc3_l        input" ).value = parseInt(gc.vars.dom.maps.preview_l.value, 10) ;
+		// maps_record.querySelector(".gc3_t        input" ).value = parseInt(gc.vars.dom.maps.preview_t.value, 10) ;
+		// maps_record.querySelector(".gc3_w        input" ).value = parseInt(gc.vars.dom.maps.preview_w.value, 10) ;
+		// maps_record.querySelector(".gc3_h        input" ).value = parseInt(gc.vars.dom.maps.preview_h.value, 10) ;
+		maps_record.querySelector(".gc3_l        input" ).value = parseInt(gc.vars.dom.maps.preview_l.innerText, 10) ;
+		maps_record.querySelector(".gc3_t        input" ).value = parseInt(gc.vars.dom.maps.preview_t.innerText, 10) ;
+		maps_record.querySelector(".gc3_w        input" ).value = parseInt(gc.vars.dom.maps.preview_w.innerText, 10) ;
+		maps_record.querySelector(".gc3_h        input" ).value = parseInt(gc.vars.dom.maps.preview_h.innerText, 10) ;
 	}
 	//
 	,beginProcessToC        : function(){

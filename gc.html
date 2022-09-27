@@ -63,50 +63,100 @@
 	</div>
 	<div class="sectionDivs_content_">
 
-		<!--Section window - XML INPUT -->
+		<!-- INPUT XML -->
 		<div id="input_window1" class="sectionWindow">
 			<div class="sectionWindow_title">INPUT XML</div>
 			<div class="sectionWindow_content">
 				<textarea id="gc3_input_xml" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="off" placeholder=""></textarea>
-				<br>
-				<a href="input_templates/xml_template1.xml" target="_blank">Download XML template</a>
-
 			</div>
 		</div>
 
-		<!--Section window - XML INPUT - MULTI_TS -->
-		<div id="input_window5" class="sectionWindow unavailableView">
-			<div class="sectionWindow_title">INPUT XML (MULTI)</div>
+		<!-- SAMPLE DOWNLOADS-->
+		<div id="input_window5" class="sectionWindow">
+			<div class="sectionWindow_title">SAMPLE DOWNLOADS</div>
 			<div class="sectionWindow_content">
-				<div id="gc3_input_xml_MULTI_TS_div">
-					<select id="gc3_input_xml_MULTI_TS_select">
-						<option value=""></option>
-					</select>
-
-					<input type="button" id="gc3_input_xml_MULTI_TS_BATCH_btn" value="BATCH PROCESS">
-				</div>
-
+				<table class="table1">
+					<caption class="caption1">Manual File Upload</caption>
+					<tr>
+						<th>Type</th>
+						<th>Outputs</th>
+						<th>XML</th>
+						<th>IMG</th>
+					</tr>
+					<tr>
+						<td title="Supports Uzebox"> Mode3</td>
+						<td title="PROGMEM">P</td>
+						<td> <a href="input_templates/xml_template1_Uzebox_MegaTris.xml" target="_blank">MegaTris</a> </td>
+						<td> <a href="input_templates/img_template1_Uzebox_MegaTris.png" target="_blank">MegaTris</a> </td>
+					</tr>
+					<tr>
+						<td title="Supports Uzebox and JSGAME (json)"> SINGLE_TS</td>
+						<td title="PROGMEM">P</td>
+						<td> <a href="input_templates/Uzebox_MarioBros.xml" target="_blank">MarioBros</a> </td>
+						<td> <a href="input_templates/Uzebox_MarioBros.png" target="_blank">MarioBros</a> </td>
+					</tr>
+					<!-- <tr> -->
+						<!-- <td title="Supports Uzebox and JSGAME (json)"> SINGLE_TS</td> -->
+						<!-- <td title="PROGMEM, C2BIN">P/C</td> -->
+						<!-- <td> <a href="input_templates/Uzebox_MarioBros.xml" target="_blank">MarioBros</a> </td> -->
+						<!-- <td> <a href="input_templates/Uzebox_MarioBros.png" target="_blank">MarioBros</a> </td> -->
+					<!-- </tr> -->
+					<!-- <tr> -->
+						<!-- <td title="Supports Uzebox and JSGAME (json)"> MULTI_TS2 </td> -->
+						<!-- <td title="Can vary: PROGMEM, C2BIN, JSON">Varies</td> -->
+						<!-- <td> <a href="input_templates/xml_template1_Uzebox_MegaTris.xml" target="_blank">MegaTris</a> </td> -->
+						<!-- <td> <a href="input_templates/img_template1_Uzebox_MegaTris.png" target="_blank">MegaTris</a> </td> -->
+					<!-- </tr> -->
+				</table>
 			</div>
 		</div>
 
-		<!--Section window - FILE UPLOAD, TEST DATA LOAD-->
+		<!-- LOAD -->
 		<div id="input_window2" class="sectionWindow">
 			<div class="sectionWindow_title">LOAD</div>
 			<div class="sectionWindow_content">
 
-			<!-- UPLOAD BUTTONS -->
-			<input id="gc3_input_loadXml_file" type="file">
-			<input id="gc3_input_loadImg_file" type="file">
-			<!-- UPLOAD BUTTONS -->
+			<table class="table1">
+				<caption class="caption1">Manual File Upload</caption>
+				<tr>
+					<td> 
+						<button id="gc3_input_loadXml">Load XML</button> 
+						<input id="gc3_input_loadXml_file" type="file">
+					</td>
+					<td> 
+						<button id="gc3_input_loadImg">Load IMG</button> 
+						<input id="gc3_input_loadImg_file" type="file">
+					</td>
+					<td> 
+						<button id="gc3_input_validate1">Validate</button> 
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="table1">
+				<caption class="caption1">Manual File Copy/Paste</caption>
+				<tr>
+					<td> 
+						XML:
+					</td>
+					<td> 
+						You can copy/paste your XML text.
+					</td>
+				</tr>
+				<tr>
+					<td> 
+						IMG:
+					</td>
+					<td> 
+						Copy your tileset image to the clipboard 
+						<!-- <br> -->
+						<!-- (EX: CTRL+A then CTRL+C) -->
+						<br>
+						Double-click the "INPUT IMG" canvas and then press CTRL+V.
+					</td>
+				</tr>
+			</table>
 
-			<button id="gc3_input_loadXml">Load XML</button>
-			<button id="gc3_input_loadImg">Load IMG</button>
-			<button id="gc3_input_validate1">Validate</button>
-			<br>
-			<br>
-			You can also use copy/paste for the XML and IMG.
-			<!--Double-click the canvas and then press CTRL+V. If you have an image in the clipboard it will load. <br>-->
-			<br>
 			<br>
 			<table class="table1">
 				<caption class="caption1">Test Data</caption>
@@ -117,27 +167,19 @@
 							<option value=""></option>
 
 							<optgroup label="Ver: 1">
-								<option value="1" url="input_templates/xml_template1.xml">MegaTris</option>
+								<option value="1" url="input_templates/xml_template1_Uzebox_MegaTris.xml">MegaTris</option>
 							</optgroup>
 
 							<optgroup label="SINGLE_TS">
-								<option value="2" url="input_templates/xml_template2.xml">Mario Bros (sprites)</option>
+								<option value="2" url="input_templates/Uzebox_MarioBros.xml">Mario Bros (sprites)</option>
 								<option value="2b" url="input_templates/xml_template2b.xml">Mario Bros (bg tiles)</option>
 								<option value="3" url="input_templates/xml_template3.xml">Uze RPG</option>
 								<option value="4" url="input_templates/xml_template4.xml">Ram-Tile Tests</option>
 								<option value="5" url="input_templates/xml_template5.xml">Bubble Bobble</option>
 							</optgroup>
-
-							<optgroup label="MULTI_TS">
-								<option value="6" url="input_templates/xml_template6.xml">Mario Bros</option>
-							</optgroup>
 						</select>
-						<br>
 						<button id="gc3_input_selectTestData_load">LOAD/RELOAD</button>
 					</td>
-					<!--<td>-->
-					<!--	<button>LOAD</button>-->
-					<!--</td>-->
 				</tr>
 			</table>
 
@@ -145,29 +187,26 @@
 			</div>
 		</div>
 
-		<!--Section window - ACTION - LOAD INTO MAP EDITOR, RE-VALIDATE -->
+		<!-- ACTION -->
 		<div id="input_window3" class="sectionWindow">
 			<div class="sectionWindow_title">ACTION</div>
 			<div class="sectionWindow_content">
 				<button id="gc3_input_goToMapEditor">Load into the Map Editor</button>
+				<button id="gc3_uam_multiTs2_batchRunAndSave" class="unavailableView">Run Batch/Save</button>
 				<button id="gc3_input_validate2">Re-validate</button>
 			</div>
 		</div>
 
-		<!--Section window - TILESET IMG -->
+		<!-- INPUT IMG -->
 		<div id="input_window4" class="sectionWindow">
 			<div class="sectionWindow_title">INPUT IMG </div>
 			<div class="sectionWindow_content">
 				<canvas id="gc3_input_canvas" width="128" height="128"></canvas>
 				<input id="gc3_input_canvas_inputText" type="text" value="">
-				<br>
-				<br>
-				<a href="input_templates/sampleImage1.png" target="_blank">Download IMG sample</a>
-
 			</div>
 		</div>
 
-		<!--Section window - DOWNLOADS -->
+		<!-- TODO: REMOVE. Section window - DOWNLOADS -->
 		<div id="input_window6" class="sectionWindow">
 			<div class="sectionWindow_title">Downloads</div>
 			<div class="sectionWindow_content">
@@ -176,7 +215,7 @@
 			</div>
 		</div>
 
-		<!--Section window - INPUT VALIDATION RESULTS / MISC MAP AND TILESET INFO -->
+		<!-- MISC INFO (INPUT VALIDATION RESULTS / MISC MAP AND TILESET INFO) -->
 		<div id="input_window7" class="sectionWindow">
 			<div class="sectionWindow_title">MISC INFO</div>
 			<div class="sectionWindow_content">
@@ -199,9 +238,9 @@
 			</div>
 		</div>
 
-		<!--Section window - UAM FEATURES -->
+		<!-- UAM LOAD -->
 		<div id="input_window8" class="sectionWindow uamOnly">
-			<div class="sectionWindow_title">UAM</div>
+			<div class="sectionWindow_title">UAM LOAD</div>
 			<div class="sectionWindow_content">
 				<table class="table1">
 					<caption class="caption1">UAM Options</caption>
@@ -293,15 +332,19 @@
 				<table class="table1" id="gc3_mapedit_preview_settings">
 					<tr>
 						<td>L</td>
-						<td><input onclick="this.select();" name="L" type="number" min="0" max="5" value="0"></td>
+						<!-- <td><input onclick="this.select();" name="L" type="number" min="0" max="5" value="0"></td> -->
+						<td><span name="L"></span></td>
 						<td>T</td>
-						<td><input onclick="this.select();" name="T" type="number" min="0" max="5" value="0"></td>
+						<!-- <td><input onclick="this.select();" name="T" type="number" min="0" max="5" value="0"></td> -->
+						<td><span name="T"></span></td>
 					</tr>
 					<tr>
 						<td>W</td>
-						<td><input onclick="this.select();" name="W" type="number" min="0" max="5" value="2"></td>
+						<!-- <td><input onclick="this.select();" name="W" type="number" min="0" max="5" value="2"></td> -->
+						<td><span name="W"></span></td>
 						<td>H</td>
-						<td><input onclick="this.select();" name="H" type="number" min="0" max="5" value="2"></td>
+						<!-- <td><input onclick="this.select();" name="H" type="number" min="0" max="5" value="2"></td> -->
+						<td><span name="H"></span></td>
 					</tr>
 				</table>
 				<br>
