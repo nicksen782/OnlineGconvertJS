@@ -17,7 +17,8 @@ gc.funcs.domHandleCache_populate = function(){
 
 		// Go to the map editor
 		,"goToMapEditor"         : document.querySelector("#gc3_input_goToMapEditor")
-
+		
+		
 		// Input canvas.
 		,"canvas"                : document.querySelector("#gc3_input_canvas")
 
@@ -26,10 +27,11 @@ gc.funcs.domHandleCache_populate = function(){
 		// Input xml.
 		,"xml"                   : document.querySelector("#gc3_input_xml")
 
-		// Input xml select menu (MULTI_TS).
+		// Input xml select menu (MULTI_TS2).
 		,"xml_multi_div"        : document.querySelector("#input_window5")
-		,"xml_multi_select"     : document.querySelector("#gc3_input_xml_MULTI_TS_select")
-		,"xml_multi_batch_btn"  : document.querySelector("#gc3_input_xml_MULTI_TS_BATCH_btn")
+		
+		// Input xml (MULTI_TS2).
+		,"uam_multiTs2_batchRunAndSave"         : document.querySelector("#gc3_uam_multiTs2_batchRunAndSave")
 
 		// MISC INFO
 		,"imgWidth"     : document.querySelector("#gc3_input_imgWidth")
@@ -48,8 +50,6 @@ gc.funcs.domHandleCache_populate = function(){
 		// Downloads
 		,"download_inputXml" : document.querySelector("#gc3_input_download_inputXml_btn")
 		,"download_inputImg" : document.querySelector("#gc3_input_download_inputImg_btn")
-
-
 	};
 
 	gc.vars.dom.maps        = {

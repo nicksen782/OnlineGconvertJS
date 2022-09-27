@@ -281,213 +281,251 @@ gc.funcs.UAM = {
 	},
 	output : {
 		// * Saves the PROGMEM data to the server.
-		uam_saveProgmem : function(){
-			let filename = "";
-			try{ filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file"]; }
-			catch(e){
-				// console.log("ERROR: No XML file is loaded.");
-				alert      ("ERROR: No XML file is loaded.");
-				return;
-			}
-
-			if(filename!=undefined){
-				filename = filename.split("/");
-				filename = filename[ filename.length-1 ];
-			}
-			else{
-				console.log("ERROR: No value specified for the PROGMEM output file.");
-				alert      ("ERROR: No value specified for the PROGMEM output file.");
-				return;
-			}
-
-			let progmemTextarea      = gc.vars.dom.output.progmemTextarea   ;
-			if(! progmemTextarea.value.length){
-				console.log("ERROR: PROGMEM output is empty.");
-				alert      ("ERROR: PROGMEM output is empty.");
-				return;
-			}
-
-			//
-			let uam_xmlList_select = gc.vars.dom.input.uam_xmlList_select;
-
-			let gameid   = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gameid");
-			let gamename = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gamename");
-
-			if(!gamename){
-				// console.log("ERROR: No game was selected.");
-				alert      ("ERROR: No game was selected.");
-				return;
-			}
-
-			let conf = confirm(
-				"About to update file.\n" +
-				"    FILE: " + filename + "\n" +
-				"    GAME: " + gamename + "\n" +
-				"Continue?"
-			);
-
-			if(!conf){ return; }
-
-			//
-			var formData = {
-				"o"       : "uam_saveProgmem",
-				"userFile" : progmemTextarea.value ,
-				"gameid"   : gameid   ,
-				"filename" : filename ,
-				"_config" : { "processor":"gc_p.php" }
-			};
-			gc.funcs.shared.serverRequest(formData).then(
-				function(res){
-					// console.log("SUCCESS:", res);
-					if(res.success == false){
-						console.log("An error has occurred.\n\n"+res.data);
-						alert      ("An error has occurred.\n\n"+res.data);
-					}
-				},
-				function(res){
-					console.log("FAILURE:", res);
+		uam_saveProgmem : function(showAlert = true){
+			return new Promise(async(resolve,reject)=>{
+				let filename = "";
+				try{ filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file"]; }
+				catch(e){
+					// console.log("ERROR: No XML file is loaded.");
+					alert      ("ERROR: No XML file is loaded.");
+					reject();
+					return;
 				}
-			);
 
+				if(filename!=undefined){
+					filename = filename.split("/");
+					filename = filename[ filename.length-1 ];
+				}
+				else{
+					console.log("ERROR: No value specified for the PROGMEM output file.");
+					alert      ("ERROR: No value specified for the PROGMEM output file.");
+					reject();
+					return;
+				}
+
+				let progmemTextarea      = gc.vars.dom.output.progmemTextarea   ;
+				if(! progmemTextarea.value.length){
+					console.log("ERROR: PROGMEM output is empty.");
+					alert      ("ERROR: PROGMEM output is empty.");
+					reject();
+					return;
+				}
+
+				//
+				let uam_xmlList_select = gc.vars.dom.input.uam_xmlList_select;
+
+				let gameid   = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gameid");
+				let gamename = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gamename");
+
+				if(!gamename){
+					// console.log("ERROR: No game was selected.");
+					alert      ("ERROR: No game was selected.");
+					reject();
+					return;
+				}
+
+				if(showAlert){
+					let conf = confirm(
+						"PROGMEM:\n" +
+						"About to update file.\n" +
+						"    FILE: " + filename + "\n" +
+						"    GAME: " + gamename + "\n" +
+						"Continue?"
+					);
+					if(!conf){ resolve(); return; }
+				}
+
+				//
+				var formData = {
+					"o"       : "uam_saveProgmem",
+					"userFile" : progmemTextarea.value ,
+					"gameid"   : gameid   ,
+					"filename" : filename ,
+					"_config" : { "processor":"gc_p.php" }
+				};
+				gc.funcs.shared.serverRequest(formData).then(
+					function(res){
+						// console.log("SUCCESS:", res);
+						if(res.success == false){
+							console.log("An error has occurred.\n\n"+res.data);
+							alert      ("An error has occurred.\n\n"+res.data);
+							reject(); return;
+						}
+						else{
+							resolve(); return; 
+						}
+					},
+					function(res){
+						console.log("FAILURE:", res);
+						reject(); return;
+					}
+				);
+			});
 		},
 		// * Saves the C2BIN data to the server.
-		uam_saveC2bin   : function(){
-			let filename = "";
-			try{ filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file2"]; }
-			catch(e){
-				// console.log("ERROR: No XML file is loaded.");
-				alert      ("ERROR: No XML file is loaded.");
-				return;
-			}
-
-			if(filename!=undefined){
-				filename = filename.split("/");
-				filename = filename[ filename.length-1 ];
-			}
-			else{
-				console.log("ERROR: No value specified for the C2BIN output file.");
-				alert      ("ERROR: No value specified for the C2BIN output file.");
-				return;
-			}
-
-			let c2binTextarea      = gc.vars.dom.output.c2binTextarea   ;
-			if(! c2binTextarea.value.length){
-				console.log("ERROR: C2BIN output is empty.");
-				alert      ("ERROR: C2BIN output is empty.");
-				return;
-			}
-
-			let uam_xmlList_select = gc.vars.dom.input.uam_xmlList_select;
-
-			let gameid = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gameid");
-			let gamename = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gamename");
-
-			if(!gamename){
-				// console.log("ERROR: No game was selected.");
-				alert      ("ERROR: No game was selected.");
-				return;
-			}
-
-			let conf = confirm(
-				"About to update file.\n" +
-				"    FILE: " + filename + "\n" +
-				"    GAME: " + gamename + "\n" +
-				"Continue?"
-			);
-
-			if(!conf){ return; }
-
-			//
-			var formData = {
-				"o"        : "uam_saveC2bin" ,
-				"userFile" : c2binTextarea.value ,
-				"gameid"   : gameid   ,
-				"filename" : filename ,
-				"_config"  : { "processor":"gc_p.php" }
-			};
-			gc.funcs.shared.serverRequest(formData).then(
-				function(res){
-					// console.log("SUCCESS:", res);
-					if(res.success == false){
-						console.log("An error has occurred.\n\n"+res.data);
-						alert      ("An error has occurred.\n\n"+res.data);
-					}
-				},
-				function(res){
-					console.log("FAILURE:", res);
+		uam_saveC2bin   : function(showAlert = true){
+			return new Promise(async(resolve,reject)=>{
+				let filename = "";
+				try{ filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file2"]; }
+				catch(e){
+					// console.log("ERROR: No XML file is loaded.");
+					alert      ("ERROR: No XML file is loaded.");
+					reject();
+					return;
 				}
-			);
+
+				if(filename!=undefined){
+					filename = filename.split("/");
+					filename = filename[ filename.length-1 ];
+				}
+				else{
+					console.log("ERROR: No value specified for the C2BIN output file.");
+					alert      ("ERROR: No value specified for the C2BIN output file.");
+					reject();
+					return;
+				}
+
+				let c2binTextarea      = gc.vars.dom.output.c2binTextarea   ;
+				if(! c2binTextarea.value.length){
+					console.log("ERROR: C2BIN output is empty.");
+					alert      ("ERROR: C2BIN output is empty.");
+					reject();
+					return;
+				}
+
+				let uam_xmlList_select = gc.vars.dom.input.uam_xmlList_select;
+
+				let gameid = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gameid");
+				let gamename = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gamename");
+
+				if(!gamename){
+					// console.log("ERROR: No game was selected.");
+					alert      ("ERROR: No game was selected.");
+					reject();
+					return;
+				}
+
+				if(showAlert){
+					let conf = confirm(
+						"C2BIN:\n" +
+						"About to update file.\n" +
+						"    FILE: " + filename + "\n" +
+						"    GAME: " + gamename + "\n" +
+						"Continue?"
+					);
+					if(!conf){ resolve(); return; }
+				}
+
+				//
+				var formData = {
+					"o"        : "uam_saveC2bin" ,
+					"userFile" : c2binTextarea.value ,
+					"gameid"   : gameid   ,
+					"filename" : filename ,
+					"_config"  : { "processor":"gc_p.php" }
+				};
+				gc.funcs.shared.serverRequest(formData).then(
+					function(res){
+						// console.log("SUCCESS:", res);
+						if(res.success == false){
+							console.log("An error has occurred.\n\n"+res.data);
+							alert      ("An error has occurred.\n\n"+res.data);
+							reject(); return; 
+						}
+						else{
+							resolve(); return; 
+						}
+					},
+					function(res){
+						console.log("FAILURE:", res);
+						reject(); return; 
+					}
+				);
+			});
 
 		},
 
 		// * Saves the JSON data to the server.
-		uam_saveJson   : function(){
-			let filename = "";
-			try{ filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file"]; }
-			catch(e){
-				// console.log("ERROR: No XML file is loaded.");
-				alert      ("ERROR: No XML file is loaded.");
-				return;
-			}
-
-			if(filename!=undefined){
-				filename = filename.split("/");
-				filename = filename[ filename.length-1 ];
-			}
-			else{
-				console.log("ERROR: No value specified for the JSON output file.");
-				alert      ("ERROR: No value specified for the JSON output file.");
-				return;
-			}
-
-			let jsonTextarea      = gc.vars.dom.output.jsonTextarea   ;
-			if(! jsonTextarea.value.length){
-				console.log("ERROR: JSON output is empty.");
-				alert      ("ERROR: JSON output is empty.");
-				return;
-			}
-
-			let uam_xmlList_select = gc.vars.dom.input.uam_xmlList_select;
-
-			let gameid = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gameid");
-			let gamename = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gamename");
-
-			if(!gamename){
-				// console.log("ERROR: No game was selected.");
-				alert      ("ERROR: No game was selected.");
-				return;
-			}
-
-			let conf = confirm(
-				"About to update file.\n" +
-				"    FILE: " + filename + "\n" +
-				"    GAME: " + gamename + "\n" +
-				"Continue?"
-			);
-
-			if(!conf){ return; }
-
-			//
-			var formData = {
-				"o"        : "uam_saveJSON" ,
-				"userFile" : jsonTextarea.value ,
-				"gameid"   : gameid   ,
-				"filename" : filename ,
-				"_config"  : { "processor":"gc_p.php" }
-			};
-			
-			gc.funcs.shared.serverRequest(formData).then(
-				function(res){
-					// console.log("SUCCESS:", res);
-					if(res.success == false){
-						console.log("An error has occurred.\n\n"+res.data);
-						alert      ("An error has occurred.\n\n"+res.data);
-					}
-				},
-				function(res){
-					console.log("FAILURE:", res);
+		uam_saveJson   : function(showAlert = true){
+			return new Promise(async(resolve,reject)=>{
+				let filename = "";
+				try{ filename = gc.vars.settings.output.jsonObj["gfx-xform"]["output"]["@file"]; }
+				catch(e){
+					// console.log("ERROR: No XML file is loaded.");
+					alert      ("ERROR: No XML file is loaded.");
+					reject();
+					return;
 				}
-			);
+
+				if(filename!=undefined){
+					filename = filename.split("/");
+					filename = filename[ filename.length-1 ];
+				}
+				else{
+					console.log("ERROR: No value specified for the JSON output file.");
+					alert      ("ERROR: No value specified for the JSON output file.");
+					reject();
+					return;
+				}
+
+				let jsonTextarea      = gc.vars.dom.output.jsonTextarea   ;
+				if(! jsonTextarea.value.length){
+					console.log("ERROR: JSON output is empty.");
+					alert      ("ERROR: JSON output is empty.");
+					reject();
+					return;
+				}
+
+				let uam_xmlList_select = gc.vars.dom.input.uam_xmlList_select;
+
+				let gameid = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gameid");
+				let gamename = uam_xmlList_select.options[uam_xmlList_select.selectedIndex].getAttribute("gamename");
+
+				if(!gamename){
+					// console.log("ERROR: No game was selected.");
+					alert      ("ERROR: No game was selected.");
+					reject();
+					return;
+				}
+
+				if(showAlert){
+					let conf = confirm(
+						"JSON:\n" +
+						"About to update file.\n" +
+						"    FILE: " + filename + "\n" +
+						"    GAME: " + gamename + "\n" +
+						"Continue?"
+					);
+					if(!conf){ resolve(); return; }
+				}
+
+				//
+				var formData = {
+					"o"        : "uam_saveJSON" ,
+					"userFile" : jsonTextarea.value ,
+					"gameid"   : gameid   ,
+					"filename" : filename ,
+					"_config"  : { "processor":"gc_p.php" }
+				};
+				
+				gc.funcs.shared.serverRequest(formData).then(
+					function(res){
+						// console.log("SUCCESS:", res);
+						if(res.success == false){
+							console.log("An error has occurred.\n\n"+res.data);
+							alert      ("An error has occurred.\n\n"+res.data);
+							reject(); return;
+						}
+						else{
+							resolve(); return; 
+						}
+					},
+					function(res){
+						console.log("FAILURE:", res);
+						reject(); return;
+					}
+				);
+			});
 
 		},
 
@@ -723,9 +761,153 @@ gc.funcs.UAM = {
 
 	},
 
+
+	// TODO
+	uam_batchRunAndSave: async function(){
+		// Get the list of XML filenames. 
+		let xmlFileNames = (()=>{
+			// Parse the XML to get a file list.
+			var x2js = new X2JS( {
+				attributePrefix : "@"
+				, stripWhitespaces:true
+				, useDoubleQuotes:true
+				}
+			);
+			let xmlJson = x2js.xml_str2json( gc.vars.dom.input.xml.value );
+
+			// Return only the filenames. 
+			return xmlJson["gfx-xform"]["xml_files"]["xml_file"].map(d=>d["@xml"]);
+		})();
+
+		// This will store the retreived data.
+		let xmlFileDatas = {}; 
+		
+		// Download each xml file and associated source image. Store entries in xmlFileDatas.
+		let proms = [];
+		for(let f=0; f<xmlFileNames.length; f+=1){
+			proms.push(
+				new Promise( async (res,rej) => {
+					// Get the xml file. 
+					let xmlFile = await (await fetch(xmlFileNames[f])).text();
+					// console.log(xmlFileNames[f], xmlFile);
+
+					// Parse the xml to json. 
+					let x2js = new X2JS( 
+						{
+							attributePrefix : "@",
+							stripWhitespaces:true,
+							useDoubleQuotes:true,
+						}
+						);
+						let xmlJson = x2js.xml_str2json( xmlFile );
+						
+					// Get the output file name. 
+					let outputFilename = xmlJson["gfx-xform"]["output"]["@file"];
+
+					// Get the tileset name. 
+					let tilesetname    = xmlJson["gfx-xform"]["output"]["tiles"]["@var-name"];
+
+					// Get the source image. 
+					let srcImgFilename = xmlJson["gfx-xform"]["input"]["@file"];
+					
+					// Get the image.
+					let img = new Image();
+					img.onload=function(){ 
+						img.onload = null; 
+
+						// Add to the xmlFileDatas object. 
+						xmlFileDatas[tilesetname] = {
+							xmlText       : xmlFile,
+							xmlJson       : xmlJson,
+							srcImgFilename: srcImgFilename,
+							srcImg        : img,
+							outputFilename: outputFilename,
+							tilesetname   : tilesetname,
+						};
+
+						res();
+						return; 
+					}
+					img.onerror=function(err){ 
+						img.onerror = null; 
+						rej(err);
+						return; 
+					}
+					img.src = srcImgFilename;
+
+				})
+			);
+		}
+
+		await Promise.all(proms);
+		console.log("xmlFileDatas:", xmlFileDatas);
+
+		for(let key in xmlFileDatas){
+			let rec = xmlFileDatas[key];
+
+			// INPUT: Display the data in input, send to the Map editor (with validation).
+			try{
+				console.log("uam_batchRunAndSave: Working on key:", key);
+				
+				// Display the data.
+				gc.vars.dom.input.xml.value = rec.xmlText;
+				gc.vars.dom.input.canvas.width = rec.srcImg.width;
+				gc.vars.dom.input.canvas.height = rec.srcImg.height;
+				gc.vars.dom.input.canvas.getContext("2d").drawImage(rec.srcImg, 0, 0);
+
+				// Load the displayed data into the Map editor. (This does a validation.)
+				await gc.funcs.input.goToMapEditor();
+			}
+			catch(e){
+				console.log("Failure in goToMapEditor (inputDataValidation):", e);
+				throw e;
+			}
+			
+			// MAPs: Process.
+			try{
+				await gc.funcs.maps.beginProcessToC();
+			}
+			catch(e){
+				console.log("Failure in beginProcessToC:", e);
+				throw e;
+			}
+			
+			// OUTPUT: Save.
+			try{
+				// JSON?
+				if( rec.xmlJson["gfx-xform"].output.tiles["@outputAsJson"] == "1" ){
+					// Save JSON.
+					console.log("Saving JSON for:", key);
+					await gc.funcs.UAM.output.uam_saveJson(false);
+				}
+				// UZEBOX type.
+				else{
+					if( rec.xmlJson["gfx-xform"].output["@file"]){
+						// Save PROGMEM
+						console.log("Saving PROGMEM for:", key);
+						await gc.funcs.UAM.output.uam_saveProgmem(false);
+					}
+					if( rec.xmlJson["gfx-xform"].output["@file2"]){
+						// Save C2BIN
+						console.log("Saving C2BIN for:", key);
+						await gc.funcs.UAM.output.uam_saveC2bin(false);
+					}
+				}
+			}
+			catch(e){
+				console.log("Failure in file save:", e);
+				throw e;
+			}
+		}
+
+		alert("uam_batchRunAndSave: DONE");
+	},
+
 	// * Add all the UAM event listeners.
 	addEventListeners : function(){
 		// if( gc.vars.originUAM == true ){ }
+
+		gc.vars.dom.input.uam_multiTs2_batchRunAndSave.addEventListener('click', gc.funcs.UAM.uam_batchRunAndSave, false);
 
 		// UAM: INPUT
 		// UAM: game select

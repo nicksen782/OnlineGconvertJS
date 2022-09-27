@@ -235,6 +235,69 @@ gc.funcs.input={
 		);
 
 	}
+	,showHideInputElements:function(src, version){
+		// Reset - Add the unavailableView class.
+		if(src=='uam'){
+			gc.vars.dom.input.uam_updateXML               .classList.add("unavailableView") // "XML Update"
+			gc.vars.dom.input.uam_updateIMG               .classList.add("unavailableView") // "IMG Update"
+			gc.vars.dom.input.uam_multiTs2_batchRunAndSave.classList.add("unavailableView") // "Run as batch with save"
+		}
+		gc.vars.dom.input.download_inputImg.classList.add("unavailableView") // "Download IMG"
+		gc.vars.dom.input.goToMapEditor    .classList.add("unavailableView") // "Load into the Map Editor"
+		gc.vars.dom.input.validate1        .classList.add("unavailableView") // "Re-validate"
+		gc.vars.dom.input.validate2        .classList.add("unavailableView") // "Re-validate"
+		gc.vars.dom.input.download_inputXml.classList.add("unavailableView") // "Download XML"
+		gc.vars.dom.input.download_inputImg.classList.add("unavailableView") // "Download IMG"
+		
+		// Clear the canvas too.
+		gc.vars.dom.input.canvas.width  = 8;
+		gc.vars.dom.input.canvas.height = 8;
+		gc.vars.dom.input.canvas.getContext("2d").clearRect(0, 0, gc.vars.dom.input.canvas.width, gc.vars.dom.input.canvas.height);
+
+		// Stop here if this is just a clear.
+		if(version == "_CLEAR_ALL_"){ return; }
+
+		// Add/Remove the unavailableView class based on type.
+		switch(version){
+			case undefined: 
+			case "": 
+			case "1": 
+			case "SINGLE_TS": { 
+				if(src=='uam'){
+					gc.vars.dom.input.uam_updateXML               .classList.remove("unavailableView") // "XML Update"
+					gc.vars.dom.input.uam_updateIMG               .classList.remove("unavailableView") // "IMG Update"
+					gc.vars.dom.input.uam_multiTs2_batchRunAndSave.classList.add("unavailableView") // "Run as batch with save"
+				}
+				gc.vars.dom.input.download_inputImg.classList.remove("unavailableView") // "Download IMG"
+				gc.vars.dom.input.goToMapEditor    .classList.remove("unavailableView") // "Load into the Map Editor"
+				gc.vars.dom.input.validate1        .classList.remove("unavailableView") // "Re-validate"
+				gc.vars.dom.input.validate2        .classList.remove("unavailableView") // "Re-validate"
+				gc.vars.dom.input.download_inputXml.classList.remove("unavailableView") // "Download XML"
+				gc.vars.dom.input.download_inputImg.classList.remove("unavailableView") // "Download IMG"
+				
+				break; 
+			}
+			case "MULTI_TS2": { 
+				if(src=='uam'){
+					gc.vars.dom.input.uam_updateXML               .classList.remove("unavailableView") // "XML Update"
+					gc.vars.dom.input.uam_updateIMG               .classList.add("unavailableView") // "IMG Update"
+					gc.vars.dom.input.uam_multiTs2_batchRunAndSave.classList.remove("unavailableView") // "Run as batch with save"
+				}
+				gc.vars.dom.input.download_inputImg.classList.add("unavailableView") // "Download IMG"
+				gc.vars.dom.input.goToMapEditor    .classList.add("unavailableView") // "Load into the Map Editor"
+				gc.vars.dom.input.validate1        .classList.add("unavailableView") // "Re-validate"
+				gc.vars.dom.input.validate2        .classList.add("unavailableView") // "Re-validate"
+				gc.vars.dom.input.download_inputXml.classList.add("unavailableView") // "Download XML"
+				gc.vars.dom.input.download_inputImg.classList.add("unavailableView") // "Download IMG"
+				break; 
+			}
+			default : {
+				console.log("showHides: version: <unknown>", version);
+				break;
+			}
+		}
+	}
+
 	// * Event listener.
 	,selectTestData_load      : function(src){
 	  	var elem;
@@ -262,105 +325,114 @@ gc.funcs.input={
 	  	}
 
 	  	if(elem.value==""){
-	  		// console.log("None selected.");
+	  		console.log("None selected.");
 	  		return;
 	  	}
 
 		var prom = new Promise(
 			function(resolveOuter, rejectOuter){
-			// Get the selected test data value and load those files.
-			gc.funcs.shared.getFile_fromUrl( url ).then(async function(xmlString){
-				// var parser = new DOMParser();
-				// xmlString = parser.parseFromString(xmlString,"text/xml");
+				// Get the selected test data value and load those files.
+				gc.funcs.shared.getFile_fromUrl( url ).then(async function(xmlString){
+					// var parser = new DOMParser();
+					// xmlString = parser.parseFromString(xmlString,"text/xml");
 
-				// XML retrieved. Now get the image.
-				var x2js = new X2JS( {
-					  attributePrefix : "@"
-					, stripWhitespaces:true
-					, useDoubleQuotes:true
+					// XML retrieved. Now get the image.
+					var x2js = new X2JS( {
+						attributePrefix : "@"
+						, stripWhitespaces:true
+						, useDoubleQuotes:true
+						}
+					);
+
+					var full_jsonObj = JSON.parse( JSON.stringify( x2js.xml_str2json( xmlString ), null, 0 ) );
+					var jsonObj
+					var srcImage ;
+					
+					// Make sure that the XML is valid and was successfully parsed.
+					if(!full_jsonObj){
+						let msg1 = "The XML could not be parsed.";
+						console.log(msg1);
+						alert      (msg1);
+						rejectOuter(msg1);
+						return;
 					}
-				);
 
-				var full_jsonObj = JSON.parse( JSON.stringify( x2js.xml_str2json( xmlString ), null, 0 ) );
-				var jsonObj
-				var srcImage ;
+					// console.log(full_jsonObj, xmlString);
+					// console.log(x2js.xml_str2json( xmlString ), xmlString);
 
-				// console.log(full_jsonObj, xmlString);
+					// Get the version.
+					var version = full_jsonObj["gfx-xform"]['@version'];
 
-				// Check the version!
-				var version = full_jsonObj["gfx-xform"]['@version'];
-				if(version=="MULTI_TS"){
-					// Load the FIRST tileset and tileset IMAGE. Present that to the validator.
-					// full_jsonObj = jsonObj;
-					gc.vars.settings.input.full_jsonObj = full_jsonObj;
-					var tilesetNames = full_jsonObj["gfx-xform"]["TILESET"].map(function(d,i,a){
-						return {
-							 "name" : d["gfx-xform"]["output"]["tiles"]["@var-name"]
-							,"text" : d["gfx-xform"]["output"]["tiles"]["@text"]
-						};
-					});
+					// Show/hide input elements.
+					gc.funcs.input.showHideInputElements(src, version);
+					
+					// Check the version!
+					// TODO
+					if(version=="MULTI_TS2"){
+						// MULTI_TS2 requires "<xml_files>" containing at least one "<xml_file>".
+						if(full_jsonObj["gfx-xform"]["xml_files"] && full_jsonObj["gfx-xform"]["xml_files"]['xml_file'].length){
+							// Clear input.full_jsonObj.
+							gc.vars.settings.input.full_jsonObj = {};
+							
+							// Put the xmlString in the input xml.
+							gc.vars.dom.input.xml.value = xmlString;
+						}
 
-					gc.funcs.input.adjustMultiXml_select( tilesetNames );
-
-					gc.vars.dom.input.xml.value="";
-					gc.vars.dom.input.canvas.width=100;
-					gc.vars.dom.input.canvas.height=100;
-					gc.vars.dom.input.canvas.getContext("2d").clearRect(0,0,gc.vars.dom.input.canvas.width, gc.vars.dom.input.canvas.height);
-
-					resolveOuter();
-					return;
-				}
-				else{
-					gc.vars.settings.input.full_jsonObj = {};
-					jsonObj = full_jsonObj;
-					srcImage = jsonObj["gfx-xform"]["input"]['@file'];
-					gc.funcs.input.adjustMultiXml_select( [] );
-
-					if(src=='uam'){
-						let parts = srcImage.split("/");
-						gc.vars.dom.input.uam_imgName.value=parts[ parts.length-1 ];
-						gc.vars.dom.input.uam_imgName.setAttribute("gamename", selectedOption.getAttribute("gamename"));
+						// Resolve and return.
+						resolveOuter("MULTI_TS2");
+						return;
 					}
-				}
+					else{
+						gc.vars.settings.input.full_jsonObj = {};
+						jsonObj = full_jsonObj;
+						srcImage = jsonObj["gfx-xform"]["input"]['@file'];
+						// gc.funcs.input.adjustMultiXml_select( [] );
 
-				// NO IMAGE? ABORT.
-				if(!srcImage){
-					console.log("An image is required before XML validation can take place. Add an image to your XML.");
-					alert      ("An image is required before XML validation can take place. Add an image to your XML.");
-					rejectOuter("Missing image!");
-					return;
-				}
-
-				// Get the image from the url.
-				var img;
-				try{ img = await gc.funcs.shared.getImageElem_fromUrl(srcImage); } 
-				catch(e){
-					alert(`ERROR: ${e.text}\n\nSRC: ${e.src}`);
-					console.log("ERROR:", e);
-					throw "ABORT";
-				}
-
-				// Draw the image to the canvas.
-				var ctx1 = gc.vars.dom.input.canvas.getContext("2d");
-				ctx1.canvas.width = img.width;
-				ctx1.canvas.height = img.height;
-				ctx1.drawImage(img, 0, 0);
-
-				// Validate the XML and IMG.
-				gc.funcs.input.inputDataValidation(jsonObj, img).then(
-					function(success){
-						// console.log("SUCCESS!", success);
-						resolveOuter(success);
+						if(src=='uam'){
+							let parts = srcImage.split("/");
+							gc.vars.dom.input.uam_imgName.value=parts[ parts.length-1 ];
+							gc.vars.dom.input.uam_imgName.setAttribute("gamename", selectedOption.getAttribute("gamename"));
+						}
 					}
-					, function(error){
-						console.log("ERROR!", error);
-						rejectOuter(error);
+
+					// NO IMAGE? ABORT.
+					if(!srcImage){
+						console.log("An image is required before XML validation can take place. Add an image to your XML.");
+						alert      ("An image is required before XML validation can take place. Add an image to your XML.");
+						rejectOuter("Missing image!");
+						return;
 					}
-				);
 
-			});
+					// Get the image from the url.
+					var img;
+					try{ img = await gc.funcs.shared.getImageElem_fromUrl(srcImage); } 
+					catch(e){
+						alert(`ERROR: ${e.text}\n\nSRC: ${e.src}`);
+						console.log("ERROR:", e);
+						throw "ABORT";
+					}
 
-		});
+					// Draw the image to the canvas.
+					var ctx1 = gc.vars.dom.input.canvas.getContext("2d");
+					ctx1.canvas.width = img.width;
+					ctx1.canvas.height = img.height;
+					ctx1.drawImage(img, 0, 0);
+
+					// Validate the XML and IMG.
+					gc.funcs.input.inputDataValidation(jsonObj, img).then(
+						function(success){
+							// console.log("SUCCESS!", success);
+							resolveOuter(success);
+						}
+						, function(error){
+							console.log("ERROR!", error);
+							rejectOuter(error);
+						}
+					);
+
+				});
+			}
+		);
 
 		prom.then(
 			  function(success){
@@ -375,40 +447,40 @@ gc.funcs.input={
 
 	  }
 	//
-	,adjustMultiXml_select    : function( tilesetNames ){
-		// console.log("adjustMultiXml_select:", tilesetNames);
+	// ,adjustMultiXml_select    : function( tilesetNames ){
+	// 	console.log("I am about to go bye-bye: adjustMultiXml_select");
+	// 	// console.log("adjustMultiXml_select:", tilesetNames);
 
-		var i;
-		var option;
+	// 	var i;
+	// 	var option;
 
-		// If the array is populated, populate the select menu and then show it.
-		if(tilesetNames.length){
-			gc.vars.dom.input.xml_multi_div.classList.remove("unavailableView");
-			gc.vars.dom.input.xml_multi_select.length=0;
-			option = document.createElement("option");
-			option.value="";
-			option.text="... " + tilesetNames.length + " tilesets available";
-			gc.vars.dom.input.xml_multi_select.appendChild(option);
+	// 	// If the array is populated, populate the select menu and then show it.
+	// 	if(tilesetNames.length){
+	// 		gc.vars.dom.input.xml_multi_div.classList.remove("unavailableView");
+	// 		gc.vars.dom.input.xml_multi_select.length=0;
+	// 		option = document.createElement("option");
+	// 		option.value="";
+	// 		option.text="... " + tilesetNames.length + " tilesets available";
+	// 		gc.vars.dom.input.xml_multi_select.appendChild(option);
 
-			for(i=0; i<tilesetNames.length; i+=1){
-				option = document.createElement("option");
-				option.value=i;
-				option.text=tilesetNames[i]['name'] + " (" + tilesetNames[i]['text'] + ")";
-				gc.vars.dom.input.xml_multi_select.appendChild(option);
-			}
-		}
+	// 		for(i=0; i<tilesetNames.length; i+=1){
+	// 			option = document.createElement("option");
+	// 			option.value=i;
+	// 			option.text=tilesetNames[i]['name'] + " (" + tilesetNames[i]['text'] + ")";
+	// 			gc.vars.dom.input.xml_multi_select.appendChild(option);
+	// 		}
+	// 	}
 
-		// If the array is empty, empty and then hide the select menu.
-		else{
-			gc.vars.dom.input.xml_multi_div.classList.add("unavailableView");
-			gc.vars.dom.input.xml_multi_select.length=0;
-			option = document.createElement("option");
-			option.value="";
-			option.text="";
-			gc.vars.dom.input.xml_multi_select.appendChild(option);
-		}
-
-	}
+	// 	// If the array is empty, empty and then hide the select menu.
+	// 	else{
+	// 		gc.vars.dom.input.xml_multi_div.classList.add("unavailableView");
+	// 		gc.vars.dom.input.xml_multi_select.length=0;
+	// 		option = document.createElement("option");
+	// 		option.value="";
+	// 		option.text="";
+	// 		gc.vars.dom.input.xml_multi_select.appendChild(option);
+	// 	}
+	// }
 	// * Validate XML and IMG. Both are required.
 	,inputDataValidation : function(jsonObj, img){
 		return new Promise(function(resolve, reject){
@@ -703,33 +775,12 @@ gc.funcs.input={
 				}
 			);
 			var full_jsonObj = JSON.parse( JSON.stringify( x2js.xml_str2json( newXml ), null, 0 ) );
-			var version = full_jsonObj["gfx-xform"]['@version'];
-			if(version=="MULTI_TS"){
-					gc.vars.settings.input.full_jsonObj = full_jsonObj;
-					var tilesetNames = full_jsonObj["gfx-xform"]["TILESET"].map(function(d,i,a){
-						return {
-							 "name" : d["gfx-xform"]["output"]["tiles"]["@var-name"]
-							,"text" : d["gfx-xform"]["output"]["tiles"]["@text"]
-						};
-					});
+			// var version = full_jsonObj["gfx-xform"]['@version'];
+			gc.vars.settings.input.full_jsonObj = {};
+			// gc.funcs.input.adjustMultiXml_select( [] );
 
-					gc.funcs.input.adjustMultiXml_select( tilesetNames );
-
-					gc.vars.dom.input.xml.value="";
-					gc.vars.dom.input.canvas.width=100;
-					gc.vars.dom.input.canvas.height=100;
-					gc.vars.dom.input.canvas.getContext("2d").clearRect(0,0,gc.vars.dom.input.canvas.width, gc.vars.dom.input.canvas.height);
-
-			}
-			else{
-				gc.vars.settings.input.full_jsonObj = {};
-				gc.funcs.input.adjustMultiXml_select( [] );
-
-				newXml = gc.funcs.shared.format_xmlText(newXml);
-				gc.vars.dom.input.xml.value = newXml ;
-			}
-
-
+			newXml = gc.funcs.shared.format_xmlText(newXml);
+			gc.vars.dom.input.xml.value = newXml ;
 		};
 
 		if (file) { reader.readAsText(file); }
@@ -737,44 +788,44 @@ gc.funcs.input={
 
 	}
 	// loadXML_multi
-	,loadXML_multi : function(e){
-		// loadXML_multi
-		var ts_index = gc.vars.dom.input.xml_multi_select.value;
-		var src_image;
-		var jsonObj;
+	// ,loadXML_multi : function(e){
+	// 	// loadXML_multi
+	// 	var ts_index = gc.vars.dom.input.xml_multi_select.value;
+	// 	var src_image;
+	// 	var jsonObj;
 
-		if(ts_index==""){
-			console.log("A blank value was selected.");
-			// alert      ("A blank value was selected.");
+	// 	if(ts_index==""){
+	// 		console.log("A blank value was selected.");
+	// 		// alert      ("A blank value was selected.");
 
-			// Erase the canvas and the textarea.
-			gc.vars.dom.input.xml.value="";
-			gc.vars.dom.input.canvas.width=100;
-			gc.vars.dom.input.canvas.height=100;
-			gc.vars.dom.input.canvas.getContext("2d").clearRect(0,0,gc.vars.dom.input.canvas.width, gc.vars.dom.input.canvas.height);
+	// 		// Erase the canvas and the textarea.
+	// 		gc.vars.dom.input.xml.value="";
+	// 		gc.vars.dom.input.canvas.width=100;
+	// 		gc.vars.dom.input.canvas.height=100;
+	// 		gc.vars.dom.input.canvas.getContext("2d").clearRect(0,0,gc.vars.dom.input.canvas.width, gc.vars.dom.input.canvas.height);
 
-			return;
-		}
-		jsonObj   = gc.vars.settings.input.full_jsonObj["gfx-xform"]["TILESET"][ts_index];
-		// console.log(jsonObj, gc.vars.settings.input.full_jsonObj);
-		// console.log(jsonObj);
-		src_image = jsonObj["gfx-xform"]["input"]["@file"];
+	// 		return;
+	// 	}
+	// 	jsonObj   = gc.vars.settings.input.full_jsonObj["gfx-xform"]["TILESET"][ts_index];
+	// 	// console.log(jsonObj, gc.vars.settings.input.full_jsonObj);
+	// 	// console.log(jsonObj);
+	// 	src_image = jsonObj["gfx-xform"]["input"]["@file"];
 
-		// Get the image.
-		var img = new Image();
-		img.onload = function(){
-			img.onload=null;
-			var ctx1 = gc.vars.dom.input.canvas.getContext("2d");
-			ctx1.canvas.width = img.width;
-			ctx1.canvas.height = img.height;
-			ctx1.drawImage(img, 0, 0);
+	// 	// Get the image.
+	// 	var img = new Image();
+	// 	img.onload = function(){
+	// 		img.onload=null;
+	// 		var ctx1 = gc.vars.dom.input.canvas.getContext("2d");
+	// 		ctx1.canvas.width = img.width;
+	// 		ctx1.canvas.height = img.height;
+	// 		ctx1.drawImage(img, 0, 0);
 
-			// Pass the JSON and the IMG to the validator.
-			gc.funcs.input.inputDataValidation(jsonObj, img);
-		};
-		img.src=src_image;
+	// 		// Pass the JSON and the IMG to the validator.
+	// 		gc.funcs.input.inputDataValidation(jsonObj, img);
+	// 	};
+	// 	img.src=src_image;
 
-	}
+	// }
 	// * Event listener: Reads in the IMG file and draws it to the canvas.
 	,loadImg             : function(e){
 		// This ONLY loads the IMG.
@@ -858,8 +909,8 @@ gc.funcs.input={
 			gc.funcs.input.inputDataValidation_manual().then(
 				 function(data){
 				 	// console.log("Validation was successful");
-				 	jsonObj=data.jsonObj;
-				 	img=data.img;
+				 	jsonObj = data.jsonObj;
+				 	img = data.img;
 
 				 	// Check if the tilesetOutputTo and removeDupeTiles keys exist and are populated.
 					var tilesetOutputTo  = jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"];
@@ -867,14 +918,14 @@ gc.funcs.input={
 					var outputAsJson     = jsonObj["gfx-xform"]["output"]["tiles"]["@outputAsJson"];
 
 				 	// Provide default values.
-					if(tilesetOutputTo==undefined || tilesetOutputTo == ""){
-						tilesetOutputTo="PROGMEM";
-						jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"]=tilesetOutputTo;
+					if(tilesetOutputTo == undefined || tilesetOutputTo == ""){
+						tilesetOutputTo = "PROGMEM";
+						jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"] = tilesetOutputTo;
 					}
 				 	// Provide default values.
 					if(removeDupeTiles==undefined || removeDupeTiles == ""){
-						removeDupeTiles=1;
-						jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"]=removeDupeTiles;
+						removeDupeTiles = 1;
+						jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"] = removeDupeTiles;
 					}
 					// Set the DOM controls for tilesetOutputTo and removeDupeTiles.
 					gc.vars.dom.maps.tilesetOutputTo.value   = tilesetOutputTo;
@@ -933,8 +984,8 @@ gc.funcs.input={
 		gc.vars.dom.input.validate2           .addEventListener('click', gc.funcs.input.validate, false);
 
 		// LOAD via MULTI:
-		gc.vars.dom.input.xml_multi_select    .addEventListener('change', gc.funcs.input.loadXML_multi, false);
-		gc.vars.dom.input.xml_multi_batch_btn .addEventListener('click', gc.funcs.input.multi_process, false);
+		// gc.vars.dom.input.xml_multi_select    .addEventListener('change', gc.funcs.input.loadXML_multi, false);
+		// gc.vars.dom.input.xml_multi_batch_btn .addEventListener('click', gc.funcs.input.multi_process, false);
 
 		// Double-click and paste image upload
 		gc.vars.dom.input.canvas              .addEventListener('dblclick', function(){

@@ -531,9 +531,11 @@ gc.funcs.output = {
                 'tileset' : srcJson["tileset"].length,
                 'tilemaps': Object.keys(srcJson["tilemaps"]).length,
             },
-            'tilemaps'     : {},
+            'tilemaps' : {},
+            'C2BIN_tilemaps'   : {},
+            'NOWHERE_tilemaps' : [],
+            'SKIPPED_tilemaps' : [],
             'tileset'      : [], 
-            'SKIPPED_tilemaps'     : [],
         };
         
         for(let index in srcJson["tileset"]){
@@ -543,6 +545,13 @@ gc.funcs.output = {
         for(let key in srcJson["tilemaps"]){
             let rec = srcJson["tilemaps"][key];
             json.tilemaps[key] = JSON.stringify(rec);
+        }
+        for(let key in srcJson["C2BIN_tilemaps"]){
+            let rec = srcJson["C2BIN_tilemaps"][key];
+            json.C2BIN_tilemaps[key] = JSON.stringify(rec);
+        }
+        for(let key of srcJson["NOWHERE_tilemaps"]){
+            json.NOWHERE_tilemaps.push(key);
         }
         for(let key of srcJson["SKIPPED_tilemaps"]){
             json.SKIPPED_tilemaps.push(key);
@@ -1150,30 +1159,42 @@ gc.funcs.output = {
                         tileHeight   : tileHeight,
                         tileWidth    : tileWidth,
                         translucent_color : Number( jsonObj["gfx-xform"]["output"]["tiles"]["@translucent_color"] ),
-                        tileset  : [],
-                        tilemaps : {},
-                        SKIPPED_tilemaps : [],
+                        'tilemaps' : {},
+                        'C2BIN_tilemaps'   : {},
+                        'NOWHERE_tilemaps' : [],
+                        'SKIPPED_tilemaps' : [],
+                        'tileset'      : [], 
                     };
                     // console.log("SOURCE:", data);
+                    
+                    // Tileset.
+                    for(let i=0; i<reducedTileset.length; i+=1){
+                        json.tileset.push( reducedTileset[i].data );
+                    }
+
+                    // Tilemaps.
                     for(let i=0; i<data.maps.length; i+=1){
                         // Get the record. 
                         let rec = data.maps[i];
 
-                        // Skip this if the outputTo is set to "SKIPMAP".
-                        if(rec["@mapOutputTo"] == "SKIPMAP"){ 
-                            json.SKIPPED_tilemaps.push(rec["@var-name"]);
+                        // If the outputTo is "SKIPMAP", add to SKIPPED_tilemaps (not tilemaps.)
+                        if(rec["@mapOutputTo"] == "SKIPMAP"){ json.SKIPPED_tilemaps.push(rec["@var-name"]); continue; }
+
+                        // If the outputTo is "NOWHERE", add to NOWHERE_tilemaps (not tilemaps.)
+                        if(rec["@mapOutputTo"] == "NOWHERE"){ json.NOWHERE_tilemaps.push(rec["@var-name"]); continue; }
+
+                        // If the outputTo is "C2BIN", add to C2BIN_tilemaps (not tilemaps.)
+                        if(rec["@mapOutputTo"] == "C2BIN"){ 
+                            json.C2BIN_tilemaps[ rec["@var-name"] ] = [ rec["@width"], rec["@height"], ...rec["reduced_tilesUsed"]];
                             continue; 
                         }
 
-                        // TODO: Skip others?
-
-                        // Add.
-                        json.tilemaps[ rec["@var-name"] ] = [ rec["@width"], rec["@height"], ...rec["reduced_tilesUsed"]];
+                        // If the outputTo is "PROGMEM", add to tilemaps.
+                        if(rec["@mapOutputTo"] == "PROGMEM"){ 
+                            json.tilemaps[ rec["@var-name"] ] = [ rec["@width"], rec["@height"], ...rec["reduced_tilesUsed"]];
+                            continue; 
+                        }
                     }
-                    for(let i=0; i<reducedTileset.length; i+=1){
-                        json.tileset.push( reducedTileset[i].data );
-                    }
-                    // console.log("outputAsJson:", json);
 
                     gc.funcs.output.final_outputText_jsonOnly(json);
                 }
