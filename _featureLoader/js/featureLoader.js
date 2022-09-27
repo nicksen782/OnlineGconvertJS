@@ -580,7 +580,6 @@ window.onload = function(){
 		// "FileSaver",
 		// "sha512"   ,
 		// "chartsJs" ,
-		// "momentJs"
 	];
 
 	console.log("**********************************");

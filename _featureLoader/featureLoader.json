@@ -39,26 +39,6 @@
   "test"        : "if(typeof hex_sha512 == \"undefined\")  { false; } else { true; };",
   "website"     : "https://coursesweb.net/javascript/sha512-encrypt-hash_cs"
  },
- "chartsJs" : {
-  "type"        : "library",
-  "text"        : "Simple yet flexible JavaScript charting for designers & developers",
-  "req"         : false,
-  "have"        : null,
-  "hadNatively" : null,
-  "url"         : "_featureLoader/libs/ChartJs.min.js",
-  "test"        : "if(typeof Chart === \"undefined\")  { false; } else { true; };",
-  "website"     : "https:/www.chartjs.org/"
- },
- "momentJs" : {
-  "type"        : "library",
-  "text"        : "Parse, validate, manipulate, and display dates and times in JavaScript.",
-  "req"         : false,
-  "have"        : null,
-  "hadNatively" : null,
-  "url"         : "_featureLoader/libs/moment.min.js",
-  "test"        : "if(typeof moment === \"undefined\")  { false; } else { true; };",
-  "website"     : "http:/momentjs.com/"
- },
  "X2JS"     : {
   "type"        : "library",
   "text"        : "XML to JSON and back for JavaScript",
