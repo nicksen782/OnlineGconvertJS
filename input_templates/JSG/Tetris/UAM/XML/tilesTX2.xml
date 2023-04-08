@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<gfx-xform version="SINGLE_TS">
+ <input file="/JSG_GAMES/JSGAME_Tetris/UAM/IMG/tiles.png" type="png" tile-width="8" tile-height="8" />
+ <output file="UAM/JSON/tilesTX2.json">
+ <tiles var-name="tilesTX2" tilesetOutputTo="PROGMEM" removeDupeTiles="1" outputAsJson="1" translucent_color="253" />
+ <maps pointers-size="8">
+ <map var-name="transparent_tile" left="0" top="0" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="fonts2" left="29" top="3" width="26" height="7" mapOutputTo="PROGMEM" /> 
+ </maps> 
+ </output> 
+</gfx-xform> 

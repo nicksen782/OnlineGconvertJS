@@ -231,9 +231,7 @@ gc.funcs.output = {
                 // Set the new_tilesUsed to be a remap of the src_tilesUsed taking into account the new_tile_id for a tile.
                 map["@new_tilesUsed"][i2] = src_tileset[ map["@src_tilesUsed"][i2] ].new_tile_id ;
             }
-
         }
-
     }
     // Processing
     ,timestamp                     : function(){
@@ -345,6 +343,7 @@ gc.funcs.output = {
         return maps;
 
     }
+    
     ,tilesetText                   : function(tileset, tilesetName, tilesetOutputTo, pointersSize){
         // console.log(
         // 	"tileset        :", tileset        , "\n",
@@ -405,8 +404,6 @@ gc.funcs.output = {
                     // If this pixel is multiple of the tileWidth (and not the first pixel...)
                     if((1+dataIndex)%tileWidth==0 && dataIndex!=0){ text_tileset += " "; }
                 }
-
-
             });
 
             // If this isn't the last tile, add the comma.
@@ -494,7 +491,7 @@ gc.funcs.output = {
             if     ( a["@mapOutputTo"]=="PROGMEM" ){ progmem=true ; text_mapset_PROGMEM += makeATileMap(a, progmem, pointersSize); }
             else if( a["@mapOutputTo"]=="SKIPMAP" ){ progmem=true ; text_mapset_SKIPMAP += makeATileMap(a, progmem, pointersSize); }
             else if( a["@mapOutputTo"]=="NOWHERE" ){ progmem=true ; text_mapset_NOWHERE += makeATileMap(a, progmem, pointersSize); }
-            else if( a["@mapOutputTo"]=="C2BIN"   ){ progmem=false; text_mapset_C2BIN   += makeATileMap(a, progmem, 16); }
+            else if( a["@mapOutputTo"]=="C2BIN"   ){ progmem=false; text_mapset_C2BIN   += makeATileMap(a, progmem, pointersSize); }
             else                          {
                 // progmem=true ; text_mapset_PROGMEM += makeATileMap(a, progmem, pointersSize);
                 console.log("The 'mapOutputTo' attribute did not have a match. This is a bug. Please report it to the application author. ", a);
@@ -718,6 +715,7 @@ gc.funcs.output = {
         // gc.funcs.output.nav.showOneView("json");
 
     }
+
     ,final_outputImage_tileset     : function(reducedTileset, maps, tileWidth, tileHeight, rows, cols, jsonObj){
         // Tile data is in the reduced tileset object.
         var numberOfTiles=reducedTileset.length;
@@ -999,6 +997,8 @@ gc.funcs.output = {
 
         function preProcess      (){
             return new Promise(async function(resolve, reject){
+                // gc.deduplicate.run();
+                
                 // Get an array of maps. ParseInt where needed.
                 var maps = jsonObj["gfx-xform"]["output"]["maps"]["map"].map(function(d,i,a){
                     // Parse int on the number attributes.
@@ -1168,6 +1168,7 @@ gc.funcs.output = {
                     // console.log("SOURCE:", data);
                     
                     // Tileset.
+                    // console.log("reducedTileset:", reducedTileset);
                     for(let i=0; i<reducedTileset.length; i+=1){
                         json.tileset.push( reducedTileset[i].data );
                     }

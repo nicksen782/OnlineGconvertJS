@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<gfx-xform version="SINGLE_TS">
+ <input file="/JSG_GAMES/JSGAME_Tetris/UAM/IMG/tiles.png" type="png" tile-width="8" tile-height="8" />
+ <output file="UAM/JSON/tilesSP1.json">
+ <tiles var-name="tilesSP1" tilesetOutputTo="PROGMEM" removeDupeTiles="1" outputAsJson="1" translucent_color="253" />
+ <maps pointers-size="8">
+  <map var-name="transparent_tile" left="0" top="0" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L0" left="32" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L1" left="32" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L2" left="32" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L3" left="32" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L4" left="32" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L5" left="32" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L6" left="32" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L7" left="32" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L8" left="32" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_sptile_L9" left="32" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L0" left="33" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L1" left="33" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L2" left="33" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L3" left="33" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L4" left="33" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L5" left="33" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L6" left="33" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L7" left="33" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L8" left="33" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_sptile_L9" left="33" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L0" left="33" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L1" left="33" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L2" left="33" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L3" left="33" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L4" left="33" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L5" left="33" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L6" left="33" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L7" left="33" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L8" left="33" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_sptile_L9" left="33" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L0" left="32" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L1" left="32" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L2" left="32" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L3" left="32" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L4" left="32" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L5" left="32" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L6" left="32" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L7" left="32" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L8" left="32" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_sptile_L9" left="32" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L0" left="34" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L1" left="34" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L2" left="34" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L3" left="34" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L4" left="34" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L5" left="34" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L6" left="34" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L7" left="34" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L8" left="34" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_sptile_L9" left="34" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L0" left="34" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L1" left="34" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L2" left="34" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L3" left="34" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L4" left="34" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L5" left="34" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L6" left="34" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L7" left="34" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L8" left="34" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_sptile_L9" left="34" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L0" left="32" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L1" left="32" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L2" left="32" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L3" left="32" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L4" left="32" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L5" left="32" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L6" left="32" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L7" left="32" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L8" left="32" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_sptile_L9" left="32" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="cursor1" left="13" top="71" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="cursor2" left="13" top="73" width="1" height="1" mapOutputTo="PROGMEM" /> 
+ </maps> 
+ </output> 
+</gfx-xform> 

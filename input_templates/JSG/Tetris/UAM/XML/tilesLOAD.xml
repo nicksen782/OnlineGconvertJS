@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<gfx-xform version="SINGLE_TS">
+ <input file="/JSG_GAMES/JSGAME_Tetris/UAM/IMG/tiles.png" type="png" tile-width="8" tile-height="8" />
+ <output file="UAM/JSON/tilesLOAD.json">
+ <tiles var-name="tilesLOAD" tilesetOutputTo="PROGMEM" removeDupeTiles="1" outputAsJson="1" translucent_color="253" />
+ <maps pointers-size="8">
+  <map var-name="transparent_tile" left="0" top="0" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="blacktile" left="1" top="0" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="X_tile782" left="1" top="71" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_flare_f1" left="85" top="3" width="8" height="6" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_flare_f2" left="85" top="10" width="8" height="6" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_flare_f3" left="85" top="17" width="8" height="6" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_flare_f4" left="85" top="24" width="8" height="6" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_flare_f5" left="85" top="31" width="8" height="6" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f1" left="94" top="3" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f2" left="103" top="3" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f3" left="94" top="8" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f4" left="103" top="8" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f5" left="94" top="13" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f6" left="103" top="13" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f7" left="94" top="18" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f8" left="103" top="18" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f9" left="94" top="23" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f10" left="103" top="23" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="n782_text_f11" left="94" top="28" width="8" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="jsgame_logo1" left="57" top="2" width="24" height="20" mapOutputTo="PROGMEM" /> 
+  <map var-name="jsgame_logo2" left="57" top="23" width="24" height="20" mapOutputTo="PROGMEM" /> 
+ </maps> 
+ </output> 
+</gfx-xform> 

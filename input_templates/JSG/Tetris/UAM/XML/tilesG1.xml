@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<gfx-xform version="SINGLE_TS">
+ <input file="/JSG_GAMES/JSGAME_Tetris/UAM/IMG/tiles.png" type="png" tile-width="8" tile-height="8" />
+ <output file="UAM/JSON/tilesG1.json">
+ <tiles var-name="tilesG1" tilesetOutputTo="PROGMEM" removeDupeTiles="1" outputAsJson="1" translucent_color="253" />
+ <maps pointers-size="8">
+  <map var-name="transparent_tile" left="0" top="0" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="blacktile" left="1" top="0" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="lineBorder_top" left="7" top="75" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="X_tile" left="1" top="73" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="garbage_tile" left="9" top="76" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L0" left="36" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L1" left="36" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L2" left="36" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L3" left="36" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L4" left="36" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L5" left="36" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L6" left="36" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L7" left="36" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L8" left="36" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_bgtile_L9" left="36" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L0" left="37" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L1" left="37" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L2" left="37" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L3" left="37" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L4" left="37" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L5" left="37" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L6" left="37" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L7" left="37" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L8" left="37" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_bgtile_L9" left="37" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L0" left="37" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L1" left="37" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L2" left="37" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L3" left="37" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L4" left="37" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L5" left="37" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L6" left="37" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L7" left="37" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L8" left="37" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_bgtile_L9" left="37" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L0" left="36" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L1" left="36" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L2" left="36" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L3" left="36" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L4" left="36" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L5" left="36" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L6" left="36" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L7" left="36" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L8" left="36" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_bgtile_L9" left="36" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L0" left="38" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L1" left="38" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L2" left="38" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L3" left="38" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L4" left="38" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L5" left="38" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L6" left="38" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L7" left="38" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L8" left="38" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_bgtile_L9" left="38" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L0" left="38" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L1" left="38" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L2" left="38" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L3" left="38" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L4" left="38" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L5" left="38" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L6" left="38" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L7" left="38" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L8" left="38" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_bgtile_L9" left="38" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L0" left="36" top="17" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L1" left="36" top="18" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L2" left="36" top="19" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L3" left="36" top="20" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L4" left="36" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L5" left="36" top="22" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L6" left="36" top="23" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L7" left="36" top="24" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L8" left="36" top="25" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_bgtile_L9" left="36" top="26" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="T_map_small" left="2" top="14" width="3" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="L_map_small" left="2" top="20" width="3" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="Z_map_small" left="2" top="26" width="3" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="O_map_small" left="2" top="32" width="3" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="S_map_small" left="2" top="38" width="3" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="J_map_small" left="2" top="44" width="3" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="I_map_small" left="2" top="50" width="3" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="title_tetris" left="1" top="56" width="26" height="12" mapOutputTo="PROGMEM" /> 
+ </maps> 
+ </output> 
+</gfx-xform> 

@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<gfx-xform version="SINGLE_TS">
+ <input file="/JSG_GAMES/JSGAME_Tetris/UAM/IMG/tiles.png" type="png" tile-width="8" tile-height="8" />
+ <output file="UAM/JSON/tilesMISC.json">
+ <tiles var-name="tilesMISC" tilesetOutputTo="PROGMEM" removeDupeTiles="1" outputAsJson="1" translucent_color="253" />
+ <maps pointers-size="8">
+  <map var-name="transparent_tile" left="0" top="0" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="blacktile" left="1" top="0" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="RAINBOWTEST1" left="26" top="85" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="RAINBOWTEST2" left="27" top="85" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="RAINBOWTEST3" left="28" top="85" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="RAINBOWTEST4" left="29" top="85" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="grid2" left="31" top="85" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="grid3" left="11" top="76" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_00" left="26" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_01" left="27" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_02" left="28" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_03" left="29" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_04" left="30" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_05" left="31" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_06" left="32" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_07" left="33" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_08" left="34" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_09" left="35" top="80" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_10" left="26" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_11" left="27" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_12" left="28" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_13" left="29" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_14" left="30" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_15" left="31" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_16" left="32" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_17" left="33" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_18" left="34" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_19" left="35" top="81" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_20" left="26" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_21" left="27" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_22" left="28" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_23" left="29" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_24" left="30" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_25" left="31" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_26" left="32" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_27" left="33" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_28" left="34" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_29" left="35" top="82" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_30" left="26" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_31" left="27" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_32" left="28" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_33" left="29" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_34" left="30" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_35" left="31" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_36" left="32" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_37" left="33" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_38" left="34" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="num_39" left="35" top="83" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad_all_off" left="2" top="81" width="22" height="6" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad_all_on" left="2" top="88" width="22" height="6" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad1_up" left="4" top="81" width="2" height="2" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad1_down" left="4" top="85" width="2" height="2" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad1_left" left="2" top="83" width="2" height="2" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad1_right" left="6" top="83" width="2" height="2" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad1_up_active" left="4" top="88" width="2" height="2" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad1_down_active" left="4" top="92" width="2" height="2" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad1_left_active" left="2" top="90" width="2" height="2" mapOutputTo="PROGMEM" /> 
+  <map var-name="dpad1_right_active" left="6" top="90" width="2" height="2" mapOutputTo="PROGMEM" /> 
+ </maps> 
+ </output> 
+</gfx-xform> 
