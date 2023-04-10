@@ -71,9 +71,6 @@ var app = {
             var cols      = this.data.canvas.width  / this.data.tileWidth;
             var rows      = this.data.canvas.height / this.data.tileHeight;
             for(let i=0; i<this.data.mapsSrc.length; i+=1){
-                // Skip maps that are set to SKIPMAP.
-                if(this.data.mapsSrc[i]["_mapOutputTo"]=="SKIPMAP"){ continue; }
-    
                 // Start the new map.
                 let newMap = {
                     // Base data.
@@ -88,6 +85,14 @@ var app = {
                     // Modified later.
                     newTilesMap: [],
                 };
+
+                // Set outputTo to PROGMEM if it is undefined or not in the list of acceptable values.
+                if(newMap["_mapOutputTo"]==undefined || ["SKIPMAP", "PROGMEM", "NOWHERE", "C2BIN"].indexOf(newMap["_mapOutputTo"]) == -1){
+                    newMap["_mapOutputTo"] = "PROGMEM";
+                }
+
+                // Skip maps that are set to SKIPMAP.
+                if(this.data.mapsSrc[i]["_mapOutputTo"]=="SKIPMAP"){ continue; }
                 
                 // Determine the orgTiles used by this map. Add to usedTileIds and orgTilesMap.
                 let startX = newMap.left;
@@ -554,6 +559,23 @@ var app = {
             };
             let getMapNames       = (outputType)=>{
                 let mapNames = [];
+                
+                // this.data.maps does not include "SKIPMAP" or "NOWHERE". Get them from mapsSrc.
+                if(outputType == "SKIPMAP" || outputType == "NOWHERE"){
+                    for(let m=0; m<this.data.mapsSrc.length; m+=1){
+                        let map = this.data.mapsSrc[m];
+                        
+                        // A gfx-xform version 1 map will NOT have mapOutputTo. Set it to PROGMEM.
+                        if(map._mapOutputTo == undefined){ map._mapOutputTo="PROGMEM"; }
+                        
+                        if(map._mapOutputTo == outputType){
+                            mapNames.push(map['_var-name']);
+                        }
+                    }
+
+                    return mapNames; 
+                }
+
                 for(let m=0; m<this.data.maps.length; m+=1){
                     let map = this.data.maps[m];
 
@@ -579,14 +601,19 @@ var app = {
             const tilesetText_C2BIN   = createTilesetText("C2BIN");
             const mapsetText_PROGMEM  = createMapsetText ("PROGMEM");
             const mapsetText_C2BIN    = createMapsetText ("C2BIN");
-            const mapsetText_SKIPMAP  = createMapsetText ("SKIPMAP"); // TODO: These maps would not have been created (They are not needed though.)
-            const mapsetText_NOWHERE  = createMapsetText ("NOWHERE"); // TODO: These maps would not have been created (They are not needed though.)
+            // const mapsetText_SKIPMAP  = createMapsetText ("SKIPMAP"); // TODO: These maps would not have been created (They are not needed though.)
+            // const mapsetText_NOWHERE  = createMapsetText ("NOWHERE"); // TODO: These maps would not have been created (They are not needed though.)
         
             const maps_SKIPMAP = getMapNames("SKIPMAP");
             const maps_NOWHERE = getMapNames("NOWHERE");
             const maps_PROGMEM = getMapNames("PROGMEM");
             const maps_C2BIN   = getMapNames("C2BIN");
         
+            console.log("maps_SKIPMAP:", maps_SKIPMAP);
+            console.log("maps_NOWHERE:", maps_NOWHERE);
+            console.log("maps_PROGMEM:", maps_PROGMEM);
+            console.log("maps_C2BIN:", maps_C2BIN);
+
             const tilesetOutputTo = this.data.settings.output.tiles['tilesetOutputTo'];
             
             let finalOutput_PROGMEM = "";
@@ -630,93 +657,6 @@ var app = {
         },
 
         // Generate and display the text output (JSON)
-        OLDgenerateJsonOutput: function(src_json){
-            let generatedDate = new Date().toLocaleString('en-us', {
-                weekday:'long',
-                year: 'numeric', month:  'short'  , day:    'numeric',
-                hour: 'numeric', minute: 'numeric', second: 'numeric',
-                hour12: true,
-                timeZoneName: 'long'
-            });
-
-            // Create a JSON-compatible output. 
-            let json = {
-                generatedTime    : generatedDate,
-                tilesetName      : src_json["gfx-xform"].output.tiles["_var-name"], 
-                pointersSize     : +src_json["gfx-xform"].output.maps["_pointers-size"],
-                tileHeight       : +src_json["gfx-xform"].input["_tile-height"], 
-                tileWidth        : +src_json["gfx-xform"].input["_tile-width"], 
-                translucent_color: +src_json["gfx-xform"]["output"]["tiles"]["_translucent_color"] ?? 254,
-                'tilemaps'        : {},
-                'C2BIN_tilemaps'  : {},
-                'tileset'         : [], 
-            };
-            
-            // Tileset.
-            for(let i=0; i<this.data.uniqueTiles.length; i+=1){
-                json.tileset.push( this.data.uniqueTiles[i].rgb332 );
-            }
-
-            // Tilemaps.
-            for(let i=0; i<this.data.maps.length; i+=1){
-                // Get the record. 
-                let rec = this.data.maps[i];
-
-                // If the outputTo is "C2BIN", add to C2BIN_tilemaps (not tilemaps.)
-                if(rec["mapOutputTo"] == "C2BIN"){ 
-                    json.C2BIN_tilemaps[ rec["varName"] ] = [ rec["width"], rec["height"], ...rec["newTilesMap"]];
-                    continue; 
-                }
-
-                // If the outputTo is "PROGMEM", add to tilemaps.
-                if(rec["mapOutputTo"] == "PROGMEM"){ 
-                    json.tilemaps[ rec["varName"] ] = [ rec["width"], rec["height"], ...rec["newTilesMap"]];
-                    continue; 
-                }
-            }
-
-            var textOutput1          = app.DOM['textOutput1'] ;
-            var textOutput2          = app.DOM['textOutput2'] ;
-            var textOutput3          = app.DOM['textOutput2'] ;
-            textOutput1.value = "";
-            textOutput2.value = "";
-            textOutput3.value = "";
-            let finalJson = {
-                'generatedTime': json["generatedTime"], 
-                'tilesetName'  : json["tilesetName"], 
-                'config': {
-                    'pointersSize' : json["pointersSize"], 
-                    'tileHeight'   : json["tileHeight"], 
-                    'tileWidth'    : json["tileWidth"], 
-                    'translucent_color' : json["translucent_color"], 
-                },
-                'counts':{
-                    'tileset' : json["tileset"].length,
-                    'tilemaps': Object.keys(json["tilemaps"]).length,
-                },
-                'tilemaps'      : {},
-                'C2BIN_tilemaps': {},
-                'tileset'       : [], 
-            };
-            
-            for(let tileId in json["tileset"]){
-                finalJson.tileset.push( JSON.stringify(json["tileset"][tileId]) );
-            }
-            for(let tileMapName in json["tilemaps"]){
-                let rec = json["tilemaps"][tileMapName];
-                finalJson.tilemaps[tileMapName] = JSON.stringify(rec);
-            }
-            for(let tileMapName in json["C2BIN_tilemaps"]){
-                let rec = json["C2BIN_tilemaps"][tileMapName];
-                finalJson.C2BIN_tilemaps[tileMapName] = JSON.stringify(rec);
-            }
-    
-            // console.log("finalJson:", finalJson);
-            this.data.finalJson = finalJson;
-            app.DOM['textOutput3'].value = JSON.stringify(finalJson,null,2);
-        },
-
-        // Generate and display the text output (JSON)
         generateJsonOutput: function(src_json){
             // Generate the date string.
             let generatedDate = new Date().toLocaleString('en-us', {
@@ -756,12 +696,12 @@ var app = {
             }
 
             // Get DOM handles to the output textareas and clear them.
-            var textOutput1 = app.DOM['textOutput1'] ; // PROGMEM (C arrays)
-            var textOutput2 = app.DOM['textOutput2'] ; // C2BIN (C arrays)
-            var textOutput3 = app.DOM['textOutput2'] ; // JSON.
-            textOutput1.value = "";
-            textOutput2.value = "";
-            textOutput3.value = "";
+            // var textOutput1 = app.DOM['textOutput1'] ; // PROGMEM (C arrays)
+            // var textOutput2 = app.DOM['textOutput2'] ; // C2BIN (C arrays)
+            // var textOutput3 = app.DOM['textOutput2'] ; // JSON.
+            // textOutput1.value = "";
+            // textOutput2.value = "";
+            // textOutput3.value = "";
 
             // Structure for the final json output. 
             let finalJson = {
@@ -780,7 +720,7 @@ var app = {
                 },
                 'tilemaps'      : {},
                 'C2BIN_tilemaps': {},
-                'tileset'       : [], 
+                'tileset'       : [],   
             };
             
             // JSON.stringify each tile of the tileset as a separate array entry.
@@ -921,6 +861,14 @@ var app = {
             this.data.entireImageData_uint8Clamped = null; // Clear to recover some RAM.
             let ts5E = performance.now() - ts5;
             
+            // Get DOM handles to the output textareas and clear them.
+            var textOutput1 = app.DOM['textOutput1'] ; // PROGMEM (C arrays)
+            var textOutput2 = app.DOM['textOutput2'] ; // C2BIN (C arrays)
+            var textOutput3 = app.DOM['textOutput2'] ; // JSON.
+            textOutput1.value = "";
+            textOutput2.value = "";
+            textOutput3.value = "";
+
             // Text output.
             let ts6 = performance.now();
             if(!this.data.settings.output.tiles['outputAsJson']){
@@ -1089,6 +1037,7 @@ var app = {
 
     DOM: {
         "action"      : 'action',
+        "inputSelect" : 'inputSelect',
         "xmlInput"    : 'xmlInput',
         "imageInput"  : 'imageInput',
         "imageInput2" : 'imageInput2',
@@ -1118,7 +1067,10 @@ var app = {
             img.src =  app.shared.src_json["gfx-xform"].input._file;
         });
 
-        app.dedupe.run();
+
+        window.requestAnimationFrame(()=>{ 
+            app.dedupe.run();
+        });
     },
 
     init: async function(){
@@ -1129,44 +1081,56 @@ var app = {
         }
 
         this.DOM['action'].addEventListener("click", ()=>{
+            console.clear();
+            this.readAndConvertXmlInput();
+        }, false);
+        
+        this.DOM['inputSelect'].addEventListener("change", async ()=>{
+            if(this.DOM['inputSelect'].value == ""){ return; }
+
+            let select = this.DOM['inputSelect'];
+            let value = select.value;
+            let option = select.options[select.selectedIndex];
+
+            let xmlFileText = await (await fetch(value)).text();
+            this.DOM['xmlInput'].value = xmlFileText;
+            console.clear();
             this.readAndConvertXmlInput();
         }, false);
 
         // Set the initial XML data.
         let demoFiles = [
-            /* 0 : MegaTris               */ "input_templates/xml_template1_Uzebox_MegaTris.xml", 
-            /* 1 : Mario Bros (sprites)   */ "input_templates/Uzebox_MarioBros.xml",                
-            /* 2 : Mario Bros (bg tiles)  */ "input_templates/xml_template2b.xml",                 
-            /* 3 : Uze RPG                */ "input_templates/xml_template3.xml",                 
-            /* 4 : Ram-Tile Tests         */ "input_templates/xml_template4.xml",                 
-            /* 5 : Bubble Bobble          */ "input_templates/xml_template5.xml",              
-            /* 6 : JSG: Tetris: tilesBG1  */ "input_templates/JSG/Tetris/UAM/XML/tilesBG1.xml",
-            /* 7 : JSG: Tetris: tilesG1   */ "input_templates/JSG/Tetris/UAM/XML/tilesG1.xml",
-            /* 8 : JSG: Tetris: tilesLOAD */ "input_templates/JSG/Tetris/UAM/XML/tilesLOAD.xml",
-            /* 9 : JSG: Tetris: tilesMISC */ "input_templates/JSG/Tetris/UAM/XML/tilesMISC.xml",
-            /* 10: JSG: Tetris: tilesSP1  */ "input_templates/JSG/Tetris/UAM/XML/tilesSP1.xml",
-            /* 11: JSG: Tetris: tilesTX1  */ "input_templates/JSG/Tetris/UAM/XML/tilesTX1.xml",
-            /* 12: JSG: Tetris: tilesTX2  */ "input_templates/JSG/Tetris/UAM/XML/tilesTX2.xml",
+            { "index": 0,  "label": "MegaTris",               "file": "input_templates/xml_template1_Uzebox_MegaTris.xml" }, 
+            { "index": 1,  "label": "Mario Bros (sprites",    "file": "input_templates/Uzebox_MarioBros.xml"              },                
+            { "index": 2,  "label": "Mario Bros (bg tiles",   "file": "input_templates/xml_template2b.xml"                },                 
+            { "index": 3,  "label": "Uze RPG",                "file": "input_templates/xml_template3.xml"                 },                 
+            { "index": 4,  "label": "Ram-Tile Tests",         "file": "input_templates/xml_template4.xml"                 },                 
+            { "index": 5,  "label": "Bubble Bobble",          "file": "input_templates/xml_template5.xml"                 },              
+            { "index": 6,  "label": "JSG: Tetris: tilesBG1",  "file": "input_templates/JSG/Tetris/UAM/XML/tilesBG1.xml"   },
+            { "index": 7,  "label": "JSG: Tetris: tilesG1",   "file": "input_templates/JSG/Tetris/UAM/XML/tilesG1.xml"    },
+            { "index": 8,  "label": "JSG: Tetris: tilesLOAD", "file": "input_templates/JSG/Tetris/UAM/XML/tilesLOAD.xml"  },
+            { "index": 9,  "label": "JSG: Tetris: tilesMISC", "file": "input_templates/JSG/Tetris/UAM/XML/tilesMISC.xml"  },
+            { "index": 10, "label": "JSG: Tetris: tilesSP1",  "file": "input_templates/JSG/Tetris/UAM/XML/tilesSP1.xml"   },
+            { "index": 11, "label": "JSG: Tetris: tilesTX1",  "file": "input_templates/JSG/Tetris/UAM/XML/tilesTX1.xml"   },
+            { "index": 12, "label": "JSG: Tetris: tilesTX2",  "file": "input_templates/JSG/Tetris/UAM/XML/tilesTX2.xml"   },
         ];
 
-        let fIndex = 0;
-        // fIndex = 0;  // 0 : MegaTris
-        // fIndex = 1;  // 1 : Mario Bros (sprites)
-        // fIndex = 2;  // 2 : Mario Bros (bg tiles)
-        // fIndex = 3;  // 3 : Uze RPG
-        // fIndex = 4;  // 4 : Ram-Tile Tests
-        // fIndex = 5;  // 5 : Bubble Bobble
-        // fIndex = 6;  // 6 : JSG: Tetris: tilesBG1
-        fIndex = 7;  // 7 : JSG: Tetris: tilesG1
-        // fIndex = 8;  // 8 : JSG: Tetris: tilesLOAD
-        // fIndex = 9;  // 9 : JSG: Tetris: tilesMISC
-        // fIndex = 10; // 10: JSG: Tetris: tilesSP1
-        // fIndex = 11; // 11: JSG: Tetris: tilesTX1
-        // fIndex = 12; // 12: JSG: Tetris: tilesTX2
-
-        app.shared.src_xmlFilename = demoFiles[fIndex];
-        let xmlFileText = await (await fetch( demoFiles[fIndex])).text();
-        this.DOM['xmlInput'].value = xmlFileText;
+        // let selectedIndex = "";
+        let selectedIndex = 0;
+        // let selectedIndex = 6;
+        let select1 = this.DOM['inputSelect'];
+        for(let i=0; i<demoFiles.length; i+=1){
+            let option = document.createElement("option");
+            option.value = demoFiles[i].file;
+            option.innerText = demoFiles[i].label;
+            if(demoFiles[i].index === selectedIndex){ 
+                option.selected = true; 
+            }
+            select1.append(option);
+        }
+        if(selectedIndex !== ""){
+            select1.dispatchEvent(new Event("change"));
+        }
     },
 };
 
@@ -1177,8 +1141,6 @@ var app = {
             window.removeEventListener('load', handler);
 
             await app.init();
-
-            app.readAndConvertXmlInput();
         };
         window.addEventListener('load', handler);
     }
