@@ -1115,8 +1115,8 @@ var app = {
             { "index": 12, "label": "JSG: Tetris: tilesTX2",  "file": "input_templates/JSG/Tetris/UAM/XML/tilesTX2.xml"   },
         ];
 
-        // let selectedIndex = "";
-        let selectedIndex = 0;
+        let selectedIndex = "";
+        // let selectedIndex = 0;
         // let selectedIndex = 6;
         let select1 = this.DOM['inputSelect'];
         for(let i=0; i<demoFiles.length; i+=1){

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<gfx-xform version="MULTI_TS2">
+  <xml_files>
+    <xml_file xml="/JSG_GAMES/JSGAME_Tetris/UAM/XML/tilesBG1.xml" />
+    <xml_file xml="/JSG_GAMES/JSGAME_Tetris/UAM/XML/tilesG1.xml" />
+    <xml_file xml="/JSG_GAMES/JSGAME_Tetris/UAM/XML/tilesLOAD.xml" />
+    <xml_file xml="/JSG_GAMES/JSGAME_Tetris/UAM/XML/tilesMISC.xml" />
+    <xml_file xml="/JSG_GAMES/JSGAME_Tetris/UAM/XML/tilesSP1.xml" />
+    <xml_file xml="/JSG_GAMES/JSGAME_Tetris/UAM/XML/tilesTX1.xml" />
+    <xml_file xml="/JSG_GAMES/JSGAME_Tetris/UAM/XML/tilesTX2.xml" />
+  </xml_files>
+</gfx-xform>

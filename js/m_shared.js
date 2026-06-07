@@ -462,8 +462,6 @@ gc.funcs.shared={
 
 		return index;
 	},
-
-
 	// * Get 24-bit rgb version of 1-byte rgb332.
 	rgb_decode332        : function(RGB332) {
 		// 0b00000111 >> 0 RED

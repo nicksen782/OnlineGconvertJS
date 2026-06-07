@@ -507,22 +507,39 @@ gc.funcs.output = {
             , text_mapset_C2BIN   : text_mapset_C2BIN
         };
     }
-    ,final_outputText_jsonOnly     : function(srcJson){
-        // console.log("final_outputText_jsonOnly:", srcJson, Object.keys(srcJson));
+    ,final_outputText_jsonOnly     : function(srcJson, jsonObj){
+        // console.log("final_outputText_jsonOnly: srcJson:", srcJson, Object.keys(srcJson));
+        console.log("final_outputText_jsonOnly: jsonObj:", jsonObj);
         var textOutput1          = gc.vars.dom.output.progmemTextarea ;
         var textOutput2          = gc.vars.dom.output.c2binTextarea ;
         var textOutput3          = gc.vars.dom.output.jsonTextarea ;
         textOutput1.value = "";
         textOutput2.value = "";
         textOutput3.value = "";
+        // ["gfx-xform"].output.maps.map
+        // Allow pointerSize to be automatic (this effectively ignores the XML pointersSize value.
+        let pointersSize;
+        // If there are more than 255 tiles then the pointerSize should be 16 (allows up to 65536 tiles in a tileset.)
+        if(srcJson["tileset"].length >255){ pointersSize = 16; }
+        // Less than 255 can use pointersSize 8 (allows up to 256 tiles in a tileset.)
+        else{ pointersSize = 8; }
+
+        let tileset_encoding = srcJson["tileset_encoding"] || "JSON"; // JSON, BASE64, NONE
+        let tilemap_encoding = srcJson["tilemap_encoding"] || "JSON"; // JSON, COORDS, NONE
+        
         let json = {
             'generatedTime': srcJson["generatedTime"], 
             'tilesetName'  : srcJson["tilesetName"], 
             'config': {
-                'pointersSize' : srcJson["pointersSize"], 
+                // 'pointersSize' : srcJson["pointersSize"], 
+                'pointersSize' : pointersSize, 
                 'tileHeight'   : srcJson["tileHeight"], 
                 'tileWidth'    : srcJson["tileWidth"], 
                 'translucent_color' : srcJson["translucent_color"], 
+                "translucent_color_rgba": gc.funcs.shared.rgb_decode332(srcJson["translucent_color"]),
+                
+                'tileset_encoding': tileset_encoding,
+                'tilemap_encoding': tilemap_encoding,
             },
             'counts':{
                 'tileset' : srcJson["tileset"].length,
@@ -535,24 +552,74 @@ gc.funcs.output = {
             'tileset'      : [], 
         };
         
-        for(let index in srcJson["tileset"]){
-            json.tileset.push( JSON.stringify(srcJson["tileset"][index]) );
-            // json.tileset.push( srcJson["tileset"][index] );
+        // TILESET
+        if(jsonObj["gfx-xform"].output.tiles["@tilesetOutputTo"] != "NOWHERE"){
+            for(let index in srcJson["tileset"]){
+                if(tileset_encoding == "JSON"){
+                    json.tileset.push( JSON.stringify(srcJson["tileset"][index]) );
+                    // json.tileset.push( srcJson["tileset"][index] );
+                    // json.tileset.push( srcJson["tileset"][index] );
+                }
+                else if(tileset_encoding == "BASE64"){
+                    let base64String = btoa(String.fromCharCode.apply(null, srcJson["tileset"][index]));
+                    json.tileset.push( base64String );
+                }
+                else{} // NONE
+            }
         }
-        for(let key in srcJson["tilemaps"]){
-            let rec = srcJson["tilemaps"][key];
-            json.tilemaps[key] = JSON.stringify(rec);
+        
+        // TILEMAPS: PROGMEM
+        if(tilemap_encoding == "JSON"){
+            for(let key in srcJson["tilemaps"]){
+                let rec = srcJson["tilemaps"][key];
+                json.tilemaps[key] = JSON.stringify(rec);
+            }
         }
+        else if(tilemap_encoding == "COORDS"){
+            for(let rec of jsonObj["gfx-xform"].output.maps.map){
+                if(srcJson["tilemaps"][rec["@var-name"]]){
+                    json.tilemaps[rec["@var-name"]] = JSON.stringify([
+                        // Number(rec["@width"]  * srcJson.tileHeight), // w
+                        // Number(rec["@height"] * srcJson.tileWidth),  // h
+                        // Number(rec["@left"]   * srcJson.tileHeight), // x
+                        // Number(rec["@top"]    * srcJson.tileWidth),  // y
+
+                        Number(rec["@width"] ), // w
+                        Number(rec["@height"]), // h
+                        Number(rec["@left"])  , // x
+                        Number(rec["@top"] )  , // y
+                        // _org: srcJson["tilemaps"][rec["@var-name"]] || "UNKNOWN"
+                    ]);
+                    // json.tilemaps[rec["@var-name"]]
+                }
+            }
+        }
+        else{} // NONE
+
+        // TILEMAPS: C2BIN
         for(let key in srcJson["C2BIN_tilemaps"]){
             let rec = srcJson["C2BIN_tilemaps"][key];
             json.C2BIN_tilemaps[key] = JSON.stringify(rec);
         }
+        
+        // TILEMAPS: NOWHERE
         for(let key of srcJson["NOWHERE_tilemaps"]){
             json.NOWHERE_tilemaps.push(key);
         }
+
+        // TILEMAPS: SKIPPED
         for(let key of srcJson["SKIPPED_tilemaps"]){
             json.SKIPPED_tilemaps.push(key);
         }
+
+
+        // Need to now adjust the tileWidth and tileHeight if the tilemap_encoding is COORDS.
+        // if(tilemap_encoding == "COORDS"){
+        //     // srcJson["tileWidth"]  = 1;
+        //     // srcJson["tileHeight"] = 1;
+        //     json.config.tileHeight = 1; 
+        //     json.config.tileWidth  = 1; 
+        // }
 
         // console.log("final_outputText_jsonOnly: DONE: ", json);
         textOutput3.value = JSON.stringify(json,null,2);
@@ -966,7 +1033,7 @@ gc.funcs.output = {
 
     ,processToC                    : function(jsonObj, xmlObj){
         gc.vars.timestamps.ts_all.s = performance.now();
-
+        
         var srcCanvas                = gc.vars.dom.maps.canvas_main;
         var tilesetOutputTo          = jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"];
         var removeDupeTiles          = jsonObj["gfx-xform"]["output"]["tiles"]["@removeDupeTiles"];
@@ -1013,6 +1080,10 @@ gc.funcs.output = {
                     // tilesetOutputTo = gc.vars.dom.maps.tilesetOutputTo.value;
                     tilesetOutputTo = "PROGMEM";
                     jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"] = tilesetOutputTo;
+                }
+                else if(tilesetOutputTo == "NOWHERE") {
+                    tilesetOutputTo = "NOWHERE";
+                    // jsonObj["gfx-xform"]["output"]["tiles"]["@tilesetOutputTo"] = tilesetOutputTo;
                 }
                 if(removeDupeTiles == undefined) {
                     removeDupeTiles = gc.vars.dom.maps.removeDupeTiles.checked ? 1 : 0;
@@ -1117,6 +1188,8 @@ gc.funcs.output = {
                 else if(tilesetOutputTo=='C2BIN'){
                     text_tileset_C2BIN   = gc.funcs.output.tilesetText( reducedTileset, tilesetName, tilesetOutputTo, pointersSize );
                 }
+                else if(tilesetOutputTo=='NOWHERE'){
+                }
                 gc.vars.timestamps.tilesetText.e                   = performance.now();
 
                 //_06_ // Generate the text for all the types of tile maps.
@@ -1164,6 +1237,8 @@ gc.funcs.output = {
                         'NOWHERE_tilemaps' : [],
                         'SKIPPED_tilemaps' : [],
                         'tileset'      : [], 
+                        tileset_encoding: jsonObj["gfx-xform"]["output"]["tiles"]["@tileset_encoding"],
+                        tilemap_encoding: jsonObj["gfx-xform"]["output"]["maps"]["@tilemap_encoding"],
                     };
                     // console.log("SOURCE:", data);
                     
@@ -1197,7 +1272,7 @@ gc.funcs.output = {
                         }
                     }
 
-                    gc.funcs.output.final_outputText_jsonOnly(json);
+                    gc.funcs.output.final_outputText_jsonOnly(json, jsonObj);
                 }
                 else{
                     gc.funcs.output.final_outputText( textObject, false, dstFile, dstFile2);
